@@ -44,56 +44,13 @@ class activity_update_ride : AppCompatActivity() {
 
     companion object {
         private val TAG = activity_update_ride::class.qualifiedName
-        lateinit var ridesDB : RidesDB
     }
-
-    private lateinit var scooterName: EditText
-    private lateinit var scooterLocation: EditText
-    private val scooter: Scooter = Scooter(timestamp = java.sql.Timestamp(System.currentTimeMillis()), name = "", location = "")
-    private lateinit var binding: ActivityUpdateRideBinding
-
-    /**
-     * onCreate main function that holds the functionality of the system.
-     * holds the onclick method for the startride button.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_update_ride)
+        setContentView(R.layout.activity_start_ride)
 
-        // Singleton to share an object between the app activities .
-        ridesDB = RidesDB.get(this)
-
-        binding = ActivityUpdateRideBinding.inflate(layoutInflater)
-        val view = binding.root
-        setContentView(view)
-
-        scooterName = binding.editTextName
-        scooterLocation = binding.editTextLocation
-
-        binding.startRideButton.setOnClickListener {
-            if (scooterName.text.isNotEmpty() && scooterLocation.text.isNotEmpty()){
-
-                val name = scooterName.text.toString().trim()
-                val location = scooterLocation.text.toString().trim()
-                val timestamp = java.sql.Timestamp(System.currentTimeMillis())
-
-                ridesDB.updateCurrentScooter(location,timestamp)
-
-                Snackbar.make(
-                    it,
-                    ("$timestamp: Ride on scooter '$name' started from '$location'."),
-                    Snackbar.LENGTH_LONG
-                ).show()
-                showMessage()
-            }
-        }
-    }
-
-    /**
-     * show message method which prints name and location when button is clicked.
-     */
-    private fun showMessage(){
-        Log.d(TAG, scooter.toString())
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, Start_Ride_Fragment())
+            .commit()
     }
 }

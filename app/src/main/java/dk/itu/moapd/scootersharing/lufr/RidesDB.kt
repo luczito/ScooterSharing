@@ -51,7 +51,7 @@ class RidesDB private constructor (context:Context) {
         getCurrentScooter().timestamp = timestamp
     }
 
-    fun getCurrentScooter():Scooter{
+    private fun getCurrentScooter():Scooter{
         return rides[rides.size - 1]
     }
 

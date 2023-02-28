@@ -23,17 +23,8 @@ SOFTWARE.
  */
 package dk.itu.moapd.scootersharing.lufr
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import android.widget.ArrayAdapter
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.Button
-import android.widget.EditText
-import androidx.core.view.WindowCompat
-import com.google.android.material.snackbar.Snackbar
-import dk.itu.moapd.scootersharing.lufr.databinding.ActivityMainBinding
 
 /**
  * Class MainAcitivity, holds the main logic and functionality of the system.
@@ -46,47 +37,14 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = MainActivity::class.qualifiedName
-        lateinit var ridesDB : RidesDB
     }
-    private lateinit var binding: ActivityMainBinding
 
-    private lateinit var listView: android.widget.ListView
-
-    /**
-     * onCreate main function that holds the functionality of the system.
-     * holds the onclick method for the startride button.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Singleton to share an object between the app activities .
-        ridesDB = RidesDB.get(this)
-
-        binding = ActivityMainBinding.inflate(layoutInflater)
-
-        listView = binding.listView
-        listView.adapter = CustomArrayAdapter(this, R.layout.rides_list, ridesDB.getRidesList())
-        listView.visibility = View.GONE
-
-        val view = binding.root
-        setContentView(view)
-
-        binding.startRideButton.setOnClickListener {
-            val intent = Intent(baseContext, activity_start_ride::class.java)
-            startActivity(intent)
-        }
-        binding.updateRideButton.setOnClickListener {
-            val intent = Intent(baseContext, activity_update_ride::class.java)
-            startActivity(intent)
-        }
-        binding.showRidesButton.setOnClickListener {
-            if (listView.visibility == View.GONE){
-                listView.visibility = View.VISIBLE
-            }else{
-                listView.visibility = View.GONE
-            }
-        }
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, MainFragment())
+            .commit()
     }
 }
