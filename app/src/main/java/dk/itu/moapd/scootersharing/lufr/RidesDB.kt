@@ -43,8 +43,18 @@ class RidesDB private constructor (context:Context) {
         return rides
     }
     //Function to add a scooter with given inputs.
-    fun addScooter(name: String, location: String, timestamp: Timestamp) {
-        rides.add(Scooter(name, location, timestamp))
+    fun addScooter(name: String, location: String, timestamp: Timestamp):String {
+        var returnString = ""
+        var found = false
+        for(s in rides) {
+            if (s.name == name) found = true
+        }
+        returnString = if(found) "Scooter with name: $name, already exists!"
+        else {
+            rides.add(Scooter(name, location, timestamp))
+            "[$timestamp] - Ride on scooter: '$name', started at location: '$location'."
+        }
+        return returnString
     }
     //updates current scooter with a new location and timestamp
     fun updateCurrentScooter(location:String, timestamp:Timestamp) {

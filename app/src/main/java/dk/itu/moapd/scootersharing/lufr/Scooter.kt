@@ -39,7 +39,7 @@ data class Scooter(
     var timestamp: Timestamp)
     {
     override fun toString(): String {
-        return "[Scooter] $name is placed at $location at $timestamp"
+        return "[${timestamp.toString().substring(0,19)}] - Scooter: $name is placed at $location"
     }
 }
 

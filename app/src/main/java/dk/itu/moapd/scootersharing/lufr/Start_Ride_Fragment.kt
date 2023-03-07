@@ -99,14 +99,14 @@ class Start_Ride_Fragment : Fragment() {
                     val location = scooterLocation.text.toString().trim()
                     val timestamp = java.sql.Timestamp(System.currentTimeMillis())
 
-                    ridesDB.addScooter(name, location, timestamp)
+                    val status = ridesDB.addScooter(name, location, timestamp)
 
                     Snackbar.make(
                         it,
-                        ("$timestamp: Ride on scooter '$name' started from '$location'."),
+                        status,
                         Snackbar.LENGTH_LONG
                     ).show()
-                    showMessage()
+                    showMessage(status)
                 }
             }
         }
@@ -115,7 +115,7 @@ class Start_Ride_Fragment : Fragment() {
     /**
      * show message method which logs name and location when "startRideButton" is clicked.
      */
-    private fun showMessage(){
-        Log.d(TAG, scooter.toString())
+    private fun showMessage(input: String){
+        Log.d(TAG, input)
     }
 }

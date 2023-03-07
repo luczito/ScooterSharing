@@ -103,8 +103,8 @@ class Update_Ride_Fragment : Fragment() {
                     ridesDB.updateCurrentScooter(location,timestamp)
 
                     Snackbar.make(
-                        it,
-                        ("$timestamp: Scooter updated with location: '$location', and time: '$timestamp'."),
+                        binding.root,
+                        ("[$timestamp] - Scooter updated with location: '$location', and time: '$timestamp'."),
                         Snackbar.LENGTH_LONG
                     ).show()
                     showMessage()
