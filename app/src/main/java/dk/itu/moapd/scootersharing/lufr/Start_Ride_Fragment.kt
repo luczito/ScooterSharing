@@ -38,24 +38,21 @@ import androidx.annotation.RequiresApi
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import dk.itu.moapd.scootersharing.lufr.databinding.ActivityMainBinding
-import dk.itu.moapd.scootersharing.lufr.databinding.ActivityStartRideBinding
-import dk.itu.moapd.scootersharing.lufr.databinding.FragmentMainBinding
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentStartRideBinding
 import java.sql.Timestamp
 import kotlin.time.Duration.Companion.nanoseconds
 
 /**
- * Class MainAcitivity, holds the main logic and functionality of the system.
+ * Class Start_Ride_Fragment, holds the logic and functionality of the Start_Ride_Fragment.
  * @property scooterName Input text for the scooter name.
  * @property scooterLocation Input text for the scooter location.
  * @property scooter scooter object.
- * @property binding viewbinding for the view.
+ * @property binding Fragment binding for the view fragment.
  */
 class Start_Ride_Fragment : Fragment() {
 
     companion object {
-        private val TAG = activity_start_ride::class.qualifiedName
+        private val TAG = Start_Ride_Fragment::class.qualifiedName
         lateinit var ridesDB : RidesDB
     }
 
@@ -65,8 +62,7 @@ class Start_Ride_Fragment : Fragment() {
     private lateinit var binding: FragmentStartRideBinding
 
     /**
-     * onCreate main function that holds the functionality of the system.
-     * holds the onclick method for the startride button.
+     * Default onCreate function.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
@@ -75,6 +71,9 @@ class Start_Ride_Fragment : Fragment() {
         // Singleton to share an object between the app activities .
         ridesDB = RidesDB.get(requireContext())
     }
+    /**
+     * onCreateView function which inflates the binding as well as gets the inputs from text fields.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -87,7 +86,9 @@ class Start_Ride_Fragment : Fragment() {
 
         return binding.root
     }
-
+    /**
+     * onViewCreated function, holds the logic for the "startRideButton", as well as the snackbar notification.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
 
@@ -112,7 +113,7 @@ class Start_Ride_Fragment : Fragment() {
     }
 
     /**
-     * show message method which prints name and location when button is clicked.
+     * show message method which logs name and location when "startRideButton" is clicked.
      */
     private fun showMessage(){
         Log.d(TAG, scooter.toString())

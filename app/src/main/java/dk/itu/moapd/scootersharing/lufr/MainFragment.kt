@@ -36,15 +36,12 @@ import android.widget.EditText
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
-import dk.itu.moapd.scootersharing.lufr.databinding.ActivityMainBinding
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentMainBinding
 
 /**
- * Class MainAcitivity, holds the main logic and functionality of the system.
- * @property scooterName Input text for the scooter name.
- * @property scooterLocation Input text for the scooter location.
- * @property scooter scooter object.
- * @property binding viewbinding for the view.
+ * Class MainFragment, holds the logic and functionality of the main fragment.
+ * @property binding fragment binding for the view fragment.
+ * @property listView the listview for the list of scooters
  */
 class MainFragment : Fragment() {
 
@@ -57,8 +54,7 @@ class MainFragment : Fragment() {
     private lateinit var listView: android.widget.ListView
 
     /**
-     * onCreate main function that holds the functionality of the system.
-     * holds the onclick method for the startride button.
+     * Default onCreate function.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
@@ -80,18 +76,26 @@ class MainFragment : Fragment() {
 
         return binding.root
     }
-
+    /**
+     * onCreateView function which inflates the binding, and holds the functionality for the 3 buttons.
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
 
         binding.apply {
             startRideButton.setOnClickListener {
-                val intent = Intent(requireContext(), activity_start_ride::class.java)
-                requireActivity().startActivity(intent)
+                val fragment = Start_Ride_Fragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
             updateRideButton.setOnClickListener {
-                val intent = Intent(requireContext(), activity_update_ride::class.java)
-                requireActivity().startActivity(intent)
+                val fragment = Update_Ride_Fragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
             showRidesButton.setOnClickListener {
                 if (listView.visibility == View.GONE){

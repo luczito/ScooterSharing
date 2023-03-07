@@ -28,14 +28,16 @@ import java.sql.Timestamp
 
 /**
  * Scooter is a data class that holds the information for scooters in the system.
- * @property name the name of the scooter
- * @property location the location of the scooter
- * @property timestamp the time the scooter was placed at the location
+ * @property name the name of the scooter.
+ * @property location the location of the scooter.
+ * @property timestamp the time the scooter was placed at the location.
+ * @function toString() returns name, location and timestamp as a collected string.
  */
 data class Scooter(
-    var timestamp: Timestamp,
     val name: String,
-    var location: String){
+    var location: String,
+    var timestamp: Timestamp)
+    {
     override fun toString(): String {
         return "[Scooter] $name is placed at $location at $timestamp"
     }

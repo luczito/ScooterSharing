@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
 
+/**
+ * custom array adapter class. Used to create the list of scooters for the frontpage.
+ */
 class CustomArrayAdapter(context: Context, private var resource: Int, data: List<Scooter>) :
     ArrayAdapter<Scooter>(context, R.layout.rides_list, data) {
 

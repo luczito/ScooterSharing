@@ -27,11 +27,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
 /**
- * Class MainAcitivity, holds the main logic and functionality of the system.
- * @property scooterName Input text for the scooter name.
- * @property scooterLocation Input text for the scooter location.
- * @property scooter scooter object.
- * @property binding viewbinding for the view.
+ * Class MainAcitivity, refers to the main fragment.
  */
 class MainActivity : AppCompatActivity() {
 
