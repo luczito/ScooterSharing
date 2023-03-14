@@ -58,7 +58,7 @@ class Start_Ride_Fragment : Fragment() {
 
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
-    private val scooter: Scooter = Scooter(timestamp = java.sql.Timestamp(System.currentTimeMillis()), name = "",location = "")
+    private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "",location = "")
     private lateinit var binding: FragmentStartRideBinding
 
     /**
@@ -97,7 +97,7 @@ class Start_Ride_Fragment : Fragment() {
                 if (scooterName.text.isNotEmpty() && scooterLocation.text.isNotEmpty()) {
                     val name = scooterName.text.toString().trim()
                     val location = scooterLocation.text.toString().trim()
-                    val timestamp = java.sql.Timestamp(System.currentTimeMillis())
+                    val timestamp = System.currentTimeMillis()
 
                     val status = ridesDB.addScooter(name, location, timestamp)
 

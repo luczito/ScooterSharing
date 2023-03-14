@@ -35,6 +35,8 @@ import android.widget.Button
 import android.widget.EditText
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentMainBinding
 
@@ -51,7 +53,7 @@ class MainFragment : Fragment() {
     }
     private lateinit var binding: FragmentMainBinding
 
-    private lateinit var listView: android.widget.ListView
+    private lateinit var recyclerView: RecyclerView
 
     /**
      * Default onCreate function.
@@ -70,9 +72,10 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ) :View? {
         binding = FragmentMainBinding.inflate(layoutInflater, container, false)
-        listView = binding.listView
-        listView.adapter = CustomArrayAdapter(requireContext(), R.layout.rides_list, ridesDB.getRidesList())
-        listView.visibility = View.GONE
+        recyclerView = binding.recyclerView
+        recyclerView.adapter = CustomArrayAdapter(ridesDB.getRidesList())
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.visibility = View.GONE
 
         return binding.root
     }
@@ -98,12 +101,13 @@ class MainFragment : Fragment() {
                     .commit()
             }
             showRidesButton.setOnClickListener {
-                if (listView.visibility == View.GONE){
-                    listView.visibility = View.VISIBLE
+                if (recyclerView.visibility == View.GONE){
+                    recyclerView.visibility = View.VISIBLE
                 }else{
-                    listView.visibility = View.GONE
+                    recyclerView.visibility = View.GONE
                 }
             }
+
         }
     }
 }

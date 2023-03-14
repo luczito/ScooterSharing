@@ -52,7 +52,7 @@ class Update_Ride_Fragment : Fragment() {
 
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
-    private val scooter: Scooter = Scooter(timestamp = java.sql.Timestamp(System.currentTimeMillis()), name = "", location = "")
+    private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "", location = "")
     private lateinit var binding: FragmentUpdateRideBinding
 
     /**
@@ -98,7 +98,7 @@ class Update_Ride_Fragment : Fragment() {
                 if (scooterLocation.text.isNotEmpty()){
 
                     val location = scooterLocation.text.toString().trim()
-                    val timestamp = java.sql.Timestamp(System.currentTimeMillis())
+                    val timestamp = System.currentTimeMillis()
 
                     ridesDB.updateCurrentScooter(location,timestamp)
 

@@ -20,21 +20,21 @@ class RidesDB private constructor (context:Context) {
             Scooter(
                 name = "CPH001",
                 location = "ITU",
-                timestamp = java.sql.Timestamp(randomDate())
+                timestamp = randomDate()
             )
         )
         rides.add(
             Scooter(
                 name = "CPH002",
                 location = "Fields",
-                timestamp = java.sql.Timestamp(randomDate())
+                timestamp = randomDate()
             )
         )
         rides.add(
             Scooter(
                 name = "CPH003",
                 location = "Lufthavn",
-                timestamp = java.sql.Timestamp(randomDate())
+                timestamp = randomDate()
             )
         )
     }
@@ -42,8 +42,8 @@ class RidesDB private constructor (context:Context) {
     fun getRidesList():List <Scooter> {
         return rides
     }
-    //Function to add a scooter with given inputs.
-    fun addScooter(name: String, location: String, timestamp: Timestamp):String {
+    //Function to add a scooter with given inputs. does not allow for dupes.
+    fun addScooter(name: String, location: String, timestamp: Long):String {
         var returnString = ""
         var found = false
         for(s in rides) {
@@ -57,7 +57,7 @@ class RidesDB private constructor (context:Context) {
         return returnString
     }
     //updates current scooter with a new location and timestamp
-    fun updateCurrentScooter(location:String, timestamp:Timestamp) {
+    fun updateCurrentScooter(location:String, timestamp:Long) {
         getCurrentScooter().location = location
         getCurrentScooter().timestamp = timestamp
     }
@@ -70,6 +70,10 @@ class RidesDB private constructor (context:Context) {
         return getCurrentScooter().toString()
     }
 
+    fun deleteScooter(name:String):String{
+        rides.removeIf{it.name == name}
+        return "Removed scooter: $name"
+    }
     /**
      * Generate a random timestamp in the last 365 days .
      * @return A random timestamp in the last year .

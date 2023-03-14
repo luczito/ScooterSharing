@@ -24,7 +24,9 @@ SOFTWARE.
 
 package dk.itu.moapd.scootersharing.lufr
 
+import java.sql.Date
 import java.sql.Timestamp
+import java.text.SimpleDateFormat
 
 /**
  * Scooter is a data class that holds the information for scooters in the system.
@@ -36,10 +38,14 @@ import java.sql.Timestamp
 data class Scooter(
     val name: String,
     var location: String,
-    var timestamp: Timestamp)
+    var timestamp: Long)
     {
     override fun toString(): String {
-        return "[${timestamp.toString().substring(0,19)}] - Scooter: $name is placed at $location"
+        return "[${getTimestamp()}] - Scooter: $name is placed at $location"
     }
+        fun getTimestamp() : String {
+            val timestamp = SimpleDateFormat("dd/MM/yyyy hh:mm").format(Date(timestamp))
+            return timestamp
+        }
 }
 
