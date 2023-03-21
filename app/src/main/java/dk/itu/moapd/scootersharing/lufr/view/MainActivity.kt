@@ -21,10 +21,15 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package dk.itu.moapd.scootersharing.lufr
+package dk.itu.moapd.scootersharing.lufr.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.google.firebase.FirebaseApp
+import com.google.firebase.auth.FirebaseAuth
+import dk.itu.moapd.scootersharing.lufr.controller.MainFragment
+import dk.itu.moapd.scootersharing.lufr.R
+import dk.itu.moapd.scootersharing.lufr.controller.WelcomeFragment
 
 /**
  * Class MainAcitivity, refers to the main fragment.
@@ -39,8 +44,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        FirebaseApp.initializeApp(this)
+        FirebaseAuth.getInstance().setLanguageCode("en")
+
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, MainFragment())
+            .replace(R.id.fragment_container, WelcomeFragment())
             .commit()
     }
 }

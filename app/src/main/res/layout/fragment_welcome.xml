@@ -8,8 +8,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:background="@color/dark_grey"
-    tools:context=".controller.MainFragment"
-    android:id="@+id/fragment_main">
+    tools:context=".controller.WelcomeFragment"
+    android:id="@+id/fragment_welcome">
 
     <TextView
         android:layout_width="match_parent"
@@ -28,49 +28,29 @@
         android:layout_height="20dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:text="@string/start_ride_button"
+        android:text="@string/Login"
         android:textColor="@color/dark_grey"
         android:scaleX="1"
         android:layout_margin="5dp"
-        android:id="@+id/start_ride_button"
+        android:id="@+id/login_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
         android:background="@drawable/button"
-        android:drawableLeft="@drawable/baseline_start_24"
+        android:drawableLeft="@drawable/baseline_person_24"
         />
-    <Button
-        android:text="@string/update_ride_button"
+
+    <com.google.android.material.button.MaterialButton
+        android:text="@string/Sign_up"
         android:textColor="@color/dark_grey"
         android:scaleX="1"
         android:layout_margin="5dp"
-        android:id="@+id/update_ride_button"
+        android:id="@+id/signup_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
         android:background="@drawable/button"
-        android:drawableLeft="@drawable/baseline_update_24"
+        android:drawableLeft="@drawable/baseline_person_add_24"
         />
-    <Button
-        android:text="Show rides"
-        android:textColor="@color/dark_grey"
-        android:scaleX="1"
-        android:layout_margin="5dp"
-        android:id="@+id/show_rides_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="visible"
-        android:background="@drawable/button"
-        android:drawableLeft="@drawable/baseline_list_24"
-        />
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="match_parent"
-        android:layout_height="225dp"
-        android:layout_marginHorizontal="25dp"
-        android:layout_marginBottom="50dp"
-        android:layout_marginTop="15dp"
-        android:id="@+id/recycler_view"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        android:divider="@color/mid_grey"
-        />
+
 </LinearLayout>

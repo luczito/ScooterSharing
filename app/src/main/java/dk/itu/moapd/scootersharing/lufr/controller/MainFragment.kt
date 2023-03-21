@@ -21,39 +21,40 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
-package dk.itu.moapd.scootersharing.lufr
+package dk.itu.moapd.scootersharing.lufr.controller
 
-import androidx.appcompat.app.AppCompatActivity
+import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import com.google.android.material.snackbar.Snackbar
-import dk.itu.moapd.scootersharing.lufr.databinding.FragmentUpdateRideBinding
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.firebase.ui.auth.AuthUI
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.ktx.Firebase
+import dk.itu.moapd.scootersharing.lufr.R
+import dk.itu.moapd.scootersharing.lufr.RidesDB
+import dk.itu.moapd.scootersharing.lufr.databinding.FragmentMainBinding
 
 /**
- * Class Update_Ride_Fragment, holds the logic and functionality of the update page.
- * @property scooterName Input text for the scooter name.
- * @property scooterLocation Input text for the scooter location.
- * @property scooter scooter object.
+ * Class MainFragment, holds the logic and functionality of the main fragment.
  * @property binding fragment binding for the view fragment.
+ * @property listView the listview for the list of scooters
  */
-class Update_Ride_Fragment : Fragment() {
+class MainFragment : Fragment() {
 
     companion object {
-        private val TAG = Update_Ride_Fragment::class.qualifiedName
+        private val TAG = MainFragment::class.qualifiedName
         lateinit var ridesDB : RidesDB
     }
+    private lateinit var binding: FragmentMainBinding
 
-    private lateinit var scooterName: EditText
-    private lateinit var scooterLocation: EditText
-    private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "", location = "")
-    private lateinit var binding: FragmentUpdateRideBinding
+    private lateinit var recyclerView: RecyclerView
 
     /**
      * Default onCreate function.
@@ -66,56 +67,48 @@ class Update_Ride_Fragment : Fragment() {
         ridesDB = RidesDB.get(requireContext())
 
     }
-
-    /**
-     * onCreateView function which inflates the binding as well as gets the inputs from text fields.
-     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) : View? {
-        binding = FragmentUpdateRideBinding.inflate(layoutInflater, container, false)
-
-        scooterName = binding.editTextName
-        scooterLocation = binding.editTextLocation
+    ) :View? {
+        binding = FragmentMainBinding.inflate(layoutInflater, container, false)
+        recyclerView = binding.recyclerView
+        recyclerView.adapter = CustomArrayAdapter(ridesDB.getRidesList())
+        recyclerView.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView.visibility = View.GONE
 
         return binding.root
     }
-
     /**
-     * onViewCreated function, holds the logic for the "updateRideButton", as well as the snackbar notification.
+     * onCreateView function which inflates the binding, and holds the functionality for the 3 buttons.
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
 
-        val latestScooter = ridesDB.getCurrentScooter()
-
-        binding.editTextName.setText(latestScooter.name)
-
         binding.apply {
+            startRideButton.setOnClickListener {
+                val fragment = Start_Ride_Fragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
             updateRideButton.setOnClickListener {
-                if (scooterLocation.text.isNotEmpty()){
-
-                    val location = scooterLocation.text.toString().trim()
-                    val timestamp = System.currentTimeMillis()
-
-                    ridesDB.updateCurrentScooter(location,timestamp)
-
-                    Snackbar.make(
-                        binding.root,
-                        ("[$timestamp] - Scooter updated with location: '$location', and time: '$timestamp'."),
-                        Snackbar.LENGTH_LONG
-                    ).show()
-                    showMessage()
+                val fragment = Update_Ride_Fragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+            showRidesButton.setOnClickListener {
+                if (recyclerView.visibility == View.GONE){
+                    recyclerView.visibility = View.VISIBLE
+                }else{
+                    recyclerView.visibility = View.GONE
                 }
             }
+
         }
-    }
-    /**
-     * show message method which logs name and location when "updateRideButton" is clicked.
-     */
-    private fun showMessage(){
-        Log.d(TAG, scooter.toString())
     }
 }

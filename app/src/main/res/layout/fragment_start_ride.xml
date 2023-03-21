@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:background="@color/dark_grey"
-    tools:context=".Start_Ride_Fragment">
+    tools:context=".controller.Start_Ride_Fragment">
 
     <TextView
         android:layout_width="match_parent"

@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
  */
 
-package dk.itu.moapd.scootersharing.lufr
+package dk.itu.moapd.scootersharing.lufr.model
 
 import java.sql.Date
 import java.sql.Timestamp

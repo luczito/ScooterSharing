@@ -1,7 +1,7 @@
 package dk.itu.moapd.scootersharing.lufr
 
 import android.content.Context
-import java.sql.Timestamp
+import dk.itu.moapd.scootersharing.lufr.model.Scooter
 import java.util.Random
 import kotlin.collections.ArrayList
 
@@ -62,7 +62,7 @@ class RidesDB private constructor (context:Context) {
         getCurrentScooter().timestamp = timestamp
     }
     //returns the current scooter (the newest in the list)
-    fun getCurrentScooter():Scooter{
+    fun getCurrentScooter(): Scooter {
         return rides[rides.size - 1]
     }
     //returns the current scooters info
