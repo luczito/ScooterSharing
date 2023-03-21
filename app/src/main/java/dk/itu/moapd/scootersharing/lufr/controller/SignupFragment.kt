@@ -10,6 +10,8 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentSignupBinding
 
@@ -25,6 +27,7 @@ class SignupFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
         super.onCreate(savedInstanceState)
+        auth = Firebase.auth
     }
 
     override fun onCreateView(
@@ -40,15 +43,18 @@ class SignupFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //TODO setup THIS BLOCK TO CHECK EMAIL/PASSWORD AND PARSE TO FIREBASE
-
         binding.apply {
             signupButton.setOnClickListener {
-                val fragment = MainFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                var check = checkCredentials(editTextEmail.text.toString().trim(),
+                    editTextPassword.text.toString().trim(),
+                    editTextConfirmPassword.text.toString().trim()
+                )
+                if(check == "true"){
+                    createAccount(editTextEmail.text.toString().trim(), editTextPassword.text.toString().trim())
+                }else{
+                    Toast.makeText(context, check,
+                        Toast.LENGTH_SHORT).show()
+                }
             }
         }
     }
@@ -61,6 +67,9 @@ class SignupFragment : Fragment() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     val user = auth.currentUser
+                    Toast.makeText(context, "Signed up",
+                        Toast.LENGTH_SHORT).show()
+                    sendEmailVerification()
                     updateUI(user)
                 } else {
                     // If sign in fails, display a message to the user.
@@ -84,23 +93,30 @@ class SignupFragment : Fragment() {
     }
 
     private fun updateUI(user: FirebaseUser?) {
-
+        val fragment = LoginFragment()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun reload() {
 
     }
 
-    fun checkCredentials(email: String, password: String) : Boolean {
-        var check: Boolean
+    fun checkCredentials(email: String, password: String, confPassword: String) : String {
+        var check: String
         if (!email.contains('@') || !email.contains('.') || email.length < 8) {
-            check = false
+            check = "Email address not valid"
         }
         else if (password.length < 6) {
-            check = false
+            check = "Password needs to be 6 or more characters"
+        }
+        else if (password != confPassword){
+            check = "Passwords do not match"
         }
         else {
-            check = true
+            check = "true"
         }
         return check
     }

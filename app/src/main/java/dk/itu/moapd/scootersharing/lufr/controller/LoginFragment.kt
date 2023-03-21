@@ -48,18 +48,15 @@ class LoginFragment : Fragment() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
+                    Toast.makeText(context, "Successfully logged in",
+                        Toast.LENGTH_SHORT).show()
                     val user = auth.currentUser
                     sendEmailVerification()
                     updateUI(user)
-                    val fragment = MainFragment()
-                    requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(null)
-                        .commit()
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(this.requireContext(), "Authentication failed.",
+                    Toast.makeText(context, "User not found",
                         Toast.LENGTH_SHORT).show()
                     updateUI(null)
                 }
@@ -78,7 +75,11 @@ class LoginFragment : Fragment() {
     }
 
     private fun updateUI(user: FirebaseUser?) {
-
+        val fragment = MainFragment()
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun reload() {
@@ -99,24 +100,26 @@ class LoginFragment : Fragment() {
 
         binding.apply {
             loginButton.setOnClickListener {
-                if(checkCredentials(editTextEmail.text.toString().trim(), editTextPassword.text.toString().trim())){
+                var check = checkCredentials(editTextEmail.text.toString().trim(), editTextPassword.text.toString().trim())
+                if( check == "true"){
                     signIn(editTextEmail.text.toString().trim(), editTextPassword.text.toString().trim())
                 }else{
-                    //Set pop up with missing info
+                    Toast.makeText(context, check,
+                        Toast.LENGTH_SHORT).show()
                 }
             }
         }
     }
-    fun checkCredentials(email: String, password: String) : Boolean {
-        var check: Boolean
+    fun checkCredentials(email: String, password: String) : String {
+        var check: String
         if (!email.contains('@') || !email.contains('.') || email.length < 8) {
-            check = false
+            check = "Email address not valid"
         }
         else if (password.length < 6) {
-            check = false
+            check = "Incorrect password"
         }
         else {
-            check = true
+            check = "true"
         }
         return check
     }
