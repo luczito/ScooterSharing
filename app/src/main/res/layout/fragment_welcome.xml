@@ -28,29 +28,27 @@
         android:layout_height="20dp" />
 
     <com.google.android.material.button.MaterialButton
-        android:text="@string/Login"
-        android:textColor="@color/dark_grey"
-        android:scaleX="1"
-        android:layout_margin="5dp"
         android:id="@+id/login_button"
-        android:layout_width="wrap_content"
+        android:layout_width="127dp"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:layout_margin="5dp"
         android:background="@drawable/button"
         android:drawableLeft="@drawable/baseline_person_24"
-        />
+        android:scaleX="1"
+        android:text="@string/Login"
+        android:textColor="@color/dark_grey"
+        android:visibility="visible" />
 
     <com.google.android.material.button.MaterialButton
-        android:text="@string/Sign_up"
-        android:textColor="@color/dark_grey"
-        android:scaleX="1"
-        android:layout_margin="5dp"
         android:id="@+id/signup_button"
-        android:layout_width="wrap_content"
+        android:layout_width="127dp"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:layout_margin="5dp"
         android:background="@drawable/button"
         android:drawableLeft="@drawable/baseline_person_add_24"
-        />
+        android:scaleX="1"
+        android:text="@string/Sign_up"
+        android:textColor="@color/dark_grey"
+        android:visibility="visible" />
 
 </LinearLayout>

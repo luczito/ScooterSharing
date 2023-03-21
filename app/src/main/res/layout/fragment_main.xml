@@ -11,6 +11,8 @@
     tools:context=".controller.MainFragment"
     android:id="@+id/fragment_main">
 
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
