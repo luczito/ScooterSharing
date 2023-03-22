@@ -11,6 +11,31 @@
     tools:context=".controller.MainFragment"
     android:id="@+id/fragment_main">
 
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_gravity="left"
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="40dp"
+        android:drawableEnd="@drawable/baseline_logout_24"
+        android:id="@+id/logout_button"
+        />
+
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_text_user"
+        android:textColor="@color/mid_grey"
+        android:enabled="false"
+        android:color="@color/mid_grey"
+        android:clickable="false"
+        android:focusable="false"
+        />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="20dp" />
 
 
     <TextView

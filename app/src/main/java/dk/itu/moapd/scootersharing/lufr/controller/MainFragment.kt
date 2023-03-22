@@ -29,6 +29,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -36,6 +38,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
+import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.RidesDB
@@ -56,6 +59,10 @@ class MainFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
 
+    private lateinit var user: FirebaseUser
+
+    private lateinit var userTextField: EditText
+
     /**
      * Default onCreate function.
      */
@@ -65,6 +72,8 @@ class MainFragment : Fragment() {
 
         // Singleton to share an object between the app activities .
         ridesDB = RidesDB.get(requireContext())
+
+        user = Firebase.auth.currentUser!!
 
     }
     override fun onCreateView(
@@ -85,6 +94,8 @@ class MainFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
+
+        binding.editTextUser.setText("Welcome " + user.email)
 
         binding.apply {
             startRideButton.setOnClickListener {
@@ -107,6 +118,15 @@ class MainFragment : Fragment() {
                 }else{
                     recyclerView.visibility = View.GONE
                 }
+            }
+            logoutButton.setOnClickListener {
+                val fragment = WelcomeFragment()
+                Toast.makeText(context, "Successfully logged out",
+                    Toast.LENGTH_LONG).show()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
 
         }
