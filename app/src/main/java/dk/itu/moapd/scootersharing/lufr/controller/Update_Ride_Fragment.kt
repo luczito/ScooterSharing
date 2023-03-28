@@ -29,9 +29,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentUpdateRideBinding
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
@@ -109,6 +111,15 @@ class Update_Ride_Fragment : Fragment() {
                     ).show()
                     showMessage()
                 }
+            }
+            logoutButton.setOnClickListener {
+                val fragment = WelcomeFragment()
+                Toast.makeText(context, "Successfully logged out",
+                    Toast.LENGTH_LONG).show()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
         }
     }

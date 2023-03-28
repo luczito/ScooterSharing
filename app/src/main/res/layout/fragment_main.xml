@@ -6,37 +6,66 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
     android:background="@color/dark_grey"
     tools:context=".controller.MainFragment"
     android:id="@+id/fragment_main">
 
-    <com.google.android.material.button.MaterialButton
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_gravity="left"
-        android:layout_marginStart="25dp"
-        android:layout_marginBottom="40dp"
-        android:drawableEnd="@drawable/baseline_logout_24"
-        android:id="@+id/logout_button"
-        />
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logout_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableEnd="@drawable/baseline_logout_24"
+            android:layout_marginTop="16dp"
+            android:drawableTint="@color/mid_grey" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settings_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableEnd="@drawable/baseline_settings_24"
+            android:drawableTint="@color/mid_grey"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"/>
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
 
     <com.google.android.material.textfield.TextInputEditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edit_text_user"
         android:textColor="@color/mid_grey"
+        android:background="@android:color/transparent"
         android:enabled="false"
-        android:color="@color/mid_grey"
+        android:textAlignment="center"
+        android:layout_gravity="center"
         android:clickable="false"
         android:focusable="false"
         />
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
-
+        android:layout_height="50dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -52,7 +81,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="50dp" />
 
     <com.google.android.material.button.MaterialButton
         android:text="@string/start_ride_button"
@@ -63,6 +92,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
+        android:layout_gravity="center"
         android:background="@drawable/button"
         android:drawableLeft="@drawable/baseline_start_24"
         />
@@ -75,6 +105,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
+        android:layout_gravity="center"
         android:background="@drawable/button"
         android:drawableLeft="@drawable/baseline_update_24"
         />
@@ -86,6 +117,7 @@
         android:id="@+id/show_rides_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:visibility="visible"
         android:background="@drawable/button"
         android:drawableLeft="@drawable/baseline_list_24"
@@ -97,6 +129,7 @@
         android:layout_marginBottom="50dp"
         android:layout_marginTop="15dp"
         android:id="@+id/recycler_view"
+        android:layout_gravity="center"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:divider="@color/mid_grey"
         />

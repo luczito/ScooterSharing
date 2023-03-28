@@ -19,7 +19,7 @@ class SignupFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
 
     companion object {
-        private val TAG = LoginFragment::class.qualifiedName
+        private val TAG = SignupFragment::class.qualifiedName
     }
 
     private lateinit var binding: FragmentSignupBinding
@@ -67,16 +67,15 @@ class SignupFragment : Fragment() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     val user = auth.currentUser
-                    Toast.makeText(context, "Signed up",
+                    Toast.makeText(context, "Succesfully signed up",
                         Toast.LENGTH_SHORT).show()
                     sendEmailVerification()
-                    updateUI(user)
+                    updateUI(user!!)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(context, "Authentication failed.",
+                    Toast.makeText(context, "Unable to sign up",
                         Toast.LENGTH_SHORT).show()
-                    updateUI(null)
                 }
             }
         // [END create_user_with_email]
@@ -92,7 +91,7 @@ class SignupFragment : Fragment() {
         // [END send_email_verification]
     }
 
-    private fun updateUI(user: FirebaseUser?) {
+    private fun updateUI(user: FirebaseUser) {
         val fragment = LoginFragment()
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
@@ -106,7 +105,7 @@ class SignupFragment : Fragment() {
 
     fun checkCredentials(email: String, password: String, confPassword: String) : String {
         var check: String
-        if (!email.contains('@') || !email.contains('.') || email.length < 8) {
+        if (!email.contains('@') || !email.contains('.')) {
             check = "Email address not valid"
         }
         else if (password.length < 6) {

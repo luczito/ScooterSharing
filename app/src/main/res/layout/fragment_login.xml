@@ -48,6 +48,8 @@
                 android:color="@color/mid_grey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/light_grey"
+                android:inputType="textEmailAddress"
                 android:drawableLeft="@drawable/baseline_person_24"
                 android:drawableTint="@color/mid_grey" />
         </com.google.android.material.textfield.TextInputLayout>
@@ -74,6 +76,8 @@
                 android:layout_width="match_parent"
                 android:color="@color/mid_grey"
                 android:layout_height="wrap_content"
+                android:inputType="textPassword"
+                android:textColor="@color/light_grey"
                 android:drawableLeft="@drawable/baseline_key_24" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>

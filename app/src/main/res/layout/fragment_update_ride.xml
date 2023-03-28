@@ -5,9 +5,59 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:layout_gravity="center"
     android:background="@color/dark_grey"
     tools:context=".controller.Update_Ride_Fragment">
+
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logout_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableEnd="@drawable/baseline_logout_24"
+            android:layout_marginTop="16dp"
+            android:drawableTint="@color/mid_grey" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settings_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableEnd="@drawable/baseline_settings_24"
+            android:drawableTint="@color/mid_grey"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="75dp" />
+
+    <com.google.android.material.textfield.TextInputEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_text_user"
+        android:textColor="@color/mid_grey"
+        android:enabled="false"
+        android:background="@android:color/transparent"
+        android:clickable="false"
+        android:focusable="false"
+        />
 
     <TextView
         android:layout_width="match_parent"
@@ -33,24 +83,24 @@
         android:paddingHorizontal="50dp"
         android:orientation="horizontal">
 
-        <com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:color="@color/mid_grey"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:id="@+id/edit_text_name"
+            android:textColor="@color/mid_grey"
+            android:drawableLeft="@drawable/baseline_electric_scooter_24"
+            android:enabled="false"
             android:color="@color/mid_grey"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/edit_text_name"
-                android:textColor="@color/mid_grey"
-                android:drawableLeft="@drawable/baseline_electric_scooter_24"
-                android:enabled="false"
-                android:color="@color/mid_grey"
-                android:clickable="false"
-                android:focusable="false"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:clickable="false"
+            android:focusable="false"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -61,22 +111,22 @@
         android:paddingHorizontal="50dp"
         android:orientation="horizontal">
 
-        <com.google.android.material.textfield.TextInputLayout
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:color="@color/mid_grey"
+        android:textColorHint="@color/mid_grey"
+        android:hint="@string/text_location_update"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:color="@color/mid_grey"
-            android:textColorHint="@color/mid_grey"
-            android:hint="@string/text_location_update"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:color="@color/mid_grey"
-                android:id="@+id/edit_text_location"
-                android:drawableLeft="@drawable/baseline_location_on_24"
-                />
-        </com.google.android.material.textfield.TextInputLayout>
+            android:id="@+id/edit_text_location"
+            android:drawableLeft="@drawable/baseline_location_on_24"
+            />
+    </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <View
@@ -91,6 +141,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
+        android:layout_gravity="center"
+        android:background="@drawable/button"
+
         android:drawableLeft="@drawable/baseline_update_24"/>
 
 </LinearLayout>

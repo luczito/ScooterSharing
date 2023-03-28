@@ -5,9 +5,52 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
+    android:layout_gravity="center"
     android:background="@color/dark_grey"
     tools:context=".controller.Start_Ride_Fragment">
+
+    <LinearLayout
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/logout_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="start"
+            android:layout_marginStart="16dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableEnd="@drawable/baseline_logout_24"
+            android:layout_marginTop="16dp"
+            android:drawableTint="@color/mid_grey" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/settings_button"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_gravity="end"
+            android:background="?android:attr/selectableItemBackground"
+            android:drawableEnd="@drawable/baseline_settings_24"
+            android:drawableTint="@color/mid_grey"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"/>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="25dp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="75dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -88,7 +131,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
+        android:layout_gravity="center"
         android:background="@drawable/button"
         android:drawableLeft="@drawable/baseline_start_24" />
+
 
 </LinearLayout>

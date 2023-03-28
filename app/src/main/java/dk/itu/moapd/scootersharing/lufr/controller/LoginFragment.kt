@@ -52,13 +52,12 @@ class LoginFragment : Fragment() {
                         Toast.LENGTH_SHORT).show()
                     val user = auth.currentUser
                     sendEmailVerification()
-                    updateUI(user)
+                    updateUI(user!!)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "signInWithEmail:failure", task.exception)
-                    Toast.makeText(context, "User not found",
+                    Toast.makeText(context, "Wrong email or password",
                         Toast.LENGTH_SHORT).show()
-                    updateUI(null)
                 }
             }
         // [END sign_in_with_email]
@@ -74,7 +73,7 @@ class LoginFragment : Fragment() {
         // [END send_email_verification]
     }
 
-    private fun updateUI(user: FirebaseUser?) {
+    private fun updateUI(user: FirebaseUser) {
         val fragment = MainFragment()
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
