@@ -25,8 +25,7 @@
             android:layout_marginStart="16dp"
             android:background="?android:attr/selectableItemBackground"
             android:drawableEnd="@drawable/baseline_logout_24"
-            android:layout_marginTop="16dp"
-            android:drawableTint="@color/mid_grey" />
+            android:layout_marginTop="16dp"/>
 
         <View
             android:layout_width="0dp"
@@ -40,7 +39,6 @@
             android:layout_gravity="end"
             android:background="?android:attr/selectableItemBackground"
             android:drawableEnd="@drawable/baseline_settings_24"
-            android:drawableTint="@color/mid_grey"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"/>
 
@@ -54,7 +52,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/edit_text_user"
-        android:textColor="@color/mid_grey"
+        android:textColor="@color/light_grey"
         android:background="@android:color/transparent"
         android:enabled="false"
         android:textAlignment="center"
@@ -75,7 +73,6 @@
         android:scaleX="2"
         android:scaleY="2"
         android:textStyle="bold"
-        android:color="@color/light_grey"
         android:textColor="@color/mid_grey"
         app:drawableTopCompat="@drawable/baseline_electric_scooter_24" />
 

@@ -19,7 +19,6 @@
         android:scaleX="2"
         android:scaleY="2"
         android:textStyle="bold"
-        android:color="@color/light_grey"
         android:textColor="@color/mid_grey"
         app:drawableTopCompat="@drawable/baseline_electric_scooter_24" />
 
@@ -122,6 +121,4 @@
         android:background="@drawable/button"
         android:drawableLeft="@drawable/baseline_person_add_24"
         />
-
-
 </LinearLayout>

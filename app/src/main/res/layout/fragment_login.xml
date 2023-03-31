@@ -21,7 +21,7 @@
         android:textStyle="bold"
         android:color="@color/light_grey"
         android:textColor="@color/mid_grey"
-        app:drawableTopCompat="@drawable/baseline_electric_scooter_24" />
+        app:drawableTopCompat="@drawable/baseline_electric_scooter_24"/>
 
     <View
         android:layout_width="match_parent"
