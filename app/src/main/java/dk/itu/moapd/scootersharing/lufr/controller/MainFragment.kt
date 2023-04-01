@@ -53,13 +53,15 @@ class MainFragment : Fragment() {
 
     companion object {
         private val TAG = MainFragment::class.qualifiedName
-        lateinit var ridesDB : RidesDB
     }
     private lateinit var binding: FragmentMainBinding
+
+    private lateinit var ridesDB : RidesDB
 
     private lateinit var recyclerView: RecyclerView
 
     private lateinit var user: FirebaseUser
+    private lateinit var auth: FirebaseAuth
 
     private lateinit var userTextField: EditText
 
@@ -71,9 +73,10 @@ class MainFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB.get(requireContext())
+        ridesDB = RidesDB()
 
         user = Firebase.auth.currentUser!!
+        auth = Firebase.auth
 
     }
     override fun onCreateView(
@@ -121,6 +124,7 @@ class MainFragment : Fragment() {
             }
             logoutButton.setOnClickListener {
                 val fragment = WelcomeFragment()
+                auth.signOut()
                 Toast.makeText(context, "Successfully logged out",
                     Toast.LENGTH_LONG).show()
                 requireActivity().supportFragmentManager.beginTransaction()

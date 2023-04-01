@@ -17,9 +17,7 @@ import dk.itu.moapd.scootersharing.lufr.model.Scooter
 class CustomArrayAdapter(private val dataSet: List<Scooter>) :
     RecyclerView.Adapter<CustomArrayAdapter.ViewHolder>() {
 
-    companion object {
-        lateinit var ridesDB : RidesDB
-    }
+    private lateinit var ridesDB : RidesDB
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val name: TextView
@@ -43,7 +41,7 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB.get(viewHolder.itemView.context)
+        ridesDB = RidesDB()
 
         viewHolder.name.text = dataSet[position].name
         viewHolder.location.text = dataSet[position].location
@@ -52,7 +50,7 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
             AlertDialog.Builder(viewHolder.itemView.context).setTitle("Confirm")
                 .setMessage("Confirm deletion of scooter: ${dataSet[position].name}")
                 .setPositiveButton("Yes") { dialog, which ->
-                    ridesDB.deleteScooter(dataSet[position].name)
+                    ridesDB.deleteRide(dataSet[position].name)
                     notifyDataSetChanged()
                 }
                 .setNegativeButton("No", null)
@@ -61,30 +59,4 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
     }
 
     override fun getItemCount(): Int = dataSet.size
-
-    /**
-     *
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup):View {
-    var view = convertView
-    val viewHolder: ViewHolder
-
-
-    if(view==null){
-    val inflater = LayoutInflater.from(context)
-    view = inflater.inflate(resource, parent, false)
-    viewHolder = ViewHolder(view)
-
-    val scooter = getItem(position)
-    viewHolder.title.text = scooter?.name
-    viewHolder.secondaryText.text = scooter?.location
-    viewHolder.supportingText.text = scooter?.timestamp.toString().substring(0,19)
-    } else{
-    viewHolder = view.tag as ViewHolder
-    }
-
-    view?.tag=viewHolder
-    return view!!
-    }
-
-     */
 }
