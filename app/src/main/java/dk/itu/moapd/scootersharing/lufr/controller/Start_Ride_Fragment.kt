@@ -33,6 +33,9 @@ import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentStartRideBinding
@@ -49,13 +52,15 @@ class Start_Ride_Fragment : Fragment() {
 
     companion object {
         private val TAG = Start_Ride_Fragment::class.qualifiedName
-        lateinit var ridesDB : RidesDB
     }
+    private lateinit var ridesDB : RidesDB
 
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
     private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "",location = "")
     private lateinit var binding: FragmentStartRideBinding
+
+    private lateinit var auth: FirebaseAuth
 
     /**
      * Default onCreate function.
@@ -65,7 +70,9 @@ class Start_Ride_Fragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB.get(requireContext())
+        ridesDB = RidesDB(this.requireContext())
+
+        auth = Firebase.auth
     }
     /**
      * onCreateView function which inflates the binding as well as gets the inputs from text fields.
@@ -95,6 +102,7 @@ class Start_Ride_Fragment : Fragment() {
                     val location = scooterLocation.text.toString().trim()
                     val timestamp = System.currentTimeMillis()
 
+                    val fragment = MainFragment()
                     val status = ridesDB.addScooter(name, location, timestamp)
 
                     Snackbar.make(
@@ -103,12 +111,27 @@ class Start_Ride_Fragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     ).show()
                     showMessage(status)
+                    if(!status.contains("Error")) {
+                        //send user back to mainfragment screen
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .commit()
+                    }
                 }
             }
             logoutButton.setOnClickListener {
                 val fragment = WelcomeFragment()
+                auth.signOut()
                 Toast.makeText(context, "Successfully logged out",
                     Toast.LENGTH_LONG).show()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+            settingsButton.setOnClickListener{
+                val fragment = SettingsFragment()
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack(null)

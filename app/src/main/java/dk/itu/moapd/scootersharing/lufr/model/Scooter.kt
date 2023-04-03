@@ -40,10 +40,11 @@ data class Scooter(
     var location: String,
     var timestamp: Long)
     {
-    override fun toString(): String {
-        return "[${getTimestamp()}] - Scooter: $name is placed at $location"
+        constructor() : this("", "", 0L)
+        override fun toString(): String {
+        return "[${getFormatTimestamp()}] - Scooter: $name is placed at $location"
     }
-        fun getTimestamp() : String {
+        fun getFormatTimestamp() : String {
             val timestamp = SimpleDateFormat("dd/MM/yyyy hh:mm").format(Date(timestamp))
             return timestamp
         }

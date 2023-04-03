@@ -49,9 +49,15 @@ class RidesDB(context: Context) {
     }
 
     // Function to add a scooter with given inputs. does not allow for dupes.
-    fun addScooter(name: String, location: String, timestamp: Long) {
+    fun addScooter(name: String, location: String, timestamp: Long) : String {
         val scooter = Scooter(name, location, timestamp)
+        for(s in rides){
+            if (s.name == name){
+                return "Error: Scooter already exists!"
+            }
+        }
         ridesRef.child(name).setValue(scooter)
+        return "Successfully added scooter: ${scooter.name} at ${scooter.location}, at ${scooter.getFormatTimestamp()}"
     }
 
     // updates current scooter with a new location and timestamp

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
     android:background="@color/dark_grey"
-    tools:context=".controller.Start_Ride_Fragment">
+    tools:context=".controller.PaymentFragment"
+    android:id="@+id/fragment_payment">
 
     <LinearLayout
         android:layout_marginTop="50dp"
@@ -24,31 +25,32 @@
             android:layout_marginStart="16dp"
             android:background="?android:attr/selectableItemBackground"
             android:drawableEnd="@drawable/baseline_logout_24"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="16dp"/>
 
         <View
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/settings_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="end"
-            android:background="?android:attr/selectableItemBackground"
-            android:drawableEnd="@drawable/baseline_settings_24"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"/>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="25dp" />
+        android:layout_height="30dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/payment_settings"
+        android:gravity="center"
+        android:scaleX="2"
+        android:scaleY="2"
+        android:textStyle="bold"
+        android:textColor="@color/mid_grey"/>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="75dp" />
+        android:layout_height="50dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -63,7 +65,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="25dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -78,16 +80,66 @@
             android:color="@color/mid_grey"
             android:textColorHint="@color/mid_grey"
             android:layout_height="wrap_content"
-            android:hint="@string/text_name"
+            android:hint="@string/card_number"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_name"
+                android:id="@+id/edit_text_card_number"
                 android:color="@color/mid_grey"
-                android:textColor="@color/light_grey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/baseline_electric_scooter_24" />
+                android:textColor="@color/light_grey"
+                android:drawableLeft="@drawable/baseline_numbers_24"
+                android:drawableTint="@color/mid_grey" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:paddingHorizontal="50dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:color="@color/mid_grey"
+            android:textColorHint="@color/mid_grey"
+            android:layout_height="match_parent"
+            android:hint="@string/exp_date"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            >
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_exp_date"
+                android:color="@color/mid_grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/light_grey"
+                android:drawableLeft="@drawable/baseline_calendar_month_24"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:color="@color/mid_grey"
+            android:textColorHint="@color/mid_grey"
+            android:layout_height="match_parent"
+            android:hint="@string/cvc"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edit_text_cvc"
+                android:color="@color/mid_grey"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="@color/light_grey"
+                android:drawableLeft="@drawable/baseline_check_24"
+                android:drawableTint="@color/mid_grey"/>
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
@@ -101,36 +153,37 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:color="@color/mid_grey"
             android:textColorHint="@color/mid_grey"
-            android:hint="@string/text_location"
+            android:layout_height="wrap_content"
+            android:hint="@string/prompt_password"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_location"
-                android:layout_width="match_parent"
+                android:id="@+id/edit_text_password"
                 android:color="@color/mid_grey"
-                android:textColor="@color/light_grey"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/baseline_location_on_24" />
+                android:textColor="@color/light_grey"
+                android:inputType="textPassword"
+                android:drawableLeft="@drawable/baseline_key_24" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="20dp" />
+        android:layout_height="15dp" />
 
     <Button
-        android:text="@string/start_ride_button"
+        android:text="@string/apply_changes"
         android:textColor="@color/dark_grey"
         android:scaleX="1"
-        android:id="@+id/start_ride_button"
+        android:id="@+id/apply_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="visible"
         android:layout_gravity="center"
         android:background="@drawable/button"
-        android:drawableLeft="@drawable/baseline_start_24" />
+        android:drawableLeft="@drawable/baseline_check_24" />
 
 </LinearLayout>

@@ -19,7 +19,7 @@ class SignupFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
 
     companion object {
-        private val TAG = SignupFragment::class.qualifiedName
+        val TAG = SignupFragment::class.qualifiedName
     }
 
     private lateinit var binding: FragmentSignupBinding
