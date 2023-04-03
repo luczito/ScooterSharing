@@ -1,6 +1,7 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
 import android.app.AlertDialog
+import android.database.DataSetObserver
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,8 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
 
     private lateinit var ridesDB : RidesDB
 
+    private var fragment: MainFragment? = null
+
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val name: TextView
             val location: TextView
@@ -31,7 +34,12 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
                 button = view.findViewById(R.id.delete_button)
             }
         }
-
+    private val observer = object : DataSetObserver() {
+        override fun onChanged() {
+            // notify fragment that data set has changed
+            fragment?.onDataChanged()
+        }
+    }
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.rides_list, viewGroup, false)
@@ -52,11 +60,15 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
                 .setPositiveButton("Yes") { dialog, which ->
                     ridesDB.deleteScooter(dataSet[position].name)
                     notifyDataSetChanged()
+                    fragment?.onDataChanged()
                 }
                 .setNegativeButton("No", null)
                 .show()
         }
     }
-
+    // set reference to fragment
+    fun setFragment(fragment: MainFragment) {
+        this.fragment = fragment
+    }
     override fun getItemCount(): Int = dataSet.size
 }

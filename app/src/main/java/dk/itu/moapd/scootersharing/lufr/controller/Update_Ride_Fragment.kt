@@ -114,10 +114,15 @@ class Update_Ride_Fragment : Fragment() {
 
                     Snackbar.make(
                         binding.root,
-                        ("[$timestamp] - Scooter updated with location: '$location', and time: '$timestamp'."),
+                        ("[$timestamp] - Scooter updated with location: '$location', and time: '$'."),
                         Snackbar.LENGTH_LONG
                     ).show()
                     showMessage()
+                    val fragment = MainFragment()
+                    requireActivity().supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment_container, fragment)
+                        .addToBackStack(null)
+                        .commit()
                 }
             }
             logoutButton.setOnClickListener {

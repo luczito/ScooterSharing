@@ -25,6 +25,7 @@ package dk.itu.moapd.scootersharing.lufr.controller
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
+import android.database.DataSetObserver
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -74,10 +75,8 @@ class MainFragment : Fragment() {
 
         // Singleton to share an object between the app activities .
         ridesDB = RidesDB(this.requireContext())
-
-        user = Firebase.auth.currentUser!!
         auth = Firebase.auth
-
+        user = auth.currentUser!!
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -86,10 +85,12 @@ class MainFragment : Fragment() {
     ) :View? {
         binding = FragmentMainBinding.inflate(layoutInflater, container, false)
         recyclerView = binding.recyclerView
-        recyclerView.adapter = CustomArrayAdapter(ridesDB.getRidesList())
+        var adapter = CustomArrayAdapter(ridesDB.getRidesList())
+        recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.visibility = View.GONE
 
+        adapter.setFragment(this)
         return binding.root
     }
     /**
@@ -140,5 +141,8 @@ class MainFragment : Fragment() {
                     .commit()
             }
         }
+    }
+    fun onDataChanged() {
+        recyclerView.visibility = View.GONE
     }
 }

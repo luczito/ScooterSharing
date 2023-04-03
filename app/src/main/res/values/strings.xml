@@ -30,4 +30,6 @@
     <string name="card_number">Card number</string>
     <string name="cvc">CVC</string>
     <string name="exp_date">Expiration date</string>
+
+    <string name="reserve_button">Reserve scooter</string>
 </resources>

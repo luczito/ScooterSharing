@@ -57,19 +57,23 @@ class RidesDB(context: Context) {
             }
         }
         ridesRef.child(name).setValue(scooter)
+        rides.add(scooter)
         return "Successfully added scooter: ${scooter.name} at ${scooter.location}, at ${scooter.getFormatTimestamp()}"
     }
 
     // updates current scooter with a new location and timestamp
-    fun updateCurrentScooter(location: String, timestamp: Long) {
+    fun updateCurrentScooter(location: String, timestamp: Long): String {
         val currentScooter = getCurrentScooter()
-        ridesRef.child(currentScooter.name).child("location").setValue(location)
-        ridesRef.child(currentScooter.name).child("timestamp").setValue(timestamp)
+        ridesRef.child(currentScooter!!.name).child("location").setValue(location)
+        ridesRef.child(currentScooter!!.name).child("timestamp").setValue(timestamp)
+        rides[rides.size-1].location = location
+        rides[rides.size-1].timestamp = timestamp
+        return "Updated scooter: ${currentScooter.name} with location: $location, at ${rides[rides.size-1].getFormatTimestamp()}"
     }
 
-    // returns the current scooter (the newest in the list)
-    fun getCurrentScooter(): Scooter {
-        return rides.last()
+    // retrieves the last scooter from the ridesRef database reference
+    fun getCurrentScooter(): Scooter? {
+       return rides.lastOrNull()
     }
 
     // returns the current scooters info
@@ -79,6 +83,7 @@ class RidesDB(context: Context) {
 
     fun deleteScooter(name: String) {
         ridesRef.child(name).removeValue()
+        rides.removeIf{it.name == name}
     }
 
     /**
