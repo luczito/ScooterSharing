@@ -84,6 +84,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_name"
                 android:color="@color/mid_grey"
+                android:textColor="@color/light_grey"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/baseline_electric_scooter_24" />
@@ -110,6 +111,7 @@
                 android:id="@+id/edit_text_location"
                 android:layout_width="match_parent"
                 android:color="@color/mid_grey"
+                android:textColor="@color/light_grey"
                 android:layout_height="wrap_content"
                 android:drawableLeft="@drawable/baseline_location_on_24" />
         </com.google.android.material.textfield.TextInputLayout>

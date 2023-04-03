@@ -73,7 +73,7 @@ class MainFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB()
+        ridesDB = RidesDB(this.requireContext())
 
         user = Firebase.auth.currentUser!!
         auth = Firebase.auth
@@ -132,7 +132,13 @@ class MainFragment : Fragment() {
                     .addToBackStack(null)
                     .commit()
             }
-
+            settingsButton.setOnClickListener{
+                val fragment = SettingsFragment()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
         }
     }
 }

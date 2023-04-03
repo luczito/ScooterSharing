@@ -41,16 +41,16 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB()
+        ridesDB = RidesDB(viewHolder.itemView.context)
 
         viewHolder.name.text = dataSet[position].name
         viewHolder.location.text = dataSet[position].location
-        viewHolder.timestamp.text = dataSet[position].getTimestamp()
+        viewHolder.timestamp.text = dataSet[position].getFormatTimestamp()
         viewHolder.button.setOnClickListener{
             AlertDialog.Builder(viewHolder.itemView.context).setTitle("Confirm")
                 .setMessage("Confirm deletion of scooter: ${dataSet[position].name}")
                 .setPositiveButton("Yes") { dialog, which ->
-                    ridesDB.deleteRide(dataSet[position].name)
+                    ridesDB.deleteScooter(dataSet[position].name)
                     notifyDataSetChanged()
                 }
                 .setNegativeButton("No", null)

@@ -71,7 +71,7 @@ class Update_Ride_Fragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB()
+        ridesDB = RidesDB(this.requireContext())
 
         auth = Firebase.auth
 
@@ -110,7 +110,7 @@ class Update_Ride_Fragment : Fragment() {
                     val location = scooterLocation.text.toString().trim()
                     val timestamp = System.currentTimeMillis()
 
-                    ridesDB.updateCurrentScooter(latestScooter?.name.toString(),location,timestamp)
+                    ridesDB.updateCurrentScooter(location,timestamp)
 
                     Snackbar.make(
                         binding.root,
@@ -125,6 +125,13 @@ class Update_Ride_Fragment : Fragment() {
                 auth.signOut()
                 Toast.makeText(context, "Successfully logged out",
                     Toast.LENGTH_LONG).show()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+            settingsButton.setOnClickListener{
+                val fragment = SettingsFragment()
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack(null)

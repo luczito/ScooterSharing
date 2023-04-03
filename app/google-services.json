@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "260074693262",
+    "firebase_url": "https://scooter-sharing-7137f-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "scooter-sharing-7137f",
     "storage_bucket": "scooter-sharing-7137f.appspot.com"
   },
@@ -14,7 +15,39 @@
       },
       "oauth_client": [
         {
-          "client_id": "260074693262-opk8h2fkk4mv6a83s4fe1b5le16ekpul.apps.googleusercontent.com",
+          "client_id": "260074693262-b1jkmn4p7rdc6mmpvpgqp9g0nlp691mi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.itu.moapd.scootersharing.lufr",
+            "certificate_hash": "dafb6f823e2db355f2ed7bc7f8d5754db24d5f32"
+          }
+        },
+        {
+          "client_id": "260074693262-gqf4fnv3lg2sbtomba74g2bgadsc2vdg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.itu.moapd.scootersharing.lufr",
+            "certificate_hash": "b92606a9dbecf112c1be3e01718081947d3a8a16"
+          }
+        },
+        {
+          "client_id": "260074693262-o1hjlrg0a0siabs95389l23lvrajvujt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.itu.moapd.scootersharing.lufr",
+            "certificate_hash": "7490e968a3795d5911b11fdf22d46ce7866509e7"
+          }
+        },
+        {
+          "client_id": "260074693262-r644oqg2s7nqo3is636jt0jnc2alfbum.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.itu.moapd.scootersharing.lufr",
+            "certificate_hash": "52c6fe82e06630b87d72a06a6dc86176275a630c"
+          }
+        },
+        {
+          "client_id": "260074693262-nq0rselkmftnoqb7ushl5kd8ti61kr74.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
@@ -27,7 +60,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "260074693262-opk8h2fkk4mv6a83s4fe1b5le16ekpul.apps.googleusercontent.com",
+              "client_id": "260074693262-nq0rselkmftnoqb7ushl5kd8ti61kr74.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

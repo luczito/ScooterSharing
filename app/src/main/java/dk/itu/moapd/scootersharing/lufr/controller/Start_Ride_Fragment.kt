@@ -70,7 +70,7 @@ class Start_Ride_Fragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB()
+        ridesDB = RidesDB(this.requireContext())
 
         auth = Firebase.auth
     }
@@ -111,12 +111,13 @@ class Start_Ride_Fragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     ).show()
                     showMessage(status)
-
-                    //send user back to mainfragment screen
-                    requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(null)
-                        .commit()
+                    if(!status.contains("Error")) {
+                        //send user back to mainfragment screen
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .replace(R.id.fragment_container, fragment)
+                            .addToBackStack(null)
+                            .commit()
+                    }
                 }
             }
             logoutButton.setOnClickListener {
@@ -124,6 +125,13 @@ class Start_Ride_Fragment : Fragment() {
                 auth.signOut()
                 Toast.makeText(context, "Successfully logged out",
                     Toast.LENGTH_LONG).show()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.fragment_container, fragment)
+                    .addToBackStack(null)
+                    .commit()
+            }
+            settingsButton.setOnClickListener{
+                val fragment = SettingsFragment()
                 requireActivity().supportFragmentManager.beginTransaction()
                     .replace(R.id.fragment_container, fragment)
                     .addToBackStack(null)

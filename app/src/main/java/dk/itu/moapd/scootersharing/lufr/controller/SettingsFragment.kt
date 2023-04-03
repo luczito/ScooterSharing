@@ -51,9 +51,13 @@ class SettingsFragment : Fragment() {
 
         binding.apply {
             applyButton.setOnClickListener {
+                var pass = "temp"
+                if (!editTextConfirmPassword.text.isNullOrBlank()) {
+                    pass = editTextConfirmPassword.text.toString()
+                }
                 var creds = EmailAuthProvider.getCredential(
                     user.email!!,
-                    editTextConfirmPassword.text.toString()
+                    pass
                 )
                 user.reauthenticate(creds)
                     .addOnCompleteListener() { task ->

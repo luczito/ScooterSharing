@@ -1,7 +1,6 @@
 package dk.itu.moapd.scootersharing.lufr
 
 import android.content.Context
-import android.util.Log
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseReference
 
@@ -12,72 +11,76 @@ import java.util.*
  * RidesDB class. Database class for all scooters in the system.
  * Also holds all methods for scooters.
  */
-import com.google.firebase.database.*
-import kotlinx.coroutines.tasks.await
-import java.util.concurrent.CountDownLatch
+class RidesDB(context: Context) {
+    private val database: DatabaseReference = FirebaseDatabase.getInstance().reference
+    private val ridesRef: DatabaseReference = database.child("rides")
+    private val rides = ArrayList<Scooter>()
 
-class RidesDB {
+    init {
+        // add a listener to the "rides" node to keep the local list up-to-date
+        ridesRef.addChildEventListener(object : ChildEventListener {
+            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
+                val scooter = snapshot.getValue(Scooter::class.java)
+                rides.add(scooter!!)
+            }
 
-    private val databaseReference: DatabaseReference = FirebaseDatabase.getInstance().getReference("rides")
+            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
+                val updatedScooter = snapshot.getValue(Scooter::class.java)
+                val index = rides.indexOfFirst { it.name == updatedScooter!!.name }
+                if (index >= 0) {
+                    rides[index] = updatedScooter!!
+                }
+            }
 
+            override fun onChildRemoved(snapshot: DataSnapshot) {
+                val removedScooter = snapshot.getValue(Scooter::class.java)
+                rides.removeIf { it.name == removedScooter!!.name }
+            }
+
+            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
+    }
+
+    // getRidesList function, returns all scooters in the rides list.
+    fun getRidesList(): List<Scooter> {
+        return rides
+    }
+
+    // Function to add a scooter with given inputs. does not allow for dupes.
     fun addScooter(name: String, location: String, timestamp: Long) : String {
         val scooter = Scooter(name, location, timestamp)
-        databaseReference.child(name).setValue(scooter)
-        return "Succesfully added scooter: $name"
-    }
-
-    fun updateCurrentScooter(name: String, location: String, timestamp: Long) {
-        val scooter = Scooter(name, location, timestamp)
-        databaseReference.child(name).setValue(scooter)
-    }
-
-    fun deleteRide(name: String) {
-        databaseReference.child(name).removeValue()
-    }
-
-    fun getRide(scooterId: String, valueEventListener: ValueEventListener) {
-        databaseReference.child(scooterId).addListenerForSingleValueEvent(valueEventListener)
-    }
-
-    fun getRides(valueEventListener: ValueEventListener) {
-        databaseReference.addListenerForSingleValueEvent(valueEventListener)
-    }
-
-    fun getCurrentScooter(): Scooter? {
-        var latestRide: Scooter? = null
-        val latch = CountDownLatch(1)
-        databaseReference.limitToLast(1).addListenerForSingleValueEvent(object : ValueEventListener {
-            override fun onDataChange(dataSnapshot: DataSnapshot) {
-                for (rideSnapshot in dataSnapshot.children) {
-                    latestRide = rideSnapshot.getValue(Scooter::class.java)
-                }
-                latch.countDown()
-            }
-            override fun onCancelled(databaseError: DatabaseError) {
-                latch.countDown()
-            }
-        })
-        latch.await()
-        return latestRide
-    }
-
-    fun getRidesList(): List<Scooter> {
-        val ridesList = ArrayList<Scooter>()
-        getRides(object : ValueEventListener{
-        override fun onDataChange(dataSnapshot: DataSnapshot) {
-            for (rideSnapshot in dataSnapshot.children) {
-                val ride = rideSnapshot.getValue(Scooter::class.java)
-                if (ride != null) {
-                    ridesList.add(ride)
-                }
+        for(s in rides){
+            if (s.name == name){
+                return "Error: Scooter already exists!"
             }
         }
-        override fun onCancelled(databaseError: DatabaseError) {
-            Log.e("RidesDB", "Error getting rides", databaseError.toException())
-        }
-        })
-        return ridesList
+        ridesRef.child(name).setValue(scooter)
+        return "Successfully added scooter: ${scooter.name} at ${scooter.location}, at ${scooter.getFormatTimestamp()}"
     }
+
+    // updates current scooter with a new location and timestamp
+    fun updateCurrentScooter(location: String, timestamp: Long) {
+        val currentScooter = getCurrentScooter()
+        ridesRef.child(currentScooter.name).child("location").setValue(location)
+        ridesRef.child(currentScooter.name).child("timestamp").setValue(timestamp)
+    }
+
+    // returns the current scooter (the newest in the list)
+    fun getCurrentScooter(): Scooter {
+        return rides.last()
+    }
+
+    // returns the current scooters info
+    fun getCurrentScooterInfo(): String {
+        return getCurrentScooter().toString()
+    }
+
+    fun deleteScooter(name: String) {
+        ridesRef.child(name).removeValue()
+    }
+
     /**
      * Generate a random timestamp in the last 365 days .
      * @return A random timestamp in the last year .
