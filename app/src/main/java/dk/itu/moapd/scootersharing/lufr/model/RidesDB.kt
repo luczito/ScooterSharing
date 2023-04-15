@@ -3,6 +3,7 @@ package dk.itu.moapd.scootersharing.lufr
 import android.content.Context
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseReference
+import dk.itu.moapd.scootersharing.lufr.model.Card
 
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
 import java.util.*
@@ -46,6 +47,16 @@ class RidesDB(context: Context) {
     // getRidesList function, returns all scooters in the rides list.
     fun getRidesList(): List<Scooter> {
         return rides
+    }
+
+    fun getRidesAsCards() : List<Card>{
+        var card: Card
+        var cardList = ArrayList<Card>()
+        for(ride in rides){
+            card = Card(ride.name, ride.location, ride.getFormatTimestamp(), 0)
+            cardList.add(card)
+        }
+        return cardList
     }
 
     // Function to add a scooter with given inputs. does not allow for dupes.

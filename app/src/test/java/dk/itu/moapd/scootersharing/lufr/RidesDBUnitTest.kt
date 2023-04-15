@@ -1,16 +1,15 @@
 package dk.itu.moapd.scootersharing.lufr
 
-import dk.itu.moapd.scootersharing.lufr.controller.MainFragment
+import dk.itu.moapd.scootersharing.lufr.controller.MyRidesFragment
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
-import org.junit.Before
 import org.junit.Test
 
 class RidesDBUnitTest {
 
     @Test
     fun testGetRidesList() {
-        var ridesDB = MainFragment.ridesDB
+        var ridesDB = MyRidesFragment.ridesDB
 
         val ridesList = ridesDB.getRidesList()
         assertNotNull(ridesList)
@@ -19,7 +18,7 @@ class RidesDBUnitTest {
 
     @Test
     fun testAddScooter() {
-        var ridesDB = MainFragment.ridesDB
+        var ridesDB = MyRidesFragment.ridesDB
 
         val returnString = ridesDB.addScooter("CPH004", "Tivoli", 1234567890)
         assertEquals("[1234567890] - Ride on scooter: 'CPH004', started at location: 'Tivoli'.", returnString)
@@ -32,7 +31,7 @@ class RidesDBUnitTest {
 
     @Test
     fun testUpdateCurrentScooter() {
-        var ridesDB = MainFragment.ridesDB
+        var ridesDB = MyRidesFragment.ridesDB
 
         ridesDB.updateCurrentScooter("Nyhavn", 1234567890)
         val currentScooter = ridesDB.getCurrentScooter()
@@ -43,7 +42,7 @@ class RidesDBUnitTest {
 
     @Test
     fun testGetCurrentScooter() {
-        var ridesDB = MainFragment.ridesDB
+        var ridesDB = MyRidesFragment.ridesDB
 
         val currentScooter = ridesDB.getCurrentScooter()
         assertEquals("CPH003", currentScooter.name)
@@ -52,7 +51,7 @@ class RidesDBUnitTest {
 
     @Test
     fun testDeleteScooter() {
-        var ridesDB = MainFragment.ridesDB
+        var ridesDB = MyRidesFragment.ridesDB
 
         val returnString = ridesDB.deleteScooter("CPH001")
         assertEquals("Removed scooter: CPH001", returnString)

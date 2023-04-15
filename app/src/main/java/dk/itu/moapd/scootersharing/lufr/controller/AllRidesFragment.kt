@@ -10,24 +10,26 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.RidesDB
-import dk.itu.moapd.scootersharing.lufr.databinding.FragmentAvailableScootersBinding
+import dk.itu.moapd.scootersharing.lufr.databinding.FragmentAllRidesBinding
 import dk.itu.moapd.scootersharing.lufr.model.Card
 
-class AvailableScootersFragment : Fragment() {
+class AllRidesFragment : Fragment() {
     companion object {
-        private val TAG = AvailableScootersFragment::class.qualifiedName
+        private val TAG = AllRidesFragment::class.qualifiedName
     }
-    private lateinit var binding: FragmentAvailableScootersBinding
+    private lateinit var binding: FragmentAllRidesBinding
 
     private lateinit var ridesDB : RidesDB
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var bottomNav: BottomNavigationView
 
     private lateinit var user: FirebaseUser
     private lateinit var auth: FirebaseAuth
@@ -55,16 +57,12 @@ class AvailableScootersFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) : View? {
-        binding = FragmentAvailableScootersBinding.inflate(layoutInflater, container, false)
+        binding = FragmentAllRidesBinding.inflate(layoutInflater, container, false)
 
-        //val cards = listOf(
-            //Card("Title 1", "Secondary text 1", "Supporting text 1", R.drawable.media1, "Action 1"),
-            //Card("Title 2", "Secondary text 2", "Supporting text 2", R.drawable.media2, "Action 2"),
-            //Card("Title 3", "Secondary text 3", "Supporting text 3", R.drawable.media3, "Action 3")
-        //)
+        val cards = ridesDB.getRidesAsCards()
 
         val recyclerView = binding.recyclerView
-        //recyclerView.adapter = CardAdapter(cards)
+        recyclerView.adapter = CardAdapter(cards)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         return binding.root
@@ -97,5 +95,34 @@ class AvailableScootersFragment : Fragment() {
                     .commit()
             }
         }
+        bottomNav = view.findViewById(R.id.bottom_navigation) as BottomNavigationView
+        bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.start_nav_button -> {
+                    loadFragment(Start_Ride_Fragment())
+                    true
+                }
+                R.id.update_nav_button -> {
+                    loadFragment(Update_Ride_Fragment())
+                    true
+                }
+                R.id.all_rides_nav_button -> {
+                    loadFragment((AllRidesFragment()))
+                    true
+                }
+                R.id.my_rides_nav_button -> {
+                    loadFragment(MyRidesFragment())
+                    true
+                }
+                else -> false
+            }
+        }
+    }
+
+    private fun loadFragment(fragment: Fragment){
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

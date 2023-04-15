@@ -74,7 +74,7 @@ class LoginFragment : Fragment() {
     }
 
     private fun updateUI(user: FirebaseUser) {
-        val fragment = MainFragment()
+        val fragment = Start_Ride_Fragment()
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)

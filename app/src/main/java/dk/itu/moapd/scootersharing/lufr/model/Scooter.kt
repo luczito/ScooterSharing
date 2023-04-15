@@ -45,7 +45,7 @@ data class Scooter(
         return "[${getFormatTimestamp()}] - Scooter: $name is placed at $location"
     }
         fun getFormatTimestamp() : String {
-            val timestamp = SimpleDateFormat("dd/MM/yyyy hh:mm").format(Date(timestamp))
+            val timestamp = SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date(timestamp))
             return timestamp
         }
 }

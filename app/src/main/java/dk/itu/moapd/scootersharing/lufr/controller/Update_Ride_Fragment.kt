@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,12 +31,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.RidesDB
@@ -60,7 +62,7 @@ class Update_Ride_Fragment : Fragment() {
     private lateinit var scooterLocation: EditText
     private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "", location = "")
     private lateinit var binding: FragmentUpdateRideBinding
-
+    private lateinit var bottomNav: BottomNavigationView
     private lateinit var auth: FirebaseAuth
 
     /**
@@ -118,7 +120,7 @@ class Update_Ride_Fragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     ).show()
                     showMessage()
-                    val fragment = MainFragment()
+                    val fragment = MyRidesFragment()
                     requireActivity().supportFragmentManager.beginTransaction()
                         .replace(R.id.fragment_container, fragment)
                         .addToBackStack(null)
@@ -143,7 +145,37 @@ class Update_Ride_Fragment : Fragment() {
                     .commit()
             }
         }
+        bottomNav = view.findViewById(R.id.bottom_navigation) as BottomNavigationView
+        bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.start_nav_button -> {
+                    loadFragment(Start_Ride_Fragment())
+                    true
+                }
+                R.id.update_nav_button -> {
+                    loadFragment(Update_Ride_Fragment())
+                    true
+                }
+                R.id.all_rides_nav_button -> {
+                    loadFragment((AllRidesFragment()))
+                    true
+                }
+                R.id.my_rides_nav_button -> {
+                    loadFragment(MyRidesFragment())
+                    true
+                }
+                else -> false
+            }
+        }
     }
+
+    private fun loadFragment(fragment: Fragment){
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     /**
      * show message method which logs name and location when "updateRideButton" is clicked.
      */

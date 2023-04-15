@@ -143,4 +143,21 @@
         android:background="@drawable/button"
         android:drawableLeft="@drawable/baseline_update_24"/>
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+        <com.google.android.material.bottomnavigation.BottomNavigationView
+            android:id="@+id/bottom_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:menu="@menu/bottom_navigation_menu"
+            app:labelVisibilityMode="labeled"
+            android:background="@color/main_blue"
+            app:itemTextColor="@drawable/bottom_nav_color"
+            app:itemIconTint="@drawable/bottom_nav_color"
+            android:layout_gravity="bottom"
+            />
+
+    </FrameLayout>
 </LinearLayout>

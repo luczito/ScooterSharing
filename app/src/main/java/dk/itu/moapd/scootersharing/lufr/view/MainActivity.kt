@@ -27,7 +27,6 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
-import dk.itu.moapd.scootersharing.lufr.controller.MainFragment
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.WelcomeFragment
 

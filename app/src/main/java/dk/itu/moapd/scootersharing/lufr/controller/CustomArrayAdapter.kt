@@ -20,7 +20,7 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
 
     private lateinit var ridesDB : RidesDB
 
-    private var fragment: MainFragment? = null
+    private var fragment: MyRidesFragment? = null
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val name: TextView
@@ -34,16 +34,10 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
                 button = view.findViewById(R.id.delete_button)
             }
         }
-    private val observer = object : DataSetObserver() {
-        override fun onChanged() {
-            // notify fragment that data set has changed
-            fragment?.onDataChanged()
-        }
-    }
+
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(viewGroup.context)
             .inflate(R.layout.rides_list, viewGroup, false)
-
         return ViewHolder(view)
     }
 
@@ -67,7 +61,7 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
         }
     }
     // set reference to fragment
-    fun setFragment(fragment: MainFragment) {
+    fun setFragment(fragment: MyRidesFragment) {
         this.fragment = fragment
     }
     override fun getItemCount(): Int = dataSet.size

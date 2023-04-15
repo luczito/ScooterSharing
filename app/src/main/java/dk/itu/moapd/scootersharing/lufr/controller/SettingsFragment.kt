@@ -1,23 +1,23 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import com.google.firebase.auth.AuthCredential
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.ktx.oAuthCredential
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentSettingsBinding
-import dk.itu.moapd.scootersharing.lufr.databinding.FragmentWelcomeBinding
 
 class SettingsFragment : Fragment() {
     companion object {
@@ -25,6 +25,7 @@ class SettingsFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentSettingsBinding
+    private lateinit var bottomNav: BottomNavigationView
 
     private lateinit var auth: FirebaseAuth
     private lateinit var user: FirebaseUser
@@ -75,7 +76,7 @@ class SettingsFragment : Fragment() {
                                 user.updateEmail(editTextChangeEmail.text.toString())
                             }
 
-                            val fragment = MainFragment()
+                            val fragment = MyRidesFragment()
                             requireActivity().supportFragmentManager.beginTransaction()
                                 .replace(R.id.fragment_container, fragment)
                                 .addToBackStack(null)
@@ -109,5 +110,35 @@ class SettingsFragment : Fragment() {
                 }
             }
         }
+        bottomNav = view.findViewById(R.id.bottom_navigation) as BottomNavigationView
+        bottomNav.setOnItemSelectedListener {
+            when (it.itemId) {
+                R.id.start_nav_button -> {
+                    loadFragment(Start_Ride_Fragment())
+                    true
+                }
+                R.id.update_nav_button -> {
+                    loadFragment(Update_Ride_Fragment())
+                    true
+                }
+                R.id.all_rides_nav_button -> {
+                    loadFragment((AllRidesFragment()))
+                    true
+                }
+                R.id.my_rides_nav_button -> {
+                    loadFragment(MyRidesFragment())
+                    true
+                }
+                else -> false
+            }
+        }
     }
+
+    private fun loadFragment(fragment: Fragment){
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
 }
