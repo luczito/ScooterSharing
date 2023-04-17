@@ -60,6 +60,7 @@ class MyRidesFragment : Fragment() {
     private lateinit var ridesDB: RidesDB
 
     private lateinit var recyclerView: RecyclerView
+    private lateinit var adapter: CustomArrayAdapter
 
     private lateinit var user: FirebaseUser
     private lateinit var auth: FirebaseAuth
@@ -91,11 +92,8 @@ class MyRidesFragment : Fragment() {
             binding = FragmentMyRidesBinding.inflate(layoutInflater, container, false)
 
             recyclerView = binding.recyclerView
-            var adapter = CustomArrayAdapter(ridesDB.getRidesList())
-            recyclerView.adapter = adapter
-            recyclerView.layoutManager = LinearLayoutManager(requireContext())
-            onDataChanged()
-            adapter.setFragment(this)
+            adapter = CustomArrayAdapter(ridesDB.getRidesList())
+            recyclerView.setAdapter(adapter)
 
             return binding.root
         }
@@ -145,6 +143,7 @@ class MyRidesFragment : Fragment() {
                     else -> false
                 }
             }
+            bottomNav.selectedItemId = R.id.my_rides_nav_button
         }
 
         private fun loadFragment(fragment: Fragment){
@@ -153,11 +152,5 @@ class MyRidesFragment : Fragment() {
                 .addToBackStack(null)
                 .commit()
         }
-
-        fun onDataChanged() {
-            recyclerView.visibility = View.GONE
-            recyclerView.visibility = View.VISIBLE
-
-    }
 }
 

@@ -166,6 +166,7 @@ class Start_Ride_Fragment : Fragment() {
                 else -> false
             }
         }
+        bottomNav.selectedItemId = R.id.start_ride_button
     }
 
     private fun loadFragment(fragment: Fragment){

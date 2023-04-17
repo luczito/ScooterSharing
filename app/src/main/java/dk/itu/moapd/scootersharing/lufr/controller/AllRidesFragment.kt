@@ -48,9 +48,6 @@ class AllRidesFragment : Fragment() {
 
         user = Firebase.auth.currentUser!!
         auth = Firebase.auth
-
-
-
     }
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,10 +56,8 @@ class AllRidesFragment : Fragment() {
     ) : View? {
         binding = FragmentAllRidesBinding.inflate(layoutInflater, container, false)
 
-        val cards = ridesDB.getRidesAsCards()
-
-        val recyclerView = binding.recyclerView
-        recyclerView.adapter = CardAdapter(cards)
+        recyclerView = binding.recyclerView
+        recyclerView.adapter = CardAdapter(ridesDB.getRidesAsCards())
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         return binding.root
@@ -117,6 +112,7 @@ class AllRidesFragment : Fragment() {
                 else -> false
             }
         }
+        bottomNav.selectedItemId = R.id.all_rides_nav_button
     }
 
     private fun loadFragment(fragment: Fragment){

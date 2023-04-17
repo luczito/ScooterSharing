@@ -167,6 +167,7 @@ class Update_Ride_Fragment : Fragment() {
                 else -> false
             }
         }
+        bottomNav.selectedItemId = R.id.update_nav_button
     }
 
     private fun loadFragment(fragment: Fragment){

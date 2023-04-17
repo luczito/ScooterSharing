@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.RidesDB
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
+import org.w3c.dom.Text
 
 /**
  * custom array adapter class. Used to create the list of scooters for the frontpage.
@@ -20,18 +21,18 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
 
     private lateinit var ridesDB : RidesDB
 
-    private var fragment: MyRidesFragment? = null
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val name: TextView
             val location: TextView
             val timestamp: TextView
-            val button: Button
+            val price: TextView
+            val distance: TextView
             init {
                 name = view.findViewById(R.id.name)
                 location = view.findViewById(R.id.location)
                 timestamp = view.findViewById(R.id.timestamp)
-                button = view.findViewById(R.id.delete_button)
+                price = view.findViewById(R.id.price)
+                distance = view.findViewById(R.id.distance)
             }
         }
 
@@ -48,21 +49,7 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
         viewHolder.name.text = dataSet[position].name
         viewHolder.location.text = dataSet[position].location
         viewHolder.timestamp.text = dataSet[position].getFormatTimestamp()
-        viewHolder.button.setOnClickListener{
-            AlertDialog.Builder(viewHolder.itemView.context).setTitle("Confirm")
-                .setMessage("Confirm deletion of scooter: ${dataSet[position].name}")
-                .setPositiveButton("Yes") { dialog, which ->
-                    ridesDB.deleteScooter(dataSet[position].name)
-                    notifyDataSetChanged()
-                    fragment?.onDataChanged()
-                }
-                .setNegativeButton("No", null)
-                .show()
-        }
-    }
-    // set reference to fragment
-    fun setFragment(fragment: MyRidesFragment) {
-        this.fragment = fragment
+
     }
     override fun getItemCount(): Int = dataSet.size
 }
