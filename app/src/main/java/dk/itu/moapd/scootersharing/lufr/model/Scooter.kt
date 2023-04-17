@@ -38,9 +38,10 @@ import java.text.SimpleDateFormat
 data class Scooter(
     val name: String,
     var location: String,
-    var timestamp: Long)
+    var timestamp: Long,
+    var image: String)
     {
-        constructor() : this("", "", 0L)
+        constructor() : this("", "", 0L, "")
         override fun toString(): String {
         return "[${getFormatTimestamp()}] - Scooter: $name is placed at $location"
     }
@@ -48,5 +49,6 @@ data class Scooter(
             val timestamp = SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date(timestamp))
             return timestamp
         }
+
 }
 
