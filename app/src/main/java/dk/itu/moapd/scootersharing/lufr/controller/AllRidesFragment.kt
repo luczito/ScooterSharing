@@ -1,6 +1,7 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,8 +27,6 @@ class AllRidesFragment : Fragment() {
     }
     private lateinit var binding: FragmentAllRidesBinding
 
-    private lateinit var ridesDB : RidesDB
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var bottomNav: BottomNavigationView
 
@@ -44,7 +43,9 @@ class AllRidesFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB(this.requireContext())
+        RidesDB.initialize(this.requireContext()){
+            Log.d("RidesDB", "Data is fully loaded")
+        }
 
         user = Firebase.auth.currentUser!!
         auth = Firebase.auth
@@ -57,7 +58,7 @@ class AllRidesFragment : Fragment() {
         binding = FragmentAllRidesBinding.inflate(layoutInflater, container, false)
 
         recyclerView = binding.recyclerView
-        recyclerView.adapter = CardAdapter(ridesDB.getRidesAsCards())
+        recyclerView.adapter = CardAdapter(RidesDB.getRidesAsCards())
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         return binding.root
@@ -68,7 +69,7 @@ class AllRidesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
 
-        binding.editTextUser.setText("Welcome " + user.email)
+        binding.editTextUser.setText("Welcome ${user.email}")
 
         binding.apply {
 

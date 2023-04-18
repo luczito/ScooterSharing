@@ -1,6 +1,7 @@
 package dk.itu.moapd.scootersharing.lufr
 
 import android.content.Context
+import android.util.Log
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseReference
 import dk.itu.moapd.scootersharing.lufr.model.Card
@@ -12,35 +13,29 @@ import java.util.*
  * RidesDB class. Database class for all scooters in the system.
  * Also holds all methods for scooters.
  */
-class RidesDB(context: Context) {
+object RidesDB {
     private val database: DatabaseReference = FirebaseDatabase.getInstance().reference
     private val ridesRef: DatabaseReference = database.child("rides")
     private val rides = ArrayList<Scooter>()
 
-    init {
+    fun initialize(context: Context, completion: () -> Unit) {
         // add a listener to the "rides" node to keep the local list up-to-date
-        ridesRef.addChildEventListener(object : ChildEventListener {
-            override fun onChildAdded(snapshot: DataSnapshot, previousChildName: String?) {
-                val scooter = snapshot.getValue(Scooter::class.java)
-                rides.add(scooter!!)
-            }
-
-            override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
-                val updatedScooter = snapshot.getValue(Scooter::class.java)
-                val index = rides.indexOfFirst { it.name == updatedScooter!!.name }
-                if (index >= 0) {
-                    rides[index] = updatedScooter!!
+        ridesRef.addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val updatedRides = ArrayList<Scooter>()
+                for(child in snapshot.children){
+                    val scooter = child.getValue(Scooter::class.java) ?: continue
+                    updatedRides.add(scooter)
                 }
+                rides.clear()
+                rides.addAll(updatedRides)
+                completion()
             }
 
-            override fun onChildRemoved(snapshot: DataSnapshot) {
-                val removedScooter = snapshot.getValue(Scooter::class.java)
-                rides.removeIf { it.name == removedScooter!!.name }
+            override fun onCancelled(error: DatabaseError) {
+                // Handle cancelled event
+                Log.e("RidesDB", "Failed to retrieve ride IDs from database", error.toException())
             }
-
-            override fun onChildMoved(snapshot: DataSnapshot, previousChildName: String?) {}
-
-            override fun onCancelled(error: DatabaseError) {}
         })
     }
 

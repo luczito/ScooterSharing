@@ -56,7 +56,6 @@ class Update_Ride_Fragment : Fragment() {
     companion object {
         private val TAG = Update_Ride_Fragment::class.qualifiedName
     }
-    private lateinit var ridesDB : RidesDB
 
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
@@ -73,7 +72,9 @@ class Update_Ride_Fragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB(this.requireContext())
+        RidesDB.initialize(this.requireContext()){
+            Log.d("RidesDB", "Data is fully loaded")
+        }
 
         auth = Firebase.auth
 
@@ -101,7 +102,7 @@ class Update_Ride_Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
 
-        val latestScooter = ridesDB.getCurrentScooter()
+        val latestScooter = RidesDB.getCurrentScooter()
 
         binding.editTextName.setText(latestScooter?.name)
 
@@ -112,7 +113,7 @@ class Update_Ride_Fragment : Fragment() {
                     val location = scooterLocation.text.toString().trim()
                     val timestamp = System.currentTimeMillis()
 
-                    ridesDB.updateCurrentScooter(location,timestamp)
+                    RidesDB.updateCurrentScooter(location,timestamp)
 
                     Snackbar.make(
                         binding.root,

@@ -28,6 +28,7 @@ import android.os.Bundle
 import com.google.firebase.FirebaseApp
 import com.google.firebase.auth.FirebaseAuth
 import dk.itu.moapd.scootersharing.lufr.R
+import dk.itu.moapd.scootersharing.lufr.controller.MyRidesFragment
 import dk.itu.moapd.scootersharing.lufr.controller.WelcomeFragment
 
 /**
@@ -47,7 +48,7 @@ class MainActivity : AppCompatActivity() {
         FirebaseAuth.getInstance().setLanguageCode("en")
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, WelcomeFragment())
+            .replace(R.id.fragment_container, MyRidesFragment())
             .commit()
     }
 }

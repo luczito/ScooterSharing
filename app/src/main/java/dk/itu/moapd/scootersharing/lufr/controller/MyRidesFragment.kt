@@ -25,6 +25,7 @@ package dk.itu.moapd.scootersharing.lufr.controller
 
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -57,15 +58,11 @@ class MyRidesFragment : Fragment() {
 
     private lateinit var binding: FragmentMyRidesBinding
 
-    private lateinit var ridesDB: RidesDB
-
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CustomArrayAdapter
 
     private lateinit var user: FirebaseUser
     private lateinit var auth: FirebaseAuth
-
-    private lateinit var userTextField: EditText
 
     lateinit var bottomNav: BottomNavigationView
 
@@ -77,7 +74,11 @@ class MyRidesFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB(this.requireContext())
+        // Singleton to share an object between the app activities .
+        RidesDB.initialize(this.requireContext()){
+            Log.d("RidesDB", "Data is fully loaded")
+        }
+
         auth = Firebase.auth
         if (auth.currentUser != null) {
             user = auth.currentUser!!
@@ -92,8 +93,8 @@ class MyRidesFragment : Fragment() {
             binding = FragmentMyRidesBinding.inflate(layoutInflater, container, false)
 
             recyclerView = binding.recyclerView
-            adapter = CustomArrayAdapter(ridesDB.getRidesList())
-            recyclerView.setAdapter(adapter)
+            adapter = CustomArrayAdapter(RidesDB.getRidesList())
+            recyclerView.adapter = adapter
 
             return binding.root
         }
@@ -105,7 +106,7 @@ class MyRidesFragment : Fragment() {
             super.onViewCreated(view, savedInstanceState)
 
             if (auth.currentUser != null) {
-                binding.editTextUser.setText("Welcome " + user.email)
+                binding.editTextUser.setText(user.email)
             }
 
             binding.apply {

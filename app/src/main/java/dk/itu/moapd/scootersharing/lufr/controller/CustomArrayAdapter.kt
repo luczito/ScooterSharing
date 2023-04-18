@@ -19,8 +19,6 @@ import org.w3c.dom.Text
 class CustomArrayAdapter(private val dataSet: List<Scooter>) :
     RecyclerView.Adapter<CustomArrayAdapter.ViewHolder>() {
 
-    private lateinit var ridesDB : RidesDB
-
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val name: TextView
             val location: TextView
@@ -43,13 +41,11 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
-        // Singleton to share an object between the app activities .
-        ridesDB = RidesDB(viewHolder.itemView.context)
-
         viewHolder.name.text = dataSet[position].name
         viewHolder.location.text = dataSet[position].location
         viewHolder.timestamp.text = dataSet[position].getFormatTimestamp()
-
+        viewHolder.price.text = "100dkk"
+        viewHolder.distance.text = "10km"
     }
     override fun getItemCount(): Int = dataSet.size
 }

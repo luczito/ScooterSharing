@@ -57,12 +57,12 @@ class Start_Ride_Fragment : Fragment() {
         private val TAG = Start_Ride_Fragment::class.qualifiedName
     }
 
-    private lateinit var ridesDB: RidesDB
-
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
+
     private val scooter: Scooter =
         Scooter(timestamp = System.currentTimeMillis(), name = "", location = "", image = "")
+
     private lateinit var binding: FragmentStartRideBinding
 
     private lateinit var auth: FirebaseAuth
@@ -77,7 +77,10 @@ class Start_Ride_Fragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB(this.requireContext())
+        // Singleton to share an object between the app activities .
+        RidesDB.initialize(this.requireContext()){
+            Log.d("RidesDB", "Data is fully loaded")
+        }
 
         auth = Firebase.auth
     }
@@ -107,7 +110,7 @@ class Start_Ride_Fragment : Fragment() {
         binding.apply {
             startRideButton.setOnClickListener {
                 if (scooterName.text.isNotEmpty() && scooterLocation.text.isNotEmpty()) {
-                    val status = ridesDB.addScooter(
+                    val status = RidesDB.addScooter(
                         scooterName.text.toString().trim(),
                         scooterLocation.text.toString().trim(),
                         System.currentTimeMillis(),
