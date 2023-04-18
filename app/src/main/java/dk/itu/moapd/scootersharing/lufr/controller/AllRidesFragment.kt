@@ -26,9 +26,9 @@ class AllRidesFragment : Fragment() {
         private val TAG = AllRidesFragment::class.qualifiedName
     }
     private lateinit var binding: FragmentAllRidesBinding
+    private lateinit var bottomNavBar: BottomNavigationView
 
     private lateinit var recyclerView: RecyclerView
-    private lateinit var bottomNav: BottomNavigationView
 
     private lateinit var user: FirebaseUser
     private lateinit var auth: FirebaseAuth
@@ -67,6 +67,9 @@ class AllRidesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
 
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
+
         binding.apply {
 
             logoutButton.setOnClickListener {
@@ -77,28 +80,6 @@ class AllRidesFragment : Fragment() {
             }
             settingsButton.setOnClickListener{
                 loadFragment(SettingsFragment())
-            }
-        }
-        bottomNav = view.findViewById(R.id.bottom_navigation) as BottomNavigationView
-        bottomNav.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.start_nav_button -> {
-                    loadFragment(Start_Ride_Fragment())
-                    true
-                }
-                R.id.update_nav_button -> {
-                    loadFragment(Update_Ride_Fragment())
-                    true
-                }
-                R.id.all_rides_nav_button -> {
-                    loadFragment((AllRidesFragment()))
-                    true
-                }
-                R.id.my_rides_nav_button -> {
-                    loadFragment(MyRidesFragment())
-                    true
-                }
-                else -> false
             }
         }
     }

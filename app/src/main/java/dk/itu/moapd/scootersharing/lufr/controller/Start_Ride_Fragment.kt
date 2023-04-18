@@ -64,10 +64,9 @@ class Start_Ride_Fragment : Fragment() {
         Scooter(timestamp = System.currentTimeMillis(), name = "", location = "", image = "")
 
     private lateinit var binding: FragmentStartRideBinding
+    private lateinit var bottomNavBar: BottomNavigationView
 
     private lateinit var auth: FirebaseAuth
-
-    private lateinit var bottomNav: BottomNavigationView
 
     /**
      * Default onCreate function.
@@ -107,6 +106,9 @@ class Start_Ride_Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
+
         binding.apply {
             startRideButton.setOnClickListener {
                 if (scooterName.text.isNotEmpty() && scooterLocation.text.isNotEmpty()) {
@@ -138,28 +140,6 @@ class Start_Ride_Fragment : Fragment() {
             }
             settingsButton.setOnClickListener {
                 loadFragment(SettingsFragment())
-            }
-        }
-        bottomNav = view.findViewById(R.id.bottom_navigation) as BottomNavigationView
-        bottomNav.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.start_nav_button -> {
-                    loadFragment(Start_Ride_Fragment())
-                    true
-                }
-                R.id.update_nav_button -> {
-                    loadFragment(Update_Ride_Fragment())
-                    true
-                }
-                R.id.all_rides_nav_button -> {
-                    loadFragment((AllRidesFragment()))
-                    true
-                }
-                R.id.my_rides_nav_button -> {
-                    loadFragment(MyRidesFragment())
-                    true
-                }
-                else -> false
             }
         }
     }

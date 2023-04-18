@@ -25,11 +25,10 @@ package dk.itu.moapd.scootersharing.lufr.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.google.firebase.FirebaseApp
-import com.google.firebase.auth.FirebaseAuth
+import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import dk.itu.moapd.scootersharing.lufr.R
-import dk.itu.moapd.scootersharing.lufr.controller.MyRidesFragment
-import dk.itu.moapd.scootersharing.lufr.controller.WelcomeFragment
+import dk.itu.moapd.scootersharing.lufr.controller.*
 
 /**
  * Class MainAcitivity, refers to the main fragment.
@@ -44,11 +43,31 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        FirebaseApp.initializeApp(this)
-        FirebaseAuth.getInstance().setLanguageCode("en")
+        val startRideFragment=Start_Ride_Fragment()
+        val updateRideFragment=Update_Ride_Fragment()
+        val allRidesFragment=AllRidesFragment()
+        val myRidesFragment=MyRidesFragment()
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, MyRidesFragment())
-            .commit()
+        setCurrentFragment(WelcomeFragment())
+
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+        bottomNavigationView.setOnNavigationItemSelectedListener {
+            when(it.itemId){
+                R.id.start_nav_button->setCurrentFragment(startRideFragment)
+                R.id.update_nav_button->setCurrentFragment(updateRideFragment)
+                R.id.all_rides_nav_button->setCurrentFragment(allRidesFragment)
+                R.id.my_rides_nav_button->setCurrentFragment(myRidesFragment)
+            }
+            true
+        }
+
     }
+
+    private fun setCurrentFragment(fragment: Fragment)=
+        supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment_container,fragment)
+            commit()
+        }
+
 }
+

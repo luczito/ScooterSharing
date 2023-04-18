@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.ktx.Firebase
@@ -24,6 +25,7 @@ class LoginFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentLoginBinding
+    private lateinit var bottomNavBar: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
@@ -96,6 +98,9 @@ class LoginFragment : Fragment() {
     }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.GONE
 
         binding.apply {
             loginButton.setOnClickListener {

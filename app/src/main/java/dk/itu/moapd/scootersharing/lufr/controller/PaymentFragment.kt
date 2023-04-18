@@ -25,7 +25,7 @@ class PaymentFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentPaymentBinding
-    private lateinit var bottomNav: BottomNavigationView
+    private lateinit var bottomNavBar: BottomNavigationView
 
     private lateinit var auth: FirebaseAuth
     private lateinit var user: FirebaseUser
@@ -50,6 +50,9 @@ class PaymentFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
+
         binding.apply {
             applyButton.setOnClickListener {
                 var creds = EmailAuthProvider.getCredential(
@@ -68,11 +71,7 @@ class PaymentFragment : Fragment() {
 
                             //TODO ADD CARD INFO TO DB HERE
 
-                            val fragment = MyRidesFragment()
-                            requireActivity().supportFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_container, fragment)
-                                .addToBackStack(null)
-                                .commit()
+                            loadFragment(Start_Ride_Fragment())
 
                         } else {
                             // if authentication fails, notify the user
@@ -85,36 +84,10 @@ class PaymentFragment : Fragment() {
                     }
             }
             logoutButton.setOnClickListener {
-                val fragment = WelcomeFragment()
                 auth.signOut()
                 Toast.makeText(context, "Successfully logged out",
                     Toast.LENGTH_LONG).show()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
-            }
-        }
-        bottomNav = view.findViewById(R.id.bottom_navigation) as BottomNavigationView
-        bottomNav.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.start_nav_button -> {
-                    loadFragment(Start_Ride_Fragment())
-                    true
-                }
-                R.id.update_nav_button -> {
-                    loadFragment(Update_Ride_Fragment())
-                    true
-                }
-                R.id.all_rides_nav_button -> {
-                    loadFragment((AllRidesFragment()))
-                    true
-                }
-                R.id.my_rides_nav_button -> {
-                    loadFragment(MyRidesFragment())
-                    true
-                }
-                else -> false
+                loadFragment(WelcomeFragment())
             }
         }
     }
