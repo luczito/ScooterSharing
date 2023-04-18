@@ -73,21 +73,13 @@ class AllRidesFragment : Fragment() {
         binding.apply {
 
             logoutButton.setOnClickListener {
-                val fragment = WelcomeFragment()
                 auth.signOut()
                 Toast.makeText(context, "Successfully logged out",
                     Toast.LENGTH_LONG).show()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                loadFragment(WelcomeFragment())
             }
             settingsButton.setOnClickListener{
-                val fragment = SettingsFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                loadFragment(SettingsFragment())
             }
         }
         bottomNav = view.findViewById(R.id.bottom_navigation) as BottomNavigationView
@@ -112,7 +104,6 @@ class AllRidesFragment : Fragment() {
                 else -> false
             }
         }
-        bottomNav.selectedItemId = R.id.all_rides_nav_button
     }
 
     private fun loadFragment(fragment: Fragment){

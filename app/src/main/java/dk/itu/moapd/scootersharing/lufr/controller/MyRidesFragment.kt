@@ -143,7 +143,6 @@ class MyRidesFragment : Fragment() {
                     else -> false
                 }
             }
-            bottomNav.selectedItemId = R.id.my_rides_nav_button
         }
 
         private fun loadFragment(fragment: Fragment){

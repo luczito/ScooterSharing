@@ -60,7 +60,7 @@ class Update_Ride_Fragment : Fragment() {
 
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
-    private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "", location = "")
+    private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "", location = "", image = "")
     private lateinit var binding: FragmentUpdateRideBinding
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var auth: FirebaseAuth
@@ -120,29 +120,17 @@ class Update_Ride_Fragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     ).show()
                     showMessage()
-                    val fragment = MyRidesFragment()
-                    requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(null)
-                        .commit()
+                    loadFragment(MyRidesFragment())
                 }
             }
             logoutButton.setOnClickListener {
-                val fragment = WelcomeFragment()
                 auth.signOut()
                 Toast.makeText(context, "Successfully logged out",
                     Toast.LENGTH_LONG).show()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                loadFragment(WelcomeFragment())
             }
             settingsButton.setOnClickListener{
-                val fragment = SettingsFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                loadFragment(SettingsFragment())
             }
         }
         bottomNav = view.findViewById(R.id.bottom_navigation) as BottomNavigationView
@@ -167,7 +155,6 @@ class Update_Ride_Fragment : Fragment() {
                 else -> false
             }
         }
-        bottomNav.selectedItemId = R.id.update_nav_button
     }
 
     private fun loadFragment(fragment: Fragment){
