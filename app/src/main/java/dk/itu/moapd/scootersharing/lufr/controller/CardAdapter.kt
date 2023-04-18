@@ -11,6 +11,7 @@ import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.Card
 
 class CardAdapter(private val cards: List<Card>) : RecyclerView.Adapter<CardAdapter.CardViewHolder>() {
+    private var fragment: AllRidesFragment? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CardViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.available_scooters_list, parent, false)
@@ -32,11 +33,14 @@ class CardAdapter(private val cards: List<Card>) : RecyclerView.Adapter<CardAdap
         private val actionButton = itemView.findViewById<MaterialButton>(R.id.reserve_button)
 
         fun bind(card: Card) {
-            titleTextView.text = card.title
-            secondaryTextView.text = card.secondaryText
-            supportingTextView.text = card.supportingText
+            titleTextView.text = card.name
+            secondaryTextView.text = card.location
+            supportingTextView.text = card.timestamp
             mediaImageView.setImageResource(card.mediaResId)
-            actionButton.text = card.actionText
+
         }
+    }
+    fun setFragment(fragment: AllRidesFragment) {
+        this.fragment = fragment
     }
 }

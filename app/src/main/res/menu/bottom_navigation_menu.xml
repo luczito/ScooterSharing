@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/start_nav_button"
+        android:enabled="true"
+        android:icon="@drawable/baseline_start_24"
+        android:title="Start"  />
+    <item
+        android:id="@+id/update_nav_button"
+        android:enabled="true"
+        android:icon="@drawable/baseline_update_24"
+        android:title="Update"
+        />
+    <item
+        android:id="@+id/all_rides_nav_button"
+        android:enabled="true"
+        android:icon="@drawable/baseline_electric_scooter_24"
+        android:title="All rides" />
+    <item
+        android:id="@+id/my_rides_nav_button"
+        android:enabled="true"
+        android:icon="@drawable/baseline_list_24"
+        android:title="My rides" />
+</menu>

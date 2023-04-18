@@ -1,23 +1,23 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import com.google.firebase.auth.AuthCredential
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.auth.ktx.oAuthCredential
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentSettingsBinding
-import dk.itu.moapd.scootersharing.lufr.databinding.FragmentWelcomeBinding
 
 class SettingsFragment : Fragment() {
     companion object {
@@ -25,7 +25,7 @@ class SettingsFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentSettingsBinding
-
+    private lateinit var bottomNavBar: BottomNavigationView
     private lateinit var auth: FirebaseAuth
     private lateinit var user: FirebaseUser
 
@@ -48,6 +48,9 @@ class SettingsFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
 
         binding.apply {
             applyButton.setOnClickListener {
@@ -75,11 +78,7 @@ class SettingsFragment : Fragment() {
                                 user.updateEmail(editTextChangeEmail.text.toString())
                             }
 
-                            val fragment = MainFragment()
-                            requireActivity().supportFragmentManager.beginTransaction()
-                                .replace(R.id.fragment_container, fragment)
-                                .addToBackStack(null)
-                                .commit()
+                            loadFragment(MyRidesFragment())
 
                         } else {
                             // if authentication fails, notify the user
@@ -91,23 +90,23 @@ class SettingsFragment : Fragment() {
                         }
                     }
                 paymentSettingsButton.setOnClickListener {
-                    val fragment = PaymentFragment()
-                    requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(null)
-                        .commit()
+                    loadFragment(PaymentFragment())
                 }
                 logoutButton.setOnClickListener {
-                    val fragment = WelcomeFragment()
                     auth.signOut()
                     Toast.makeText(context, "Successfully logged out",
                         Toast.LENGTH_LONG).show()
-                    requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(null)
-                        .commit()
+                    loadFragment(WelcomeFragment())
                 }
             }
         }
     }
+
+    private fun loadFragment(fragment: Fragment){
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
 }

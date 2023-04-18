@@ -23,6 +23,7 @@ SOFTWARE.
  */
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,8 +31,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
@@ -53,12 +56,15 @@ class Start_Ride_Fragment : Fragment() {
     companion object {
         private val TAG = Start_Ride_Fragment::class.qualifiedName
     }
-    private lateinit var ridesDB : RidesDB
 
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
-    private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "",location = "")
+
+    private val scooter: Scooter =
+        Scooter(timestamp = System.currentTimeMillis(), name = "", location = "", image = "")
+
     private lateinit var binding: FragmentStartRideBinding
+    private lateinit var bottomNavBar: BottomNavigationView
 
     private lateinit var auth: FirebaseAuth
 
@@ -70,10 +76,14 @@ class Start_Ride_Fragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB(this.requireContext())
+        // Singleton to share an object between the app activities .
+        RidesDB.initialize(this.requireContext()){
+            Log.d("RidesDB", "Data is fully loaded")
+        }
 
         auth = Firebase.auth
     }
+
     /**
      * onCreateView function which inflates the binding as well as gets the inputs from text fields.
      */
@@ -81,7 +91,7 @@ class Start_Ride_Fragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) : View? {
+    ): View? {
         binding = FragmentStartRideBinding.inflate(layoutInflater, container, false)
 
         scooterName = binding.editTextName
@@ -89,21 +99,24 @@ class Start_Ride_Fragment : Fragment() {
 
         return binding.root
     }
+
     /**
      * onViewCreated function, holds the logic for the "startRideButton", as well as the snackbar notification.
      */
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
 
         binding.apply {
             startRideButton.setOnClickListener {
                 if (scooterName.text.isNotEmpty() && scooterLocation.text.isNotEmpty()) {
-                    val name = scooterName.text.toString().trim()
-                    val location = scooterLocation.text.toString().trim()
-                    val timestamp = System.currentTimeMillis()
-
-                    val fragment = MainFragment()
-                    val status = ridesDB.addScooter(name, location, timestamp)
+                    val status = RidesDB.addScooter(
+                        scooterName.text.toString().trim(),
+                        scooterLocation.text.toString().trim(),
+                        System.currentTimeMillis(),
+                        "")
 
                     Snackbar.make(
                         it,
@@ -111,39 +124,37 @@ class Start_Ride_Fragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     ).show()
                     showMessage(status)
-                    if(!status.contains("Error")) {
+                    if (!status.contains("Error")) {
                         //send user back to mainfragment screen
-                        requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.fragment_container, fragment)
-                            .addToBackStack(null)
-                            .commit()
+                        loadFragment(Start_Ride_Fragment())
                     }
                 }
             }
             logoutButton.setOnClickListener {
-                val fragment = WelcomeFragment()
                 auth.signOut()
-                Toast.makeText(context, "Successfully logged out",
-                    Toast.LENGTH_LONG).show()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                Toast.makeText(
+                    context, "Successfully logged out",
+                    Toast.LENGTH_LONG
+                ).show()
+                loadFragment(WelcomeFragment())
             }
-            settingsButton.setOnClickListener{
-                val fragment = SettingsFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+            settingsButton.setOnClickListener {
+                loadFragment(SettingsFragment())
             }
         }
+    }
+
+    private fun loadFragment(fragment: Fragment){
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 
     /**
      * show message method which logs name and location when "startRideButton" is clicked.
      */
-    private fun showMessage(input: String){
+    private fun showMessage(input: String) {
         Log.d(TAG, input)
     }
 }

@@ -1,6 +1,7 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,29 +11,27 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.RidesDB
-import dk.itu.moapd.scootersharing.lufr.databinding.FragmentAvailableScootersBinding
+import dk.itu.moapd.scootersharing.lufr.databinding.FragmentAllRidesBinding
 import dk.itu.moapd.scootersharing.lufr.model.Card
 
-class AvailableScootersFragment : Fragment() {
+class AllRidesFragment : Fragment() {
     companion object {
-        private val TAG = AvailableScootersFragment::class.qualifiedName
+        private val TAG = AllRidesFragment::class.qualifiedName
     }
-    private lateinit var binding: FragmentAvailableScootersBinding
-
-    private lateinit var ridesDB : RidesDB
+    private lateinit var binding: FragmentAllRidesBinding
+    private lateinit var bottomNavBar: BottomNavigationView
 
     private lateinit var recyclerView: RecyclerView
 
     private lateinit var user: FirebaseUser
     private lateinit var auth: FirebaseAuth
-
-    private lateinit var userTextField: EditText
 
     /**
      * Default onCreate function.
@@ -42,29 +41,22 @@ class AvailableScootersFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB(this.requireContext())
+        RidesDB.initialize(this.requireContext()){
+            Log.d("RidesDB", "Data is fully loaded")
+        }
 
         user = Firebase.auth.currentUser!!
         auth = Firebase.auth
-
-
-
     }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ) : View? {
-        binding = FragmentAvailableScootersBinding.inflate(layoutInflater, container, false)
+        binding = FragmentAllRidesBinding.inflate(layoutInflater, container, false)
 
-        //val cards = listOf(
-            //Card("Title 1", "Secondary text 1", "Supporting text 1", R.drawable.media1, "Action 1"),
-            //Card("Title 2", "Secondary text 2", "Supporting text 2", R.drawable.media2, "Action 2"),
-            //Card("Title 3", "Secondary text 3", "Supporting text 3", R.drawable.media3, "Action 3")
-        //)
-
-        val recyclerView = binding.recyclerView
-        //recyclerView.adapter = CardAdapter(cards)
+        recyclerView = binding.recyclerView
+        recyclerView.adapter = CardAdapter(RidesDB.getRidesAsCards())
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
         return binding.root
@@ -75,27 +67,27 @@ class AvailableScootersFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
 
-        binding.editTextUser.setText("Welcome " + user.email)
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
 
         binding.apply {
 
             logoutButton.setOnClickListener {
-                val fragment = WelcomeFragment()
                 auth.signOut()
                 Toast.makeText(context, "Successfully logged out",
                     Toast.LENGTH_LONG).show()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                loadFragment(WelcomeFragment())
             }
             settingsButton.setOnClickListener{
-                val fragment = SettingsFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                loadFragment(SettingsFragment())
             }
         }
+    }
+
+    private fun loadFragment(fragment: Fragment){
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
     }
 }

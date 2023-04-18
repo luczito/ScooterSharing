@@ -25,7 +25,6 @@ SOFTWARE.
 package dk.itu.moapd.scootersharing.lufr.model
 
 import java.sql.Date
-import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
 /**
@@ -38,15 +37,16 @@ import java.text.SimpleDateFormat
 data class Scooter(
     val name: String,
     var location: String,
-    var timestamp: Long)
+    var timestamp: Long,
+    var image: String)
     {
-        constructor() : this("", "", 0L)
+        constructor() : this("", "", 0L, "")
         override fun toString(): String {
         return "[${getFormatTimestamp()}] - Scooter: $name is placed at $location"
     }
-        fun getFormatTimestamp() : String {
-            val timestamp = SimpleDateFormat("dd/MM/yyyy hh:mm").format(Date(timestamp))
-            return timestamp
+        fun getFormatTimestamp(): String {
+            return SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date(this.timestamp))
         }
+
 }
 

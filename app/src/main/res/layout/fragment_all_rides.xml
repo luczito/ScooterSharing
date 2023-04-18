@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dark_grey"
-    tools:context=".controller.AvailableScootersFragment"
+    tools:context=".controller.AllRidesFragment"
     android:id="@+id/fragment_available_scooters">
 
     <LinearLayout
@@ -44,18 +44,10 @@
 
     </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputEditText
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/edit_text_user"
-        android:textColor="@color/light_grey"
-        android:background="@android:color/transparent"
-        android:enabled="false"
-        android:textAlignment="center"
-        android:layout_gravity="center"
-        android:clickable="false"
-        android:focusable="false"
-        />
+        android:layout_height="100dp" />
+
 
     <TextView
         android:layout_width="match_parent"
@@ -70,13 +62,36 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="50dp" />
+        android:layout_height="25dp" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <com.google.android.material.textfield.TextInputEditText
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="16dp"
-        tools:listitem="@layout/available_scooters_list" />
+        android:layout_height="wrap_content"
+        android:id="@+id/page_info_text"
+        android:textColor="@color/mid_grey"
+        android:background="@android:color/transparent"
+        android:textAlignment="center"
+        android:layout_gravity="center"
+        android:clickable="false"
+        android:focusable="false"
+        android:textStyle="bold"
+        android:text="@string/all_rides_info"
+        />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:layout_margin="30dp"
+            tools:listitem="@layout/available_scooters_list"
+            />
+
+    </RelativeLayout>
+
+
 </LinearLayout>

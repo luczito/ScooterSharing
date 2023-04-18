@@ -32,10 +32,10 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
-import com.google.firebase.database.ValueEventListener
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.RidesDB
@@ -54,13 +54,14 @@ class Update_Ride_Fragment : Fragment() {
     companion object {
         private val TAG = Update_Ride_Fragment::class.qualifiedName
     }
-    private lateinit var ridesDB : RidesDB
 
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
-    private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "", location = "")
-    private lateinit var binding: FragmentUpdateRideBinding
 
+    private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "", location = "", image = "")
+
+    private lateinit var binding: FragmentUpdateRideBinding
+    private lateinit var bottomNavBar: BottomNavigationView
     private lateinit var auth: FirebaseAuth
 
     /**
@@ -71,7 +72,9 @@ class Update_Ride_Fragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        ridesDB = RidesDB(this.requireContext())
+        RidesDB.initialize(this.requireContext()){
+            Log.d("RidesDB", "Data is fully loaded")
+        }
 
         auth = Firebase.auth
 
@@ -99,7 +102,10 @@ class Update_Ride_Fragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
 
-        val latestScooter = ridesDB.getCurrentScooter()
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
+
+        val latestScooter = RidesDB.getCurrentScooter()
 
         binding.editTextName.setText(latestScooter?.name)
 
@@ -110,7 +116,7 @@ class Update_Ride_Fragment : Fragment() {
                     val location = scooterLocation.text.toString().trim()
                     val timestamp = System.currentTimeMillis()
 
-                    ridesDB.updateCurrentScooter(location,timestamp)
+                    RidesDB.updateCurrentScooter(location,timestamp)
 
                     Snackbar.make(
                         binding.root,
@@ -118,32 +124,28 @@ class Update_Ride_Fragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     ).show()
                     showMessage()
-                    val fragment = MainFragment()
-                    requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.fragment_container, fragment)
-                        .addToBackStack(null)
-                        .commit()
+                    loadFragment(MyRidesFragment())
                 }
             }
             logoutButton.setOnClickListener {
-                val fragment = WelcomeFragment()
                 auth.signOut()
                 Toast.makeText(context, "Successfully logged out",
                     Toast.LENGTH_LONG).show()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                loadFragment(WelcomeFragment())
             }
             settingsButton.setOnClickListener{
-                val fragment = SettingsFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                loadFragment(SettingsFragment())
             }
         }
     }
+
+    private fun loadFragment(fragment: Fragment){
+        requireActivity().supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, fragment)
+            .addToBackStack(null)
+            .commit()
+    }
+
     /**
      * show message method which logs name and location when "updateRideButton" is clicked.
      */
