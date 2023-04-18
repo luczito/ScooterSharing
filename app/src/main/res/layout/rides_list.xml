@@ -3,13 +3,14 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:gravity="center_vertical"
-    android:background="@color/dark_grey" >
+    android:background="@drawable/outline" >
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:src="@drawable/baseline_electric_scooter_24"
         android:scaleType="centerInside"
+        android:tint="@color/light_grey"
         android:scaleX="2"
         android:scaleY="2"
         android:paddingLeft="20dp"/>
@@ -26,8 +27,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Cph001"
-            android:textColor="@color/mid_grey"
-            android:textSize="18sp"
+            android:textColor="@color/light_grey"
+            android:textSize="22sp"
             android:gravity="center"
             android:textStyle="bold" />
 
@@ -36,7 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="01/01/2023 - 10:10"
-            android:textColor="@color/mid_grey"
+            android:textColor="@color/light_grey"
             android:textSize="15sp"
             android:gravity="center" />
 
@@ -47,7 +48,7 @@
             android:text="ITU"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:textColor="@color/mid_grey"
+            android:textColor="@color/light_grey"
             android:paddingLeft="25dp"/>
 
         <LinearLayout
@@ -63,13 +64,14 @@
                 android:layout_height="wrap_content"
                 android:text="100dkk"
                 android:textSize="20sp"
-                android:textColor="@color/mid_grey"
+                android:textColor="@color/light_grey"
                 android:paddingHorizontal="20dp" />
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:src="@drawable/baseline_arrow_right_alt_24"
+                android:tint="@color/light_grey"
                 android:scaleType="centerInside" />
 
             <TextView
@@ -77,7 +79,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/mid_grey"
+                android:textColor="@color/light_grey"
                 android:text="8.1km"
                 android:paddingHorizontal="20dp"
                 android:textSize="16sp" />

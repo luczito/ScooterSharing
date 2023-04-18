@@ -105,10 +105,6 @@ class MyRidesFragment : Fragment() {
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
             super.onViewCreated(view, savedInstanceState)
 
-            if (auth.currentUser != null) {
-                binding.editTextUser.setText(user.email)
-            }
-
             binding.apply {
                 logoutButton.setOnClickListener {
                     auth.signOut()

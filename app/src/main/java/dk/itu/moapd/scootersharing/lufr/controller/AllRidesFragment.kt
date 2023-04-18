@@ -33,8 +33,6 @@ class AllRidesFragment : Fragment() {
     private lateinit var user: FirebaseUser
     private lateinit var auth: FirebaseAuth
 
-    private lateinit var userTextField: EditText
-
     /**
      * Default onCreate function.
      */
@@ -68,8 +66,6 @@ class AllRidesFragment : Fragment() {
      */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?){
         super.onViewCreated(view, savedInstanceState)
-
-        binding.editTextUser.setText("Welcome ${user.email}")
 
         binding.apply {
 
