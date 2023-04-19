@@ -97,7 +97,7 @@ class SignupFragment : Fragment() {
     }
 
     private fun updateUI(user: FirebaseUser) {
-        val fragment = LoginFragment()
+        val fragment = WelcomeFragment()
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)

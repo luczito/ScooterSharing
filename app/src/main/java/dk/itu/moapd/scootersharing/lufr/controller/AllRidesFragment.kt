@@ -81,6 +81,12 @@ class AllRidesFragment : Fragment() {
             settingsButton.setOnClickListener{
                 loadFragment(SettingsFragment())
             }
+            allRidesButton.setOnClickListener{
+                loadFragment(AllRidesFragment())
+            }
+            myRidesButton.setOnClickListener{
+                loadFragment(MyRidesFragment())
+            }
         }
     }
 

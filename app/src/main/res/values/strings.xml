@@ -35,4 +35,7 @@
 
     <string name="my_rides_info">Previous rides</string>
     <string name="all_rides_info">Available rides</string>
+
+    <string name="my_rides_button">My rides</string>
+    <string name="all_rides_button">All rides</string>
 </resources>
