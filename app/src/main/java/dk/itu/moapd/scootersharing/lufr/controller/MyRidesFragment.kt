@@ -23,18 +23,14 @@ SOFTWARE.
  */
 package dk.itu.moapd.scootersharing.lufr.controller
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
@@ -42,7 +38,7 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
-import dk.itu.moapd.scootersharing.lufr.RidesDB
+import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentMyRidesBinding
 
 /**
@@ -74,7 +70,7 @@ class MyRidesFragment : Fragment() {
 
         // Singleton to share an object between the app activities .
         // Singleton to share an object between the app activities .
-        RidesDB.initialize(this.requireContext()){
+        RidesDB.initialize {
             Log.d("RidesDB", "Data is fully loaded")
         }
 

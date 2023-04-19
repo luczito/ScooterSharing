@@ -1,13 +1,11 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -41,7 +39,7 @@ class PaymentFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentPaymentBinding.inflate(layoutInflater, container, false)
 
         return binding.root
@@ -55,23 +53,23 @@ class PaymentFragment : Fragment() {
 
         binding.apply {
             applyButton.setOnClickListener {
-                var creds = EmailAuthProvider.getCredential(
+                val credentials = EmailAuthProvider.getCredential(
                     user.email!!,
                     editTextPassword.text.toString()
                 )
-                user.reauthenticate(creds)
-                    .addOnCompleteListener() { task ->
+                user.reauthenticate(credentials)
+                    .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             //authentication successful, update password
                             Log.d(SignupFragment.TAG, "updateInformation:success")
                             Toast.makeText(
-                                context, "Sucessfully updated information",
+                                context, "Successfully updated information",
                                 Toast.LENGTH_SHORT
                             ).show()
 
                             //TODO ADD CARD INFO TO DB HERE
 
-                            loadFragment(Start_Ride_Fragment())
+                            loadFragment(StartRideFragment())
 
                         } else {
                             // if authentication fails, notify the user

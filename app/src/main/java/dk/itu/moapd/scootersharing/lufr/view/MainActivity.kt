@@ -43,10 +43,10 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val startRideFragment=Start_Ride_Fragment()
-        val updateRideFragment=Update_Ride_Fragment()
+        val startRideFragment=StartRideFragment()
+        val updateRideFragment=UpdateRideFragment()
         val mapsFragment=MapsFragment()
-        val myRidesFragment=MyRidesFragment()
+        val allRidesFragment=AllRidesFragment()
 
         setCurrentFragment(WelcomeFragment())
 
@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.map_nav_button->setCurrentFragment(mapsFragment)
                 R.id.start_nav_button->setCurrentFragment(startRideFragment)
                 R.id.update_nav_button->setCurrentFragment(updateRideFragment)
-                R.id.rides_nav_button->setCurrentFragment(myRidesFragment)
+                R.id.rides_nav_button->setCurrentFragment(allRidesFragment)
             }
             true
         }

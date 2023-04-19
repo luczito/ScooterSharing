@@ -23,7 +23,6 @@ SOFTWARE.
  */
 package dk.itu.moapd.scootersharing.lufr.controller
 
-import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -31,7 +30,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -40,28 +38,28 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
-import dk.itu.moapd.scootersharing.lufr.RidesDB
+import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentStartRideBinding
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
 
 /**
- * Class Start_Ride_Fragment, holds the logic and functionality of the Start_Ride_Fragment.
+ * Class StartRideFragment, holds the logic and functionality of the StartRideFragment.
  * @property scooterName Input text for the scooter name.
  * @property scooterLocation Input text for the scooter location.
  * @property scooter scooter object.
  * @property binding Fragment binding for the view fragment.
  */
-class Start_Ride_Fragment : Fragment() {
+class StartRideFragment : Fragment() {
 
     companion object {
-        private val TAG = Start_Ride_Fragment::class.qualifiedName
+        private val TAG = StartRideFragment::class.qualifiedName
     }
 
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
 
     private val scooter: Scooter =
-        Scooter(timestamp = System.currentTimeMillis(), name = "", location = "", image = "")
+        Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0F, long = 0.0F, image = "")
 
     private lateinit var binding: FragmentStartRideBinding
     private lateinit var bottomNavBar: BottomNavigationView
@@ -77,7 +75,7 @@ class Start_Ride_Fragment : Fragment() {
 
         // Singleton to share an object between the app activities .
         // Singleton to share an object between the app activities .
-        RidesDB.initialize(this.requireContext()){
+        RidesDB.initialize {
             Log.d("RidesDB", "Data is fully loaded")
         }
 
@@ -91,7 +89,7 @@ class Start_Ride_Fragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentStartRideBinding.inflate(layoutInflater, container, false)
 
         scooterName = binding.editTextName
@@ -116,7 +114,7 @@ class Start_Ride_Fragment : Fragment() {
                         scooterName.text.toString().trim(),
                         scooterLocation.text.toString().trim(),
                         System.currentTimeMillis(),
-                        "")
+                        0.0F, 0.0F, "")
 
                     Snackbar.make(
                         it,
@@ -126,7 +124,7 @@ class Start_Ride_Fragment : Fragment() {
                     showMessage(status)
                     if (!status.contains("Error")) {
                         //send user back to mainfragment screen
-                        loadFragment(Start_Ride_Fragment())
+                        loadFragment(StartRideFragment())
                     }
                 }
             }

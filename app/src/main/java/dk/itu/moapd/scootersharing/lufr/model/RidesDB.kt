@@ -1,12 +1,9 @@
-package dk.itu.moapd.scootersharing.lufr
+package dk.itu.moapd.scootersharing.lufr.model
 
-import android.content.Context
 import android.util.Log
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseReference
-import dk.itu.moapd.scootersharing.lufr.model.Card
 
-import dk.itu.moapd.scootersharing.lufr.model.Scooter
 import java.util.*
 
 /**
@@ -18,7 +15,7 @@ object RidesDB {
     private val ridesRef: DatabaseReference = database.child("rides")
     private val rides = ArrayList<Scooter>()
 
-    fun initialize(context: Context, completion: () -> Unit) {
+    fun initialize(completion: () -> Unit) {
         // add a listener to the "rides" node to keep the local list up-to-date
         ridesRef.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -46,7 +43,7 @@ object RidesDB {
 
     fun getRidesAsCards() : List<Card>{
         var card: Card
-        var cardList = ArrayList<Card>()
+        val cardList = ArrayList<Card>()
         for(ride in rides){
             card = Card(ride.name, ride.location, ride.getFormatTimestamp(), 0)
             cardList.add(card)
@@ -55,8 +52,8 @@ object RidesDB {
     }
 
     // Function to add a scooter with given inputs. does not allow for dupes.
-    fun addScooter(name: String, location: String, timestamp: Long, image: String) : String {
-        val scooter = Scooter(name, location, timestamp, image)
+    fun addScooter(name: String, location: String, timestamp: Long, lat: Float, long: Float, image: String) : String {
+        val scooter = Scooter(name, location, timestamp, lat, long, image)
         for(s in rides){
             if (s.name == name){
                 return "Error: Scooter already exists!"
@@ -71,7 +68,7 @@ object RidesDB {
     fun updateCurrentScooter(location: String, timestamp: Long): String {
         val currentScooter = getCurrentScooter()
         ridesRef.child(currentScooter!!.name).child("location").setValue(location)
-        ridesRef.child(currentScooter!!.name).child("timestamp").setValue(timestamp)
+        ridesRef.child(currentScooter.name).child("timestamp").setValue(timestamp)
         rides[rides.size-1].location = location
         rides[rides.size-1].timestamp = timestamp
         return "Updated scooter: ${currentScooter.name} with location: $location, at ${rides[rides.size-1].getFormatTimestamp()}"
@@ -90,16 +87,5 @@ object RidesDB {
     fun deleteScooter(name: String) {
         ridesRef.child(name).removeValue()
         rides.removeIf{it.name == name}
-    }
-
-    /**
-     * Generate a random timestamp in the last 365 days .
-     * @return A random timestamp in the last year .
-     */
-    private fun randomDate(): Long {
-        val random = Random()
-        val now = System.currentTimeMillis()
-        val year = random.nextDouble() * 1000 * 60 * 60 * 24 * 365
-        return (now - year).toLong()
     }
 }

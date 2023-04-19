@@ -1,17 +1,12 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
-import android.app.AlertDialog
-import android.database.DataSetObserver
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import dk.itu.moapd.scootersharing.lufr.R
-import dk.itu.moapd.scootersharing.lufr.RidesDB
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
-import org.w3c.dom.Text
 
 /**
  * custom array adapter class. Used to create the list of scooters for the frontpage.
