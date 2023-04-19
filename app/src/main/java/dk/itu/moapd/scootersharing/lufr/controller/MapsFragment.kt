@@ -23,13 +23,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import dk.itu.moapd.scootersharing.lufr.BuildConfig
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
 
-class MapsFragment : Fragment() {
+class MapsFragment : Fragment(), OnMapReadyCallback  {
 
     val options = GoogleMapOptions()
     private lateinit var bottomNavBar: BottomNavigationView
@@ -49,19 +47,14 @@ class MapsFragment : Fragment() {
     private var cameraPosition = "camera position"
     private val location = "location"
 
-    private val callback = OnMapReadyCallback { googleMap ->
-        /**
-         * Manipulates the map once available.
-         * This callback is triggered when the map is ready to be used.
-         * This is where we can add markers or lines, add listeners or move the camera.
-         * If Google Play services is not installed on the device, the user will be prompted to
-         * install it inside the SupportMapFragment. This method will only be triggered once the
-         * user has installed Google Play services and returned to the app.
-         */
-        val itu = LatLng (55.6596, 12.5910)
-        googleMap.addMarker(MarkerOptions().position(itu).title("IT University of Copenhagen"))
-        onMapReady(googleMap)
-    }
+//    override fun onCreateView(
+//        inflater: LayoutInflater,
+//        container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View? {
+//        return inflater.inflate(R.layout.fragment_maps, container, false)
+//    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -72,18 +65,17 @@ class MapsFragment : Fragment() {
 
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+
+        val view = inflater.inflate(R.layout.fragment_maps, container, false)
 
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(this.callback)
-    }
+        mapFragment?.getMapAsync(this)
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_maps, container, false)
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -92,10 +84,8 @@ class MapsFragment : Fragment() {
         bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavBar.visibility = View.VISIBLE
 
-        getLocationPermission()
-
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-        mapFragment?.getMapAsync(callback)
+        mapFragment?.getMapAsync(this)
     }
 
     private fun getLocationPermission() {
@@ -117,18 +107,19 @@ class MapsFragment : Fragment() {
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
 
-    private fun onMapReady(googleMap: GoogleMap) {
+    override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
         if (checkPermission()) {
             return
         } else {
             // Show the current device's location as a blue dot.
             googleMap.isMyLocationEnabled = true
-            val location = LatLng(googleMap.myLocation.latitude, googleMap.myLocation.longitude)
-            googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(location, defaultZoom))
             // Set the default map type.
             googleMap.mapType = GoogleMap.MAP_TYPE_HYBRID
         }
+        getLocationPermission()
+        updateLocationUI()
+        getDeviceLocation()
     }
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(requestCode: Int,

@@ -84,7 +84,7 @@ class MyRidesFragment : Fragment() {
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
-        ): View? {
+        ): View {
             binding = FragmentMyRidesBinding.inflate(layoutInflater, container, false)
 
             recyclerView = binding.recyclerView
