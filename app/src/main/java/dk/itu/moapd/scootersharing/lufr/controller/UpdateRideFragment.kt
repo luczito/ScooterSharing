@@ -38,27 +38,27 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
-import dk.itu.moapd.scootersharing.lufr.RidesDB
+import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentUpdateRideBinding
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
 
 /**
- * Class Update_Ride_Fragment, holds the logic and functionality of the update page.
+ * Class UpdateRideFragment, holds the logic and functionality of the update page.
  * @property scooterName Input text for the scooter name.
  * @property scooterLocation Input text for the scooter location.
  * @property scooter scooter object.
  * @property binding fragment binding for the view fragment.
  */
-class Update_Ride_Fragment : Fragment() {
+class UpdateRideFragment : Fragment() {
 
     companion object {
-        private val TAG = Update_Ride_Fragment::class.qualifiedName
+        private val TAG = UpdateRideFragment::class.qualifiedName
     }
 
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
 
-    private val scooter: Scooter = Scooter(timestamp = System.currentTimeMillis(), name = "", location = "", image = "")
+    private val scooter: Scooter = Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0F, long = 0.0F, image = "")
 
     private lateinit var binding: FragmentUpdateRideBinding
     private lateinit var bottomNavBar: BottomNavigationView
@@ -72,7 +72,7 @@ class Update_Ride_Fragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        RidesDB.initialize(this.requireContext()){
+        RidesDB.initialize {
             Log.d("RidesDB", "Data is fully loaded")
         }
 
@@ -87,7 +87,7 @@ class Update_Ride_Fragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) : View? {
+    ) : View {
         binding = FragmentUpdateRideBinding.inflate(layoutInflater, container, false)
 
         scooterName = binding.editTextName

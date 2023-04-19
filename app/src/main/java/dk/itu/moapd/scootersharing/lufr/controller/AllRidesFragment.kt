@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
@@ -17,9 +16,8 @@ import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
-import dk.itu.moapd.scootersharing.lufr.RidesDB
+import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentAllRidesBinding
-import dk.itu.moapd.scootersharing.lufr.model.Card
 
 class AllRidesFragment : Fragment() {
     companion object {
@@ -41,7 +39,7 @@ class AllRidesFragment : Fragment() {
         super.onCreate(savedInstanceState)
 
         // Singleton to share an object between the app activities .
-        RidesDB.initialize(this.requireContext()){
+        RidesDB.initialize {
             Log.d("RidesDB", "Data is fully loaded")
         }
 
@@ -80,6 +78,12 @@ class AllRidesFragment : Fragment() {
             }
             settingsButton.setOnClickListener{
                 loadFragment(SettingsFragment())
+            }
+            allRidesButton.setOnClickListener{
+                loadFragment(AllRidesFragment())
+            }
+            myRidesButton.setOnClickListener{
+                loadFragment(MyRidesFragment())
             }
         }
     }

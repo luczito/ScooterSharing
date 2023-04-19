@@ -43,20 +43,20 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val startRideFragment=Start_Ride_Fragment()
-        val updateRideFragment=Update_Ride_Fragment()
+        val startRideFragment=StartRideFragment()
+        val updateRideFragment=UpdateRideFragment()
+        val mapsFragment=MapsFragment()
         val allRidesFragment=AllRidesFragment()
-        val myRidesFragment=MyRidesFragment()
 
         setCurrentFragment(WelcomeFragment())
 
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
+                R.id.map_nav_button->setCurrentFragment(mapsFragment)
                 R.id.start_nav_button->setCurrentFragment(startRideFragment)
                 R.id.update_nav_button->setCurrentFragment(updateRideFragment)
-                R.id.all_rides_nav_button->setCurrentFragment(allRidesFragment)
-                R.id.my_rides_nav_button->setCurrentFragment(myRidesFragment)
+                R.id.rides_nav_button->setCurrentFragment(allRidesFragment)
             }
             true
         }
