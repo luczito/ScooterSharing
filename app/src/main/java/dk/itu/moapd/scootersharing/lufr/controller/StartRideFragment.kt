@@ -59,7 +59,7 @@ class StartRideFragment : Fragment() {
     private lateinit var scooterLocation: EditText
 
     private val scooter: Scooter =
-        Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0F, long = 0.0F, image = "")
+        Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "")
 
     private lateinit var binding: FragmentStartRideBinding
     private lateinit var bottomNavBar: BottomNavigationView
@@ -114,7 +114,7 @@ class StartRideFragment : Fragment() {
                         scooterName.text.toString().trim(),
                         scooterLocation.text.toString().trim(),
                         System.currentTimeMillis(),
-                        0.0F, 0.0F, "")
+                        0.0, 0.0, "")
 
                     Snackbar.make(
                         it,

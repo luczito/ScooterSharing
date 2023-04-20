@@ -52,7 +52,7 @@ object RidesDB {
     }
 
     // Function to add a scooter with given inputs. does not allow for dupes.
-    fun addScooter(name: String, location: String, timestamp: Long, lat: Float, long: Float, image: String) : String {
+    fun addScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double, image: String) : String {
         val scooter = Scooter(name, location, timestamp, lat, long, image)
         for(s in rides){
             if (s.name == name){

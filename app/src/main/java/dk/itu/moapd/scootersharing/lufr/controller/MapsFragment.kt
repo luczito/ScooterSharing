@@ -23,9 +23,11 @@ import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
+import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 
 class MapsFragment : Fragment(), OnMapReadyCallback  {
 
@@ -63,8 +65,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback  {
             defaultCameraPosition = savedInstanceState.getParcelable(cameraPosition)
         }
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        RidesDB.initialize {
+            Log.d("RidesDB", "Data is fully loaded")
+        }
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -110,6 +115,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback  {
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
         if (checkPermission()) {
+            getLocationPermission()
             return
         } else {
             // Show the current device's location as a blue dot.
@@ -120,6 +126,13 @@ class MapsFragment : Fragment(), OnMapReadyCallback  {
         getLocationPermission()
         updateLocationUI()
         getDeviceLocation()
+        for(ride in RidesDB.getRidesList()) {
+            googleMap.addMarker(
+                MarkerOptions()
+                    .position(LatLng(ride.lat, ride.long))
+                    .title(ride.name)
+            )
+        }
     }
     @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(requestCode: Int,
