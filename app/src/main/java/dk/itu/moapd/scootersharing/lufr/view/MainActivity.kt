@@ -25,6 +25,7 @@ package dk.itu.moapd.scootersharing.lufr.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dk.itu.moapd.scootersharing.lufr.R
