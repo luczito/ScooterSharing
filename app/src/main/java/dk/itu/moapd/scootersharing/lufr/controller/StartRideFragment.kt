@@ -23,6 +23,9 @@ SOFTWARE.
  */
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,8 +33,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -57,6 +63,8 @@ class StartRideFragment : Fragment() {
 
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
+
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val scooter: Scooter =
         Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "")
@@ -92,6 +100,8 @@ class StartRideFragment : Fragment() {
     ): View {
         binding = FragmentStartRideBinding.inflate(layoutInflater, container, false)
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         scooterName = binding.editTextName
         scooterLocation = binding.editTextLocation
 
@@ -114,7 +124,9 @@ class StartRideFragment : Fragment() {
                         scooterName.text.toString().trim(),
                         scooterLocation.text.toString().trim(),
                         System.currentTimeMillis(),
-                        0.0, 0.0, "")
+                        getLocation().first,
+                        getLocation().second,
+                        "")
 
                     Snackbar.make(
                         it,
@@ -155,4 +167,33 @@ class StartRideFragment : Fragment() {
     private fun showMessage(input: String) {
         Log.d(TAG, input)
     }
+
+    private fun getLocation(): Pair<Double, Double>{
+        var lat = 0.0
+        var long = 0.0
+        if (checkPermission()){
+            throw Exception("No location permissions!")
+        }
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    lat = location.latitude
+                    long = location.longitude
+                } else {
+
+                }
+            }
+            .addOnFailureListener { exception: Exception ->
+                throw exception
+            }
+        return Pair(lat, long)
+    }
+
+    private fun checkPermission() =
+        ActivityCompat.checkSelfPermission(
+            this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            this.requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
 }

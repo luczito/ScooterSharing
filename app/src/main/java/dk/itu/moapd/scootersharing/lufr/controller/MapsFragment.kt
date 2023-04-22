@@ -49,14 +49,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback  {
     private var cameraPosition = "camera position"
     private val location = "location"
 
-//    override fun onCreateView(
-//        inflater: LayoutInflater,
-//        container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        return inflater.inflate(R.layout.fragment_maps, container, false)
-//    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
