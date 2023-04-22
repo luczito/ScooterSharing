@@ -120,14 +120,17 @@ class StartRideFragment : Fragment() {
         binding.apply {
             startRideButton.setOnClickListener {
                 if (scooterName.text.isNotEmpty() && scooterLocation.text.isNotEmpty()) {
-                    val status = RidesDB.addScooter(
-                        scooterName.text.toString().trim(),
-                        scooterLocation.text.toString().trim(),
-                        System.currentTimeMillis(),
-                        getLocation().first,
-                        getLocation().second,
-                        "")
-
+                    var status = ""
+                    getLocation {lat, long ->
+                        status = RidesDB.addScooter(
+                            scooterName.text.toString().trim(),
+                            scooterLocation.text.toString().trim(),
+                            System.currentTimeMillis(),
+                            lat,
+                            long,
+                            ""
+                        )
+                    }
                     Snackbar.make(
                         it,
                         status,
@@ -168,25 +171,23 @@ class StartRideFragment : Fragment() {
         Log.d(TAG, input)
     }
 
-    private fun getLocation(): Pair<Double, Double>{
-        var lat = 0.0
-        var long = 0.0
-        if (checkPermission()){
+    private fun getLocation(callback: (Double, Double) -> Unit) {
+        if (checkPermission()) {
             throw Exception("No location permissions!")
         }
         fusedLocationProviderClient.lastLocation
             .addOnSuccessListener { location: Location? ->
                 if (location != null) {
-                    lat = location.latitude
-                    long = location.longitude
+                    val lat = location.latitude
+                    val long = location.longitude
+                    callback(lat, long) // Invoke the callback with the retrieved location values
                 } else {
-
+                    // Handle case when location is null
                 }
             }
             .addOnFailureListener { exception: Exception ->
                 throw exception
             }
-        return Pair(lat, long)
     }
 
     private fun checkPermission() =
