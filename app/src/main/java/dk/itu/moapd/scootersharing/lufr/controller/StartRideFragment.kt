@@ -23,6 +23,9 @@ SOFTWARE.
  */
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,8 +33,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -41,6 +47,8 @@ import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentStartRideBinding
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
+import java.sql.Date
+import java.text.SimpleDateFormat
 
 /**
  * Class StartRideFragment, holds the logic and functionality of the StartRideFragment.
@@ -58,8 +66,10 @@ class StartRideFragment : Fragment() {
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
 
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
     private val scooter: Scooter =
-        Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "")
+        Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "", "")
 
     private lateinit var binding: FragmentStartRideBinding
     private lateinit var bottomNavBar: BottomNavigationView
@@ -92,6 +102,8 @@ class StartRideFragment : Fragment() {
     ): View {
         binding = FragmentStartRideBinding.inflate(layoutInflater, container, false)
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         scooterName = binding.editTextName
         scooterLocation = binding.editTextLocation
 
@@ -110,22 +122,23 @@ class StartRideFragment : Fragment() {
         binding.apply {
             startRideButton.setOnClickListener {
                 if (scooterName.text.isNotEmpty() && scooterLocation.text.isNotEmpty()) {
-                    val status = RidesDB.addScooter(
-                        scooterName.text.toString().trim(),
-                        scooterLocation.text.toString().trim(),
-                        System.currentTimeMillis(),
-                        0.0, 0.0, "")
-
+                    getLocation {lat, long ->
+                        RidesDB.addScooter(
+                            scooterName.text.toString().trim(),
+                            scooterLocation.text.toString().trim(),
+                            System.currentTimeMillis(),
+                            lat,
+                            long,
+                            ""
+                        )
+                    }
                     Snackbar.make(
                         it,
-                        status,
+                        "[${SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date(System.currentTimeMillis()))}]: " +
+                                "Successfully added ${scooterName.text} at ${scooterLocation.text}",
                         Snackbar.LENGTH_LONG
                     ).show()
-                    showMessage(status)
-                    if (!status.contains("Error")) {
-                        //send user back to mainfragment screen
-                        loadFragment(StartRideFragment())
-                    }
+                    loadFragment(StartRideFragment())
                 }
             }
             logoutButton.setOnClickListener {
@@ -149,10 +162,30 @@ class StartRideFragment : Fragment() {
             .commit()
     }
 
-    /**
-     * show message method which logs name and location when "startRideButton" is clicked.
-     */
-    private fun showMessage(input: String) {
-        Log.d(TAG, input)
+    private fun getLocation(callback: (Double, Double) -> Unit) {
+        if (checkPermission()) {
+            throw Exception("No location permissions!")
+        }
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val lat = location.latitude
+                    val long = location.longitude
+                    callback(lat, long)
+                } else {
+                    throw Exception("Location is null")
+                }
+            }
+            .addOnFailureListener { exception: Exception ->
+                throw exception
+            }
     }
+
+    private fun checkPermission() =
+        ActivityCompat.checkSelfPermission(
+            this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            this.requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
 }

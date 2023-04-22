@@ -23,6 +23,9 @@ SOFTWARE.
  */
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -30,8 +33,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
@@ -41,6 +47,8 @@ import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentUpdateRideBinding
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
+import java.sql.Date
+import java.text.SimpleDateFormat
 
 /**
  * Class UpdateRideFragment, holds the logic and functionality of the update page.
@@ -58,7 +66,9 @@ class UpdateRideFragment : Fragment() {
     private lateinit var scooterName: EditText
     private lateinit var scooterLocation: EditText
 
-    private val scooter: Scooter = Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "")
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    private val scooter: Scooter = Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "", "")
 
     private lateinit var binding: FragmentUpdateRideBinding
     private lateinit var bottomNavBar: BottomNavigationView
@@ -93,6 +103,8 @@ class UpdateRideFragment : Fragment() {
         scooterName = binding.editTextName
         scooterLocation = binding.editTextLocation
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+
         return binding.root
     }
 
@@ -116,15 +128,22 @@ class UpdateRideFragment : Fragment() {
                     val location = scooterLocation.text.toString().trim()
                     val timestamp = System.currentTimeMillis()
 
-                    RidesDB.updateCurrentScooter(location,timestamp)
+                    getLocation{lat, long ->
+                        RidesDB.updateCurrentScooter(
+                            location,
+                            timestamp,
+                            lat,
+                            long
+                        )
+                    }
 
                     Snackbar.make(
                         binding.root,
-                        ("[$timestamp] - Scooter updated with location: '$location', and time: '$'."),
+                        ("[${SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date(timestamp))}]: - Scooter updated with location: '$location'."),
                         Snackbar.LENGTH_LONG
                     ).show()
                     showMessage()
-                    loadFragment(MyRidesFragment())
+                    loadFragment(UpdateRideFragment())
                 }
             }
             logoutButton.setOnClickListener {
@@ -152,4 +171,30 @@ class UpdateRideFragment : Fragment() {
     private fun showMessage(){
         Log.d(TAG, scooter.toString())
     }
+    private fun getLocation(callback: (Double, Double) -> Unit) {
+        if (checkPermission()) {
+            throw Exception("No location permissions!")
+        }
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val lat = location.latitude
+                    val long = location.longitude
+                    callback(lat, long)
+                } else {
+                    throw Exception("Location is null")
+                }
+            }
+            .addOnFailureListener { exception: Exception ->
+                throw exception
+            }
+    }
+
+    private fun checkPermission() =
+        ActivityCompat.checkSelfPermission(
+            this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            this.requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
 }

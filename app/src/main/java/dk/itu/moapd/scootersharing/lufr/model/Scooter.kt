@@ -40,9 +40,10 @@ data class Scooter(
     var timestamp: Long,
     var lat: Double,
     var long: Double,
-    var image: String)
+    var image: String,
+    var reserved: String)
     {
-        constructor() : this("", "", 0L, 0.0, 0.0,"")
+        constructor() : this("", "", 0L, 0.0, 0.0,"", "")
         override fun toString(): String {
         return "[${getFormatTimestamp()}] - Scooter: $name is placed at $location"
     }

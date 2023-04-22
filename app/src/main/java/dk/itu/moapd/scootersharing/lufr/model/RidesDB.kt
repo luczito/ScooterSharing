@@ -3,6 +3,7 @@ package dk.itu.moapd.scootersharing.lufr.model
 import android.util.Log
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.values
 
 import java.util.*
 
@@ -53,7 +54,7 @@ object RidesDB {
 
     // Function to add a scooter with given inputs. does not allow for dupes.
     fun addScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double, image: String) : String {
-        val scooter = Scooter(name, location, timestamp, lat, long, image)
+        val scooter = Scooter(name, location, timestamp, lat, long, image, "")
         for(s in rides){
             if (s.name == name){
                 return "Error: Scooter already exists!"
@@ -65,13 +66,13 @@ object RidesDB {
     }
 
     // updates current scooter with a new location and timestamp
-    fun updateCurrentScooter(location: String, timestamp: Long): String {
+    fun updateCurrentScooter(location: String, timestamp: Long, lat: Double, long: Double): String {
         val currentScooter = getCurrentScooter()
         ridesRef.child(currentScooter!!.name).child("location").setValue(location)
         ridesRef.child(currentScooter.name).child("timestamp").setValue(timestamp)
-        rides[rides.size-1].location = location
-        rides[rides.size-1].timestamp = timestamp
-        return "Updated scooter: ${currentScooter.name} with location: $location, at ${rides[rides.size-1].getFormatTimestamp()}"
+        ridesRef.child(currentScooter.name).child("lat").setValue(lat)
+        ridesRef.child(currentScooter.name).child("long").setValue(long)
+        return "${rides[rides.size-1].getFormatTimestamp()}: Updated scooter ${currentScooter.name} with location: $location"
     }
 
     // retrieves the last scooter from the ridesRef database reference
@@ -79,9 +80,25 @@ object RidesDB {
        return rides.lastOrNull()
     }
 
-    // returns the current scooters info
-    fun getCurrentScooterInfo(): String {
-        return getCurrentScooter().toString()
+    fun getScooter(name: String): Scooter{
+        return rides.last {it.name == name}
+    }
+
+    fun reserveScooter(name: String, user: String): String{
+        ridesRef.child(name).child("reserved").setValue(user)
+        rides.last {it.name == name}.reserved = user
+        return "Successfully reserved scooter: $name"
+    }
+
+    fun cancelReservation(name: String, user: String): String{
+        val scooter = rides.last{it.name == name}
+        if (scooter.reserved == user){
+            rides.last {it.name == name}.reserved = ""
+            ridesRef.child(name).child("reserved").setValue("")
+            return "Successfully cancelled the reservation of $name"
+        }else{
+            return "This scooter is not reserved by you!"
+        }
     }
 
     fun deleteScooter(name: String) {
