@@ -17,24 +17,23 @@
         tools:text="Name" />
 
     <TextView
+        android:id="@+id/scooter_timestamp"
+        android:layout_width="match_parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:layout_height="wrap_content"
+        android:textColor="@color/mid_grey"
+        android:gravity="center"
+        tools:text="01/01/2023 18:30" />
+
+    <TextView
         android:id="@+id/scooter_location"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="12dp"
         android:textColor="@color/mid_grey"
         android:gravity="center"
         tools:text="ITU" />
-
-    <TextView
-        android:id="@+id/scooter_timestamp"
-        android:layout_width="match_parent"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/mid_grey"
-        android:gravity="center"
-        tools:text="01/01/2023 18:30" />
 
     <TextView
         android:id="@+id/scooter_reserved"
@@ -51,6 +50,27 @@
         android:layout_height="match_parent"
         android:layout_marginTop="8dp"
         android:text="@string/reserve_button"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:background="@drawable/button" />
+
+    <TextView
+        android:id="@+id/ride_clock"
+        android:layout_width="match_parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/mid_grey"
+        android:gravity="center"
+        tools:text="12:34:56" />
+
+
+    <Button
+        android:id="@+id/start_ride_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:text="@string/start_ride_button"
         android:layout_gravity="center"
         android:textColor="@color/black"
         android:background="@drawable/button"

@@ -24,6 +24,7 @@ SOFTWARE.
 
 package dk.itu.moapd.scootersharing.lufr.model
 
+import android.annotation.SuppressLint
 import java.sql.Date
 import java.text.SimpleDateFormat
 
@@ -41,12 +42,15 @@ data class Scooter(
     var lat: Double,
     var long: Double,
     var image: String,
-    var reserved: String)
+    var reserved: String,
+    var user: String,
+    var timer: Int)
     {
-        constructor() : this("", "", 0L, 0.0, 0.0,"", "")
+        constructor() : this("", "", 0L, 0.0, 0.0,"", "", "",0)
         override fun toString(): String {
         return "[${getFormatTimestamp()}] - Scooter: $name is placed at $location"
     }
+        @SuppressLint("SimpleDateFormat")
         fun getFormatTimestamp(): String {
             return SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date(this.timestamp))
         }
