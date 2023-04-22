@@ -4,6 +4,8 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Geocoder
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -75,15 +77,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             lastKnownLocation = savedInstanceState.getParcelable(location)
             defaultCameraPosition = savedInstanceState.getParcelable(cameraPosition)
         }
-
         RidesDB.initialize {
             Log.d("RidesDB", "Data is fully loaded")
         }
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireContext())
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
 
@@ -168,13 +174,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
 
     private fun getLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this.requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this.requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             locationPermissionGranted = true
         } else {
-            ActivityCompat.requestPermissions(this.requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                fineLocationRequest)
+            ActivityCompat.requestPermissions(
+                this.requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                fineLocationRequest
+            )
         }
     }
 
@@ -188,6 +199,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
+
         if (checkPermission()) {
             getLocationPermission()
             return
@@ -198,40 +210,67 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
         }
         getLocationPermission()
-        val bitmap = AppCompatResources.getDrawable(requireContext(), R.drawable.marker_scooter)
-            ?.toBitmap()
-        val icon = bitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
-        for(ride in RidesDB.getRidesList()) {
-            googleMap.addMarker(
-                MarkerOptions()
-                    .position(LatLng(ride.lat, ride.long))
-                    .title(ride.name)
-                    .alpha(1f)
-                    .icon(icon)
-            )
+
+
+        googleMap.setOnMapLoadedCallback {
+            val vectorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.marker_scooter)
+            for (ride in RidesDB.getRidesList()) {
+                if (ride.user != ""){
+                    vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.red))
+                }else if(ride.reserved != ""){
+                    vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.yellow))
+                }else{
+                    vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.main_blue))
+                }
+                val bitmap = Bitmap.createBitmap(
+                    vectorDrawable?.intrinsicWidth ?: 0,
+                    vectorDrawable?.intrinsicHeight ?: 0,
+                    Bitmap.Config.ARGB_8888
+                )
+                val canvas = Canvas(bitmap)
+                vectorDrawable?.setBounds(0, 0, canvas.width, canvas.height)
+                vectorDrawable?.draw(canvas)
+
+                val icon = BitmapDescriptorFactory.fromBitmap(bitmap)
+
+                googleMap.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(ride.lat, ride.long))
+                        .title(ride.name)
+                        .alpha(1f)
+                        .icon(icon)
+                )
+            }
         }
         updateLocationUI()
         getDeviceLocation()
         googleMap.setOnMarkerClickListener(this)
+
     }
+
     @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         locationPermissionGranted = false
         when (requestCode) {
             fineLocationRequest -> {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
                     locationPermissionGranted = true
                 }
             }
+
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
         updateLocationUI()
     }
+
     @SuppressLint("MissingPermission")
     private fun updateLocationUI() {
         try {
@@ -297,9 +336,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onMarkerClick(marker: Marker): Boolean {
         val scooter = RidesDB.getScooter(marker.title.toString())
+        googleMap.moveCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(
+                    marker.position.latitude,
+                    marker.position.longitude
+                ),
+                defaultZoom
+            )
+        )
 
         // Create a BottomSheetDialogFragment
-        val bottomSheetDialogFragment = BottomModalFragment()
+        val bottomSheetDialogFragment = BottomModalFragment(marker)
         // Pass the marker data to the bottom sheet fragment
         val bundle = Bundle()
         bundle.putString("name", marker.title)
@@ -313,4 +361,5 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         return true
     }
+
 }

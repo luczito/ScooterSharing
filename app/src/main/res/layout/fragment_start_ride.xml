@@ -44,11 +44,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="25dp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="75dp" />
+        android:layout_height="100dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -65,57 +61,21 @@
         android:layout_width="match_parent"
         android:layout_height="20dp" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/scooter_list"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox.ExposedDropdownMenu"
+        android:layout_width="350dp"
         android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:gravity="center"
-        android:paddingHorizontal="50dp"
-        android:orientation="horizontal">
+        android:layout_gravity="center"
+        android:hint="@string/choose_scooter">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:color="@color/mid_grey"
-            android:textColorHint="@color/mid_grey"
-            android:layout_height="wrap_content"
-            android:hint="@string/text_name"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_name"
-                android:color="@color/mid_grey"
-                android:textColor="@color/light_grey"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/baseline_electric_scooter_24" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp"
-        android:gravity="center"
-        android:paddingHorizontal="50dp"
-        android:orientation="horizontal">
-
-        <com.google.android.material.textfield.TextInputLayout
+        <AutoCompleteTextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:color="@color/mid_grey"
-            android:textColorHint="@color/mid_grey"
-            android:hint="@string/text_location"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+            android:inputType="none"
+            />
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_text_location"
-                android:layout_width="match_parent"
-                android:color="@color/mid_grey"
-                android:textColor="@color/light_grey"
-                android:layout_height="wrap_content"
-                android:drawableLeft="@drawable/baseline_location_on_24" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <View
         android:layout_width="match_parent"

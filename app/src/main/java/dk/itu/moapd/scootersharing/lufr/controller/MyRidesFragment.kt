@@ -103,25 +103,25 @@ class MyRidesFragment : Fragment() {
             bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
             bottomNavBar.visibility = View.VISIBLE
 
-            binding.apply {
-                logoutButton.setOnClickListener {
-                    auth.signOut()
-                    Toast.makeText(
-                        context, "Successfully logged out",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    loadFragment(WelcomeFragment())
-                }
-                settingsButton.setOnClickListener {
-                    loadFragment(SettingsFragment())
-                }
-                allRidesButton.setOnClickListener{
-                    loadFragment(AllRidesFragment())
-                }
-                myRidesButton.setOnClickListener{
-                    loadFragment(MyRidesFragment())
-                }
-            }
+//            binding.apply {
+//                logoutButton.setOnClickListener {
+//                    auth.signOut()
+//                    Toast.makeText(
+//                        context, "Successfully logged out",
+//                        Toast.LENGTH_LONG
+//                    ).show()
+//                    loadFragment(WelcomeFragment())
+//                }
+//                settingsButton.setOnClickListener {
+//                    loadFragment(SettingsFragment())
+//                }
+//                allRidesButton.setOnClickListener{
+//                    loadFragment(AllRidesFragment())
+//                }
+//                myRidesButton.setOnClickListener{
+//                    loadFragment(MyRidesFragment())
+//                }
+//            }
         }
 
         private fun loadFragment(fragment: Fragment){
