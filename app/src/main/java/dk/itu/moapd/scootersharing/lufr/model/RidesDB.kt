@@ -3,7 +3,6 @@ package dk.itu.moapd.scootersharing.lufr.model
 import android.util.Log
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.values
 
 import java.util.*
 
@@ -15,6 +14,8 @@ object RidesDB {
     private val database: DatabaseReference = FirebaseDatabase.getInstance().reference
     private val ridesRef: DatabaseReference = database.child("rides")
     private val rides = ArrayList<Scooter>()
+    private var timer: Timer? = null
+    private var timerValue = 0
 
     fun initialize(completion: () -> Unit) {
         // add a listener to the "rides" node to keep the local list up-to-date
@@ -52,9 +53,33 @@ object RidesDB {
         return cardList
     }
 
+    fun startRide(name: String, user: String){
+        ridesRef.child(name).child("user").setValue(user)
+        rides.last {it.name == name}.user = user
+        timer = Timer()
+        timer!!.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                timerValue++
+                ridesRef.child(name).child("timer").setValue(timerValue)
+                rides.last {it.name == name}.timer = timerValue
+            }
+        }, 0, 999)
+    }
+
+    fun endRide(name: String): Int{
+        timer?.cancel()
+        timer = null
+        val timeSpent = rides.last{it.name == name}.timer
+        ridesRef.child(name).child("timer").setValue(0)
+        rides.last {it.name == name}.timer = 0
+        ridesRef.child(name).child("user").setValue("")
+        rides.last {it.name == name}.user = ""
+        return timeSpent - 3600
+    }
+
     // Function to add a scooter with given inputs. does not allow for dupes.
     fun addScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double, image: String) : String {
-        val scooter = Scooter(name, location, timestamp, lat, long, image, "")
+        val scooter = Scooter(name, location, timestamp, lat, long, image, "", "", 0)
         for(s in rides){
             if (s.name == name){
                 return "Error: Scooter already exists!"
@@ -73,6 +98,14 @@ object RidesDB {
         ridesRef.child(currentScooter.name).child("lat").setValue(lat)
         ridesRef.child(currentScooter.name).child("long").setValue(long)
         return "${rides[rides.size-1].getFormatTimestamp()}: Updated scooter ${currentScooter.name} with location: $location"
+    }
+
+    fun updateScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double){
+        val currentScooter = getScooter(name)
+        ridesRef.child(currentScooter.name).child("location").setValue(location)
+        ridesRef.child(currentScooter.name).child("timestamp").setValue(timestamp)
+        ridesRef.child(currentScooter.name).child("lat").setValue(lat)
+        ridesRef.child(currentScooter.name).child("long").setValue(long)
     }
 
     // retrieves the last scooter from the ridesRef database reference

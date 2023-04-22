@@ -31,7 +31,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.view.WindowCompat
@@ -39,7 +38,6 @@ import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -47,13 +45,9 @@ import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentStartRideBinding
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
-import java.sql.Date
-import java.text.SimpleDateFormat
 
 /**
  * Class StartRideFragment, holds the logic and functionality of the StartRideFragment.
- * @property scooterName Input text for the scooter name.
- * @property scooterLocation Input text for the scooter location.
  * @property scooter scooter object.
  * @property binding Fragment binding for the view fragment.
  */
@@ -63,13 +57,20 @@ class StartRideFragment : Fragment() {
         private val TAG = StartRideFragment::class.qualifiedName
     }
 
-    private lateinit var scooterName: EditText
-    private lateinit var scooterLocation: EditText
-
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val scooter: Scooter =
-        Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "", "")
+        Scooter(
+            name = "",
+            location = "",
+            timestamp = System.currentTimeMillis(),
+            lat = 0.0,
+            long = 0.0,
+            image = "",
+            reserved = "",
+            user = "",
+            timer = 0
+        )
 
     private lateinit var binding: FragmentStartRideBinding
     private lateinit var bottomNavBar: BottomNavigationView
@@ -102,10 +103,8 @@ class StartRideFragment : Fragment() {
     ): View {
         binding = FragmentStartRideBinding.inflate(layoutInflater, container, false)
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
-
-        scooterName = binding.editTextName
-        scooterLocation = binding.editTextLocation
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireContext())
 
         return binding.root
     }
@@ -121,23 +120,8 @@ class StartRideFragment : Fragment() {
 
         binding.apply {
             startRideButton.setOnClickListener {
-                if (scooterName.text.isNotEmpty() && scooterLocation.text.isNotEmpty()) {
-                    getLocation {lat, long ->
-                        RidesDB.addScooter(
-                            scooterName.text.toString().trim(),
-                            scooterLocation.text.toString().trim(),
-                            System.currentTimeMillis(),
-                            lat,
-                            long,
-                            ""
-                        )
-                    }
-                    Snackbar.make(
-                        it,
-                        "[${SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date(System.currentTimeMillis()))}]: " +
-                                "Successfully added ${scooterName.text} at ${scooterLocation.text}",
-                        Snackbar.LENGTH_LONG
-                    ).show()
+                getLocation { lat, long ->
+
                     loadFragment(StartRideFragment())
                 }
             }
@@ -155,7 +139,7 @@ class StartRideFragment : Fragment() {
         }
     }
 
-    private fun loadFragment(fragment: Fragment){
+    private fun loadFragment(fragment: Fragment) {
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.fragment_container, fragment)
             .addToBackStack(null)
