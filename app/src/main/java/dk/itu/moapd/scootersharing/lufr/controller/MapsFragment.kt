@@ -257,7 +257,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onMarkerClick(marker: Marker): Boolean {
         val scooter = RidesDB.getScooter(marker.title.toString())
-        googleMap.animateCamera(
+        googleMap.moveCamera(
             CameraUpdateFactory.newLatLngZoom(
                 LatLng(
                     marker.position.latitude,

@@ -19,6 +19,7 @@ import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -184,6 +185,9 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                                 val matches = geoCoder.getFromLocation(lat, long, 1)
                                 val bestMatch = if (matches!!.isEmpty()) null else matches[0]
                                 RidesDB.updateScooter(name!!, bestMatch!!.getAddressLine(0), System.currentTimeMillis(), lat, long)
+                                marker.position = LatLng(lat, long)
+                                marker.isVisible = false
+                                marker.isVisible = true
                             }
                             stopUpdatingCounter() //stop the count
 
