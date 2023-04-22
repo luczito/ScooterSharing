@@ -58,15 +58,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             lastKnownLocation = savedInstanceState.getParcelable(location)
             defaultCameraPosition = savedInstanceState.getParcelable(cameraPosition)
         }
-
         RidesDB.initialize {
             Log.d("RidesDB", "Data is fully loaded")
         }
 
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext())
+        fusedLocationProviderClient =
+            LocationServices.getFusedLocationProviderClient(requireContext())
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
 
@@ -89,13 +93,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     private fun getLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this.requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION)
-            == PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(
+                this.requireContext(),
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+            == PackageManager.PERMISSION_GRANTED
+        ) {
             locationPermissionGranted = true
         } else {
-            ActivityCompat.requestPermissions(this.requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
-                fineLocationRequest)
+            ActivityCompat.requestPermissions(
+                this.requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                fineLocationRequest
+            )
         }
     }
 
@@ -109,6 +118,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onMapReady(googleMap: GoogleMap) {
         this.googleMap = googleMap
+
         if (checkPermission()) {
             getLocationPermission()
             return
@@ -119,40 +129,50 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
         }
         getLocationPermission()
-        val bitmap = AppCompatResources.getDrawable(requireContext(), R.drawable.marker_scooter)
-            ?.toBitmap()
+        val bitmap =
+            AppCompatResources.getDrawable(requireContext(), R.drawable.marker_scooter)?.toBitmap()
         val icon = bitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
-        for(ride in RidesDB.getRidesList()) {
-            googleMap.addMarker(
-                MarkerOptions()
-                    .position(LatLng(ride.lat, ride.long))
-                    .title(ride.name)
-                    .alpha(1f)
-                    .icon(icon)
-            )
+
+        googleMap.setOnMapLoadedCallback {
+            for (ride in RidesDB.getRidesList()) {
+                googleMap.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(ride.lat, ride.long))
+                        .title(ride.name)
+                        .alpha(1f)
+                        .icon(icon)
+                )
+            }
         }
         updateLocationUI()
         getDeviceLocation()
         googleMap.setOnMarkerClickListener(this)
+
     }
+
     @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(requestCode: Int,
-                                            permissions: Array<String>,
-                                            grantResults: IntArray) {
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         locationPermissionGranted = false
         when (requestCode) {
             fineLocationRequest -> {
 
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.isNotEmpty() &&
-                    grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    grantResults[0] == PackageManager.PERMISSION_GRANTED
+                ) {
                     locationPermissionGranted = true
                 }
             }
+
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
         updateLocationUI()
     }
+
     @SuppressLint("MissingPermission")
     private fun updateLocationUI() {
         try {
