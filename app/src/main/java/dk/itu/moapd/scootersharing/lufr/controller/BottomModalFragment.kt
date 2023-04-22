@@ -3,6 +3,8 @@ package dk.itu.moapd.scootersharing.lufr.controller
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Geocoder
 import android.location.Location
 import android.os.Bundle
@@ -13,20 +15,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentBottomModalBinding
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import java.sql.Date
 import java.text.SimpleDateFormat
 
 
-class BottomModalFragment : BottomSheetDialogFragment() {
+class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBottomModalBinding
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -117,6 +123,8 @@ class BottomModalFragment : BottomSheetDialogFragment() {
         binding.apply {
             reserveButton.setOnClickListener {
                 if (reserved == auth.currentUser?.email.toString()) {
+                    changeColor("blue")
+
                     //toast it up - cancel toaster
                     Toast.makeText(
                         context, "Successfully cancelled reservation of $name",
@@ -125,6 +133,8 @@ class BottomModalFragment : BottomSheetDialogFragment() {
                     dismiss()
                     RidesDB.cancelReservation(name!!, auth.currentUser?.email.toString())
                 } else {
+                    changeColor("yellow")
+
                     //toast it up - reserve toaster
                     Toast.makeText(
                         context, "Successfully reserved $name",
@@ -146,6 +156,8 @@ class BottomModalFragment : BottomSheetDialogFragment() {
                         .setPositiveButton("Start") { _, _ ->
                             //remove reserve button, start counter, change button title
                             RidesDB.startRide(name!!, auth.currentUser?.email.toString())
+
+                            changeColor("red")
 
                             binding.rideClock.visibility = View.VISIBLE
                             startUpdatingCounter()
@@ -174,6 +186,8 @@ class BottomModalFragment : BottomSheetDialogFragment() {
                                 RidesDB.updateScooter(name!!, bestMatch!!.getAddressLine(0), System.currentTimeMillis(), lat, long)
                             }
                             stopUpdatingCounter() //stop the count
+
+                            changeColor("blue")
 
                             binding.scooterReserved.visibility = View.VISIBLE
                             binding.scooterReserved.text = "$name is available"
@@ -262,4 +276,27 @@ class BottomModalFragment : BottomSheetDialogFragment() {
             this.requireContext(),
             Manifest.permission.ACCESS_COARSE_LOCATION
         ) != PackageManager.PERMISSION_GRANTED
+
+    private fun changeColor(color: String){
+        val vectorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.marker_scooter)
+        if(color == "red"){
+            vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.red))
+        }else if (color == "yellow"){
+            vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.yellow))
+        }else if (color == "blue"){
+            vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.main_blue))
+        }
+
+        val bitmap = Bitmap.createBitmap(
+            vectorDrawable?.intrinsicWidth ?: 0,
+            vectorDrawable?.intrinsicHeight ?: 0,
+            Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(bitmap)
+        vectorDrawable?.setBounds(0, 0, canvas.width, canvas.height)
+        vectorDrawable?.draw(canvas)
+
+        val icon = BitmapDescriptorFactory.fromBitmap(bitmap)
+        marker.setIcon(icon)
+    }
 }

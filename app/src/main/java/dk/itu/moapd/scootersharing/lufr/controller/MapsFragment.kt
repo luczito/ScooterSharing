@@ -3,6 +3,8 @@ package dk.itu.moapd.scootersharing.lufr.controller
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
@@ -129,12 +131,29 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             googleMap.mapType = GoogleMap.MAP_TYPE_NORMAL
         }
         getLocationPermission()
-        val bitmap =
-            AppCompatResources.getDrawable(requireContext(), R.drawable.marker_scooter)?.toBitmap()
-        val icon = bitmap?.let { BitmapDescriptorFactory.fromBitmap(it) }
+
 
         googleMap.setOnMapLoadedCallback {
+            val vectorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.marker_scooter)
             for (ride in RidesDB.getRidesList()) {
+                if (ride.user != ""){
+                    vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.red))
+                }else if(ride.reserved != ""){
+                    vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.yellow))
+                }else{
+                    vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.main_blue))
+                }
+                val bitmap = Bitmap.createBitmap(
+                    vectorDrawable?.intrinsicWidth ?: 0,
+                    vectorDrawable?.intrinsicHeight ?: 0,
+                    Bitmap.Config.ARGB_8888
+                )
+                val canvas = Canvas(bitmap)
+                vectorDrawable?.setBounds(0, 0, canvas.width, canvas.height)
+                vectorDrawable?.draw(canvas)
+
+                val icon = BitmapDescriptorFactory.fromBitmap(bitmap)
+
                 googleMap.addMarker(
                     MarkerOptions()
                         .position(LatLng(ride.lat, ride.long))
@@ -238,9 +257,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onMarkerClick(marker: Marker): Boolean {
         val scooter = RidesDB.getScooter(marker.title.toString())
+        googleMap.animateCamera(
+            CameraUpdateFactory.newLatLngZoom(
+                LatLng(
+                    marker.position.latitude,
+                    marker.position.longitude
+                ),
+                defaultZoom
+            )
+        )
 
         // Create a BottomSheetDialogFragment
-        val bottomSheetDialogFragment = BottomModalFragment()
+        val bottomSheetDialogFragment = BottomModalFragment(marker)
         // Pass the marker data to the bottom sheet fragment
         val bundle = Bundle()
         bundle.putString("name", marker.title)
@@ -254,4 +282,5 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         return true
     }
+
 }
