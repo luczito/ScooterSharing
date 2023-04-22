@@ -53,7 +53,7 @@ object RidesDB {
 
     // Function to add a scooter with given inputs. does not allow for dupes.
     fun addScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double, image: String) : String {
-        val scooter = Scooter(name, location, timestamp, lat, long, image)
+        val scooter = Scooter(name, location, timestamp, lat, long, image, false)
         for(s in rides){
             if (s.name == name){
                 return "Error: Scooter already exists!"
@@ -77,6 +77,16 @@ object RidesDB {
     // retrieves the last scooter from the ridesRef database reference
     fun getCurrentScooter(): Scooter? {
        return rides.lastOrNull()
+    }
+
+    fun getScooter(name: String): Scooter{
+        return rides.last {it.name == name}
+    }
+
+    fun reserveScooter(name: String): String{
+        ridesRef.child(name).child("reserved").setValue(true)
+        rides.last {it.name == name}.reserved = true
+        return "Successfully reserved scooter: $name"
     }
 
     fun deleteScooter(name: String) {

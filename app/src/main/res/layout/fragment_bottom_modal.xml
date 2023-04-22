@@ -1,0 +1,59 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/dark_grey"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/scooter_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:gravity="center"
+        android:textColor="@color/mid_grey"
+        android:textStyle="bold"
+        tools:text="Name" />
+
+    <TextView
+        android:id="@+id/scooter_location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/mid_grey"
+        android:gravity="center"
+        tools:text="ITU" />
+
+    <TextView
+        android:id="@+id/scooter_timestamp"
+        android:layout_width="match_parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/mid_grey"
+        android:gravity="center"
+        tools:text="01/01/2023 18:30" />
+
+    <TextView
+        android:id="@+id/scooter_reserved"
+        android:layout_width="match_parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/mid_grey"
+        android:gravity="center" />
+
+    <Button
+        android:id="@+id/reserve_button"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginTop="8dp"
+        android:text="@string/reserve_button"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:background="@drawable/button"
+        android:layout_marginBottom="25dp"/>
+
+</LinearLayout>

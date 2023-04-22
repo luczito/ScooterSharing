@@ -69,7 +69,7 @@ class StartRideFragment : Fragment() {
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val scooter: Scooter =
-        Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "")
+        Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "", false)
 
     private lateinit var binding: FragmentStartRideBinding
     private lateinit var bottomNavBar: BottomNavigationView
