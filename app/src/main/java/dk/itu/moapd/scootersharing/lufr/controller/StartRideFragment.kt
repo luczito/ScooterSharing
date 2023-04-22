@@ -47,6 +47,8 @@ import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentStartRideBinding
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
+import java.sql.Date
+import java.text.SimpleDateFormat
 
 /**
  * Class StartRideFragment, holds the logic and functionality of the StartRideFragment.
@@ -120,9 +122,8 @@ class StartRideFragment : Fragment() {
         binding.apply {
             startRideButton.setOnClickListener {
                 if (scooterName.text.isNotEmpty() && scooterLocation.text.isNotEmpty()) {
-                    var status = ""
                     getLocation {lat, long ->
-                        status = RidesDB.addScooter(
+                        RidesDB.addScooter(
                             scooterName.text.toString().trim(),
                             scooterLocation.text.toString().trim(),
                             System.currentTimeMillis(),
@@ -133,14 +134,11 @@ class StartRideFragment : Fragment() {
                     }
                     Snackbar.make(
                         it,
-                        status,
+                        "[${SimpleDateFormat("dd/MM/yyyy HH:mm").format(Date(System.currentTimeMillis()))}]: " +
+                                "Successfully added ${scooterName.text} at ${scooterLocation.text}",
                         Snackbar.LENGTH_LONG
                     ).show()
-                    showMessage(status)
-                    if (!status.contains("Error")) {
-                        //send user back to mainfragment screen
-                        loadFragment(StartRideFragment())
-                    }
+                    loadFragment(StartRideFragment())
                 }
             }
             logoutButton.setOnClickListener {
@@ -164,13 +162,6 @@ class StartRideFragment : Fragment() {
             .commit()
     }
 
-    /**
-     * show message method which logs name and location when "startRideButton" is clicked.
-     */
-    private fun showMessage(input: String) {
-        Log.d(TAG, input)
-    }
-
     private fun getLocation(callback: (Double, Double) -> Unit) {
         if (checkPermission()) {
             throw Exception("No location permissions!")
@@ -180,9 +171,9 @@ class StartRideFragment : Fragment() {
                 if (location != null) {
                     val lat = location.latitude
                     val long = location.longitude
-                    callback(lat, long) // Invoke the callback with the retrieved location values
+                    callback(lat, long)
                 } else {
-                    // Handle case when location is null
+                    throw Exception("Location is null")
                 }
             }
             .addOnFailureListener { exception: Exception ->

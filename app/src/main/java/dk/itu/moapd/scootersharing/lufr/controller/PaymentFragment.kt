@@ -87,6 +87,9 @@ class PaymentFragment : Fragment() {
                     Toast.LENGTH_LONG).show()
                 loadFragment(WelcomeFragment())
             }
+            settingsButton.setOnClickListener{
+                loadFragment(SettingsFragment())
+            }
         }
     }
 
