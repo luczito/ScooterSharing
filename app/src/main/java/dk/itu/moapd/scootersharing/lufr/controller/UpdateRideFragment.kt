@@ -68,7 +68,7 @@ class UpdateRideFragment : Fragment() {
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
-    private val scooter: Scooter = Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "", false)
+    private val scooter: Scooter = Scooter(name = "", location = "", timestamp = System.currentTimeMillis(), lat = 0.0, long = 0.0, image = "", "")
 
     private lateinit var binding: FragmentUpdateRideBinding
     private lateinit var bottomNavBar: BottomNavigationView

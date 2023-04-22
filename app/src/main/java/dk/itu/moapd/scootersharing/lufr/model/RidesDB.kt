@@ -3,6 +3,7 @@ package dk.itu.moapd.scootersharing.lufr.model
 import android.util.Log
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.values
 
 import java.util.*
 
@@ -53,7 +54,7 @@ object RidesDB {
 
     // Function to add a scooter with given inputs. does not allow for dupes.
     fun addScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double, image: String) : String {
-        val scooter = Scooter(name, location, timestamp, lat, long, image, false)
+        val scooter = Scooter(name, location, timestamp, lat, long, image, "")
         for(s in rides){
             if (s.name == name){
                 return "Error: Scooter already exists!"
@@ -83,10 +84,21 @@ object RidesDB {
         return rides.last {it.name == name}
     }
 
-    fun reserveScooter(name: String): String{
-        ridesRef.child(name).child("reserved").setValue(true)
-        rides.last {it.name == name}.reserved = true
+    fun reserveScooter(name: String, user: String): String{
+        ridesRef.child(name).child("reserved").setValue(user)
+        rides.last {it.name == name}.reserved = user
         return "Successfully reserved scooter: $name"
+    }
+
+    fun cancelReservation(name: String, user: String): String{
+        val scooter = rides.last{it.name == name}
+        if (scooter.reserved == user){
+            rides.last {it.name == name}.reserved = ""
+            ridesRef.child(name).child("reserved").setValue("")
+            return "Successfully cancelled the reservation of $name"
+        }else{
+            return "This scooter is not reserved by you!"
+        }
     }
 
     fun deleteScooter(name: String) {

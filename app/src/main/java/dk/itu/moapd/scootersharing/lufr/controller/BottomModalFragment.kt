@@ -1,19 +1,23 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.fragment.app.DialogFragment
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import dk.itu.moapd.scootersharing.lufr.R
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentBottomModalBinding
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 
 class BottomModalFragment : BottomSheetDialogFragment() {
     private lateinit var binding: FragmentBottomModalBinding
+
+    private lateinit var auth: FirebaseAuth
 
     private var name: String? = null
     private var location: String? = null
@@ -31,6 +35,7 @@ class BottomModalFragment : BottomSheetDialogFragment() {
         RidesDB.initialize {
             Log.d("RidesDB", "Data is fully loaded")
         }
+        auth = Firebase.auth
     }
 
     override fun onCreateView(
@@ -43,6 +48,7 @@ class BottomModalFragment : BottomSheetDialogFragment() {
         return binding.root
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -51,10 +57,16 @@ class BottomModalFragment : BottomSheetDialogFragment() {
         binding.scooterName.text = name
         binding.scooterLocation.text = location
         binding.scooterTimestamp.text = timestamp
-        if(reserved == "true"){
+        if(reserved != ""){
             binding.scooterReserved.text = "Scooter: $name is reserved"
-            binding.reserveButton.visibility = View.GONE
-            binding.reserveButton.isClickable = false
+            if(reserved == auth.currentUser?.email.toString()){
+                binding.reserveButton.text = "Cancel reservation"
+                binding.reserveButton.isClickable = true
+                binding.reserveButton.visibility = View.VISIBLE
+            }else{
+                binding.reserveButton.visibility = View.GONE
+                binding.reserveButton.isClickable = false
+            }
         }else{
             binding.scooterReserved.text = "Scooter: $name is available"
             binding.reserveButton.visibility = View.VISIBLE
@@ -63,10 +75,19 @@ class BottomModalFragment : BottomSheetDialogFragment() {
 
         binding.apply {
             reserveButton.setOnClickListener{
-                Toast.makeText(context, "Successfully reserved scooter: $name",
-                    Toast.LENGTH_LONG).show()
-                dismiss()
-                RidesDB.reserveScooter(name!!)
+                if(reserved == auth.currentUser?.email.toString()){
+                    Toast.makeText(context, "Successfully cancelled reservation of scooter: $name",
+                        Toast.LENGTH_LONG).show()
+                    dismiss()
+                    RidesDB.cancelReservation(name!!, auth.currentUser?.email.toString())
+                }else {
+                    Toast.makeText(
+                        context, "Successfully reserved scooter: $name",
+                        Toast.LENGTH_LONG
+                    ).show()
+                    dismiss()
+                    RidesDB.reserveScooter(name!!, auth.currentUser?.email.toString())
+                }
             }
         }
     }
