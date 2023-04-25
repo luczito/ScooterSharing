@@ -3,7 +3,6 @@ package dk.itu.moapd.scootersharing.lufr.controller
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
-import android.location.Geocoder
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Location
@@ -14,12 +13,8 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AutoCompleteTextView
-import androidx.appcompat.widget.SearchView
-import android.widget.Toast
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -41,8 +36,6 @@ import dk.itu.moapd.scootersharing.lufr.BuildConfig
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
-import java.io.IOException
-import java.util.Properties
 
 
 class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -64,6 +57,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     private var cameraPosition = "camera position"
     private val location = "location"
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -334,17 +328,30 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         super.onSaveInstanceState(outState)
     }
 
+    // move camera to marker
+
+
+    fun moveCameraToMarker(lat : Double, long : Double) {
+        if(::googleMap.isInitialized) {
+            googleMap.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(
+                    LatLng(
+                        lat,
+                        long
+                    ),
+                    defaultZoom
+                )
+            )
+        } else {
+            Log.d(TAG, "GoogleMap not initialized")
+        }
+    }
+
+
+
     override fun onMarkerClick(marker: Marker): Boolean {
         val scooter = RidesDB.getScooter(marker.title.toString())
-        googleMap.moveCamera(
-            CameraUpdateFactory.newLatLngZoom(
-                LatLng(
-                    marker.position.latitude,
-                    marker.position.longitude
-                ),
-                defaultZoom
-            )
-        )
+       moveCameraToMarker(marker.position.latitude, marker.position.longitude)
 
         // Create a BottomSheetDialogFragment
         val bottomSheetDialogFragment = BottomModalFragment(marker)

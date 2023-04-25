@@ -104,7 +104,11 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
         val maxCacheSize = 1024 * 1024 * 10 // 10 MB
 
         val storageRef = Firebase.storage.reference
-        val imageRef = storageRef.child("scooters/$name.webp")
+
+        //use scooter image
+        val scooter = RidesDB.getScooter(name!!)
+
+        val imageRef = storageRef.child("scooters/${scooter.image}")
 
         val cache = LruCache<String, Bitmap>(maxCacheSize)
         val cachedBitmap = cache.get(name)
