@@ -1,5 +1,7 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.graphics.BitmapFactory
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,7 +9,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import dk.itu.moapd.scootersharing.lufr.R
+import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
 import dk.itu.moapd.scootersharing.lufr.model.Card
 
 class CardAdapter(private val cards: List<Card>) : RecyclerView.Adapter<CardAdapter.CardViewHolder>() {
@@ -19,6 +24,8 @@ class CardAdapter(private val cards: List<Card>) : RecyclerView.Adapter<CardAdap
     }
 
     override fun onBindViewHolder(holder: CardViewHolder, position: Int) {
+
+
         val card = cards[position]
         holder.bind(card)
     }
@@ -36,7 +43,18 @@ class CardAdapter(private val cards: List<Card>) : RecyclerView.Adapter<CardAdap
             titleTextView.text = card.name
             secondaryTextView.text = card.location
             supportingTextView.text = card.timestamp
-            mediaImageView.setImageResource(card.mediaResId)
+
+            // Download image from Firebase Storage
+            val storageRef = Firebase.storage.reference
+            val imageRef = storageRef.child("scooters/${card.name}.webp")
+
+            val ONE_MEGABYTE: Long = 1024 * 1024
+            imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener { bytes ->
+                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
+                mediaImageView.setImageBitmap(bitmap)
+            }.addOnFailureListener { exception ->
+                Log.d(TAG, "Error downloading image: $exception")
+            }
 
         }
     }

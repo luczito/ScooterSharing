@@ -3,20 +3,25 @@ package dk.itu.moapd.scootersharing.lufr.controller
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.location.Geocoder
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.location.Location
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AutoCompleteTextView
+import androidx.appcompat.widget.SearchView
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
@@ -28,10 +33,16 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.libraries.places.api.Places
+import com.google.android.libraries.places.api.model.Place
+import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import dk.itu.moapd.scootersharing.lufr.BuildConfig
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
+import java.io.IOException
+import java.util.Properties
 
 
 class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
@@ -47,6 +58,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     private lateinit var googleMap: GoogleMap
+    private lateinit var autoCompleteTextView: AutoCompleteTextView
 
     private var defaultZoom = 18f
 
@@ -55,6 +67,11 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        if (!Places.isInitialized()) {
+            val apiKey = BuildConfig.MAPS_API_KEY
+            Places.initialize(requireContext(), apiKey)
+        }
 
         if (savedInstanceState != null) {
             lastKnownLocation = savedInstanceState.getParcelable(location)
@@ -76,6 +93,19 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
 
+        val autoCompleteTextView = view.findViewById<AutoCompleteTextView>(R.id.idAutoCompleteTextView)
+        autoCompleteTextView.setOnTouchListener { _, event ->
+            if (event.action == MotionEvent.ACTION_UP) {
+                if (autoCompleteTextView.compoundDrawables[2] != null) {
+                    if (event.x >= autoCompleteTextView.width - autoCompleteTextView.paddingRight - autoCompleteTextView.compoundDrawables[2].bounds.width()) {
+                        autoCompleteTextView.setText("")
+                        return@setOnTouchListener true
+                    }
+                }
+            }
+            false
+        }
+
         val mapFragment = childFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
@@ -92,7 +122,56 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
 
         mapFragment?.getMapAsync(this)
+
+        autoCompleteTextView = view.findViewById(R.id.idAutoCompleteTextView)
+
+        val placesClient = Places.createClient(requireContext())
+        val autoCompleteAdapter = PlacesAutoCompleteAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line)
+        autoCompleteTextView.setAdapter(autoCompleteAdapter)
+        autoCompleteTextView.threshold = 3
+
+        autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
+            val selectedPlace = autoCompleteAdapter.getItem(position)
+            selectedPlace?.let { placeItem ->
+                autoCompleteTextView.setText(placeItem.primaryText)
+
+                val placeId = placeItem.placeId
+                val fetchPlaceRequest = FetchPlaceRequest.newInstance(placeId, listOf(Place.Field.LAT_LNG))
+                placesClient.fetchPlace(fetchPlaceRequest).addOnSuccessListener { response ->
+                    val place = response.place
+                    val latLng = place.latLng
+                    if (latLng != null) {
+                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, defaultZoom))
+                    }
+                }.addOnFailureListener { exception ->
+                    if (exception is ApiException) {
+                        Log.e(TAG, "Place not found: ${exception.statusCode}")
+                    }
+                }
+            }
+        }
+
     }
+
+// Was for when used SearchView, so pressing enter would just let google go to the first result,
+// but now we use AutoCompleteTextView (Suggestions to press)
+
+//    private fun searchForLocation(query: String) {
+//        val geocoder = Geocoder(requireContext())
+//        try {
+//            val addressList = geocoder.getFromLocationName(query, 1)
+//            if (addressList?.isNotEmpty() == true) {
+//                val address = addressList[0]
+//                val latLng = LatLng(address.latitude, address.longitude)
+//                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, defaultZoom))
+//            } else {
+//                Toast.makeText(requireContext(), "Location not found", Toast.LENGTH_SHORT).show()
+//            }
+//        } catch (e: IOException) {
+//            e.printStackTrace()
+//        }
+//    }
+
 
     private fun getLocationPermission() {
         if (ContextCompat.checkSelfPermission(

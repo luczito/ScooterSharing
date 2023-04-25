@@ -1,10 +1,12 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
@@ -15,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentAllRidesBinding
@@ -68,24 +71,24 @@ class AllRidesFragment : Fragment() {
         bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavBar.visibility = View.VISIBLE
 
-        binding.apply {
-
-            logoutButton.setOnClickListener {
-                auth.signOut()
-                Toast.makeText(context, "Successfully logged out",
-                    Toast.LENGTH_LONG).show()
-                loadFragment(WelcomeFragment())
-            }
-            settingsButton.setOnClickListener{
-                loadFragment(SettingsFragment())
-            }
-            allRidesButton.setOnClickListener{
-                loadFragment(AllRidesFragment())
-            }
-            myRidesButton.setOnClickListener{
-                loadFragment(MyRidesFragment())
-            }
-        }
+//        binding.apply {
+//
+//            logoutButton.setOnClickListener {
+//                auth.signOut()
+//                Toast.makeText(context, "Successfully logged out",
+//                    Toast.LENGTH_LONG).show()
+//                loadFragment(WelcomeFragment())
+//            }
+//            settingsButton.setOnClickListener{
+//                loadFragment(SettingsFragment())
+//            }
+//            allRidesButton.setOnClickListener{
+//                loadFragment(AllRidesFragment())
+//            }
+//            myRidesButton.setOnClickListener{
+//                loadFragment(MyRidesFragment())
+//            }
+//        }
     }
 
     private fun loadFragment(fragment: Fragment){

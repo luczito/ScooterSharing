@@ -25,7 +25,10 @@ package dk.itu.moapd.scootersharing.lufr.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.WindowManager
 import androidx.fragment.app.Fragment
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.*
@@ -46,7 +49,7 @@ class MainActivity : AppCompatActivity() {
         val startRideFragment=StartRideFragment()
         val updateRideFragment=UpdateRideFragment()
         val mapsFragment=MapsFragment()
-        val allRidesFragment=AllRidesFragment()
+        val allRidesFragment=RidesFragment()
 
         setCurrentFragment(WelcomeFragment())
 
