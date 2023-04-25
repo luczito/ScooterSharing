@@ -100,13 +100,17 @@ object RidesDB {
         return "${rides[rides.size-1].getFormatTimestamp()}: Updated scooter ${currentScooter.name} with location: $location"
     }
 
-    fun updateScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double){
+    fun updateScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double, image: String = ""){
         val currentScooter = getScooter(name)
         ridesRef.child(currentScooter.name).child("location").setValue(location)
         ridesRef.child(currentScooter.name).child("timestamp").setValue(timestamp)
         ridesRef.child(currentScooter.name).child("lat").setValue(lat)
         ridesRef.child(currentScooter.name).child("long").setValue(long)
+        if(image.isNotEmpty()){
+            ridesRef.child(currentScooter.name).child("image").setValue(image)
+        }
     }
+
 
     // retrieves the last scooter from the ridesRef database reference
     fun getCurrentScooter(): Scooter? {

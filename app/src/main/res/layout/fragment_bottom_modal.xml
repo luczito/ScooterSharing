@@ -1,10 +1,17 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/dark_grey"
     android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/scooter_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:srcCompat="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/scooter_name"
@@ -44,15 +51,34 @@
         android:textColor="@color/mid_grey"
         android:gravity="center" />
 
-    <Button
-        android:id="@+id/reserve_button"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        android:text="@string/reserve_button"
-        android:layout_gravity="center"
-        android:textColor="@color/black"
-        android:background="@drawable/button" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/reserve_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/button"
+            android:text="@string/reserve_button"
+            android:textColor="@color/black" />
+
+        <Button
+            android:id="@+id/start_ride_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/button"
+            android:text="@string/start_ride_button"
+            android:textColor="@color/black" />
+    </LinearLayout>
 
     <TextView
         android:id="@+id/ride_clock"
@@ -64,16 +90,5 @@
         android:gravity="center"
         tools:text="12:34:56" />
 
-
-    <Button
-        android:id="@+id/start_ride_button"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginTop="8dp"
-        android:text="@string/start_ride_button"
-        android:layout_gravity="center"
-        android:textColor="@color/black"
-        android:background="@drawable/button"
-        android:layout_marginBottom="25dp"/>
 
 </LinearLayout>

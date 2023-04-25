@@ -1,7 +1,9 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.util.Log
+import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -45,15 +47,27 @@ class CardAdapter(private val cards: List<Card>) : RecyclerView.Adapter<CardAdap
             supportingTextView.text = card.timestamp
 
             // Download image from Firebase Storage
+            val maxCacheSize = 1024 * 1024 * 10 // 10 MB
+
             val storageRef = Firebase.storage.reference
             val imageRef = storageRef.child("scooters/${card.name}.webp")
 
-            val ONE_MEGABYTE: Long = 1024 * 1024
-            imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener { bytes ->
-                val bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.size)
-                mediaImageView.setImageBitmap(bitmap)
-            }.addOnFailureListener { exception ->
-                Log.d(TAG, "Error downloading image: $exception")
+            val cache = LruCache<String, Bitmap>(maxCacheSize)
+            val cachedBitmap = cache.get(card.name)
+
+            if (cachedBitmap != null) {
+                // Load image from cache
+                mediaImageView.setImageBitmap(cachedBitmap)
+            } else {
+                // Download image and save in cache
+                val ONE_MEGABYTE: Long = 1024 * 1024
+                imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+                    val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                    mediaImageView.setImageBitmap(bitmap)
+                    cache.put(card.name, bitmap) // Save image in cache
+                }.addOnFailureListener {
+                    // Handle any errors
+                }
             }
 
         }
