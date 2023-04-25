@@ -51,10 +51,12 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="30dp"
             android:clipToPadding="false"
-            android:layout_margin="30dp"
-            tools:listitem="@layout/available_scooters_list"
-            />
+            tools:listitem="@layout/available_scooters_list" />
 
     </RelativeLayout>
 

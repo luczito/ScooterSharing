@@ -2,14 +2,22 @@ package dk.itu.moapd.scootersharing.lufr.controller
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.location.Geocoder
 import android.location.Location
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
+import android.provider.MediaStore
+import android.util.DisplayMetrics
 import android.util.Log
+import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,14 +34,22 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import dk.itu.moapd.scootersharing.lufr.R
+import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentBottomModalBinding
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
+import java.io.ByteArrayOutputStream
 import java.sql.Date
 import java.text.SimpleDateFormat
 
 
 class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragment() {
+
+    companion object {
+        private const val REQUEST_IMAGE_CAPTURE = 1
+    }
+
     private lateinit var binding: FragmentBottomModalBinding
 
     private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -46,7 +62,6 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
     private var location: String? = null
     private var timestamp: String? = null
     private var reserved: String? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -59,6 +74,7 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
             Log.d("RidesDB", "Data is fully loaded")
         }
         auth = Firebase.auth
+
     }
 
     override fun onCreateView(
@@ -83,6 +99,36 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
         binding.scooterLocation.text = location
         binding.scooterTimestamp.text = timestamp
         binding.rideClock.visibility = View.GONE
+
+        // Download image from Firebase Storage
+        val maxCacheSize = 1024 * 1024 * 10 // 10 MB
+
+        val storageRef = Firebase.storage.reference
+
+        //use scooter image
+        val scooter = RidesDB.getScooter(name!!)
+
+        val imageRef = storageRef.child("scooters/${scooter.image}")
+
+        val cache = LruCache<String, Bitmap>(maxCacheSize)
+        val cachedBitmap = cache.get(name)
+
+        if (cachedBitmap != null) {
+            // Load image from cache
+            binding.scooterImage.setImageBitmap(cachedBitmap)
+        } else {
+            // Download image and save in cache
+            val ONE_MEGABYTE: Long = 1024 * 1024
+            imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+                val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+                binding.scooterImage.setImageBitmap(bitmap)
+                cache.put(name, bitmap) // Save image in cache
+            }.addOnFailureListener {
+                // Handle any errors
+            }
+        }
+
+
 
         //check is the ride is currently reserved
         if (reserved != "") {
@@ -180,6 +226,7 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
 
                         }
                         .setPositiveButton("End") { _, _ ->
+
                             getLocation {lat, long ->
                                 val geoCoder = Geocoder(requireContext())
                                 val matches = geoCoder.getFromLocation(lat, long, 1)
@@ -189,6 +236,8 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                                 marker.isVisible = false
                                 marker.isVisible = true
                             }
+
+
                             stopUpdatingCounter() //stop the count
 
                             changeColor("blue")
@@ -205,6 +254,7 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                             binding.rideClock.visibility = View.GONE
 
                             startRideButton.text = "Start ride" //change button title again
+
                             dismiss()
                             //toast it up - display ride time to user
                             Toast.makeText(

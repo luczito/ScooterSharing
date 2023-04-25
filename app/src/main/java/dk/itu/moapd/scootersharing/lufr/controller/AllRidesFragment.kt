@@ -12,6 +12,7 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.gms.maps.MapFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
@@ -71,6 +72,8 @@ class AllRidesFragment : Fragment() {
         bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavBar.visibility = View.VISIBLE
 
+
+
 //        binding.apply {
 //
 //            logoutButton.setOnClickListener {
@@ -97,4 +100,5 @@ class AllRidesFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
 }

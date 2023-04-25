@@ -23,15 +23,18 @@ SOFTWARE.
  */
 package dk.itu.moapd.scootersharing.lufr.view
 
+import android.app.Activity
+import android.content.Intent
+import android.graphics.Bitmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowManager
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
-import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.appbar.MaterialToolbar
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.storage.FirebaseStorage
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.*
+import java.io.ByteArrayOutputStream
 
 /**
  * Class MainAcitivity, refers to the main fragment.

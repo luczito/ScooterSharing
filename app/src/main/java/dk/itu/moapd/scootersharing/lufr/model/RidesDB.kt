@@ -14,6 +14,7 @@ object RidesDB {
     private val database: DatabaseReference = FirebaseDatabase.getInstance().reference
     private val ridesRef: DatabaseReference = database.child("rides")
     private val rides = ArrayList<Scooter>()
+    private val previousRides = ArrayList<Scooter>()
     private var timer: Timer? = null
     private var timerValue = 0
 
@@ -43,6 +44,10 @@ object RidesDB {
         return rides
     }
 
+    fun getPreviousRidesList(): List<Scooter> {
+        return previousRides
+    }
+
     fun getRidesAsCards() : List<Card>{
         var card: Card
         val cardList = ArrayList<Card>()
@@ -52,8 +57,8 @@ object RidesDB {
         }
         return cardList
     }
-
     fun startRide(name: String, user: String){
+
         ridesRef.child(name).child("user").setValue(user)
         rides.last {it.name == name}.user = user
         timer = Timer()
@@ -72,8 +77,15 @@ object RidesDB {
         val timeSpent = rides.last{it.name == name}.timer
         ridesRef.child(name).child("timer").setValue(0)
         rides.last {it.name == name}.timer = 0
+        ridesRef.child(name).child("reserved").setValue("")
+        rides.last {it.name == name}.reserved = ""
         ridesRef.child(name).child("user").setValue("")
         rides.last {it.name == name}.user = ""
+
+        //add to previous rides
+        val scooter = rides.last{it.name == name}
+        previousRides.add(scooter)
+
         return timeSpent - 3600
     }
 
@@ -100,13 +112,17 @@ object RidesDB {
         return "${rides[rides.size-1].getFormatTimestamp()}: Updated scooter ${currentScooter.name} with location: $location"
     }
 
-    fun updateScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double){
+    fun updateScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double, image: String = ""){
         val currentScooter = getScooter(name)
         ridesRef.child(currentScooter.name).child("location").setValue(location)
         ridesRef.child(currentScooter.name).child("timestamp").setValue(timestamp)
         ridesRef.child(currentScooter.name).child("lat").setValue(lat)
         ridesRef.child(currentScooter.name).child("long").setValue(long)
+        if(image.isNotEmpty()){
+            ridesRef.child(currentScooter.name).child("image").setValue(image)
+        }
     }
+
 
     // retrieves the last scooter from the ridesRef database reference
     fun getCurrentScooter(): Scooter? {

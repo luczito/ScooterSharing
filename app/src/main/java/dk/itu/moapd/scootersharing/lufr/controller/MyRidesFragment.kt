@@ -88,7 +88,7 @@ class MyRidesFragment : Fragment() {
             binding = FragmentMyRidesBinding.inflate(layoutInflater, container, false)
 
             recyclerView = binding.recyclerView
-            adapter = CustomArrayAdapter(RidesDB.getRidesList())
+            adapter = CustomArrayAdapter(RidesDB.getPreviousRidesList())
             recyclerView.adapter = adapter
 
             return binding.root
