@@ -307,17 +307,28 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                         .setPositiveButton("End") { _, _ ->
 
 
-                            getLocation {lat, long ->
-                                if(isAdded) {
-                                    val geoCoder = Geocoder(requireContext())
-                                    val matches = geoCoder.getFromLocation(lat, long, 1)
-                                    val bestMatch = if (matches!!.isEmpty()) null else matches[0]
-                                    RidesDB.updateScooter(name!!, bestMatch!!.getAddressLine(0), System.currentTimeMillis(), lat, long)
-                                    marker.position = LatLng(lat, long)
-                                    marker.isVisible = false
-                                    marker.isVisible = true
+                            getLocation { lat, long ->
+                                if (isAdded) {
+                                    try {
+                                        val geoCoder = Geocoder(requireContext())
+                                        val matches = geoCoder.getFromLocation(lat, long, 1)
+                                        val bestMatch = if (matches?.isEmpty() == true) null else matches?.get(0)
+                                        if (bestMatch != null) {
+                                            RidesDB.updateScooter(name!!, bestMatch.getAddressLine(0), System.currentTimeMillis(), lat, long)
+                                            marker.position = LatLng(lat, long)
+                                            marker.isVisible = false
+                                            marker.isVisible = true
+                                        } else {
+                                            // Handle the case when bestMatch is null
+                                        }
+                                    } catch (e: IOException) {
+                                        // Handle the exception
+                                        Log.e("GeocoderError", "Error fetching location: ", e)
+                                    }
                                 }
                             }
+
+
 
 
                             stopUpdatingCounter() //stop the count
@@ -367,27 +378,13 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
         handler.postDelayed(updateTextViewRunnable, 1000)
     }
 
-    fun getScaledBitmap(path: String, destWidth: Int, destHeight: Int): Bitmap {
-        // Read in the dimensions of the image on disk
-        val options = BitmapFactory.Options()
-        options.inJustDecodeBounds = true
-        BitmapFactory.decodeFile(path, options)
-        val srcWidth = options.outWidth.toFloat()
-        val srcHeight = options.outHeight.toFloat()
-        // Figure out how much to scale down by
-        val sampleSize = if (srcHeight <= destHeight && srcWidth <= destWidth) {
-            1
-        } else {
-            val heightScale = srcHeight / destHeight
-            val widthScale = srcWidth / destWidth
-            minOf(heightScale, widthScale).roundToInt()
-        }
-        // Read in and create final bitmap
-        return BitmapFactory.decodeFile(path, BitmapFactory.Options().apply {
-            inSampleSize = sampleSize
-        })
-    }
+    // <---------------------------------- IMAGE UPLOAD BLOCK START ----------------------------------------->
     private fun uploadImageToFirebase(uri: Uri) {
+        val activity = activity
+        if (activity == null || !isAdded) {
+            Log.e(TAG, "Fragment not attached to the activity")
+            return
+        }
         val storageRef = FirebaseStorage.getInstance().reference
         val imagesRef = storageRef.child("scooters/${name}.jpg")
 
@@ -411,21 +408,40 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                     FirebaseDatabase.getInstance().getReference("scooters").child(name!!)
                 scooterRef.child("image").setValue(downloadUrl.toString())
                 Log.d("Image", "Image uploaded to Firebase Storage and database updated")
-                Toast.makeText(requireContext(), "Image uploaded successfully", Toast.LENGTH_SHORT)
+                Toast.makeText(activity, "Image uploaded successfully", Toast.LENGTH_SHORT)
                     .show()
             }.addOnFailureListener { exception ->
                 Log.e("Image", "Failed to get download URL for image", exception)
-                Toast.makeText(requireContext(), "Failed to upload image", Toast.LENGTH_SHORT)
+                Toast.makeText(activity, "Failed to upload image", Toast.LENGTH_SHORT)
                     .show()
             }
         }.addOnFailureListener { exception ->
             Log.e("Image", "Failed to upload image to Firebase Storage", exception)
-            Toast.makeText(requireContext(), "Failed to upload image", Toast.LENGTH_SHORT)
+            Toast.makeText(activity, "Failed to upload image", Toast.LENGTH_SHORT)
                 .show()
         }
     }
 
-
+    fun getScaledBitmap(path: String, destWidth: Int, destHeight: Int): Bitmap {
+        // Read in the dimensions of the image on disk
+        val options = BitmapFactory.Options()
+        options.inJustDecodeBounds = true
+        BitmapFactory.decodeFile(path, options)
+        val srcWidth = options.outWidth.toFloat()
+        val srcHeight = options.outHeight.toFloat()
+        // Figure out how much to scale down by
+        val sampleSize = if (srcHeight <= destHeight && srcWidth <= destWidth) {
+            1
+        } else {
+            val heightScale = srcHeight / destHeight
+            val widthScale = srcWidth / destWidth
+            minOf(heightScale, widthScale).roundToInt()
+        }
+        // Read in and create final bitmap
+        return BitmapFactory.decodeFile(path, BitmapFactory.Options().apply {
+            inSampleSize = sampleSize
+        })
+    }
 
     private fun openCamera() {
         if (ContextCompat.checkSelfPermission(
@@ -433,7 +449,11 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                 Manifest.permission.CAMERA
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            val photoFile = File(photoName!!)
+            if (photoName == null) {
+                Toast.makeText(requireContext(), "Photo name is null", Toast.LENGTH_SHORT).show()
+                return
+            }
+            val photoFile = File(photoName)
             val photoUri = Uri.fromFile(photoFile)
             val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, photoUri)
             requireActivity().sendBroadcast(intent)
@@ -442,7 +462,6 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
             requestCameraPermission()
         }
     }
-
 
     private fun requestCameraPermission() {
         if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
@@ -464,11 +483,7 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
     ) {
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (photoName != null) {
-                    openCamera()
-                } else {
-                    Toast.makeText(requireContext(), "Failed to generate photo name", Toast.LENGTH_SHORT).show()
-                }
+                openCamera()
             } else {
                 Toast.makeText(requireContext(), "Camera permission denied", Toast.LENGTH_SHORT).show()
             }
@@ -476,6 +491,9 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
             super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
+
+    // <---------------------------------- IMAGE UPLOAD BLOCK END ----------------------------------------->
+
 
 
     private fun stopUpdatingCounter() {
