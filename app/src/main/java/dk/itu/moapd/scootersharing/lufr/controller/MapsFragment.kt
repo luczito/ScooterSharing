@@ -32,6 +32,10 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.BuildConfig
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
@@ -58,7 +62,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     private var cameraPosition = "camera position"
     private val location = "location"
 
-
+    private lateinit var auth: FirebaseAuth
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -79,6 +83,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             LocationServices.getFusedLocationProviderClient(requireContext())
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -87,7 +92,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
 
-        val autoCompleteTextView = view.findViewById<AutoCompleteTextView>(R.id.idAutoCompleteTextView)
+        val autoCompleteTextView =
+            view.findViewById<AutoCompleteTextView>(R.id.idAutoCompleteTextView)
         autoCompleteTextView.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) {
                 if (autoCompleteTextView.compoundDrawables[2] != null) {
@@ -120,7 +126,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         autoCompleteTextView = view.findViewById(R.id.idAutoCompleteTextView)
 
         val placesClient = Places.createClient(requireContext())
-        val autoCompleteAdapter = PlacesAutoCompleteAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line)
+        val autoCompleteAdapter =
+            PlacesAutoCompleteAdapter(requireContext(), android.R.layout.simple_dropdown_item_1line)
         autoCompleteTextView.setAdapter(autoCompleteAdapter)
         autoCompleteTextView.threshold = 3
 
@@ -130,12 +137,18 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 autoCompleteTextView.setText(placeItem.primaryText)
 
                 val placeId = placeItem.placeId
-                val fetchPlaceRequest = FetchPlaceRequest.newInstance(placeId, listOf(Place.Field.LAT_LNG))
+                val fetchPlaceRequest =
+                    FetchPlaceRequest.newInstance(placeId, listOf(Place.Field.LAT_LNG))
                 placesClient.fetchPlace(fetchPlaceRequest).addOnSuccessListener { response ->
                     val place = response.place
                     val latLng = place.latLng
                     if (latLng != null) {
-                        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, defaultZoom))
+                        googleMap.animateCamera(
+                            CameraUpdateFactory.newLatLngZoom(
+                                latLng,
+                                defaultZoom
+                            )
+                        )
                     }
                 }.addOnFailureListener { exception ->
                     if (exception is ApiException) {
@@ -144,28 +157,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
                 }
             }
         }
+        auth = Firebase.auth
 
     }
-
-// Was for when used SearchView, so pressing enter would just let google go to the first result,
-// but now we use AutoCompleteTextView (Suggestions to press)
-
-//    private fun searchForLocation(query: String) {
-//        val geocoder = Geocoder(requireContext())
-//        try {
-//            val addressList = geocoder.getFromLocationName(query, 1)
-//            if (addressList?.isNotEmpty() == true) {
-//                val address = addressList[0]
-//                val latLng = LatLng(address.latitude, address.longitude)
-//                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, defaultZoom))
-//            } else {
-//                Toast.makeText(requireContext(), "Location not found", Toast.LENGTH_SHORT).show()
-//            }
-//        } catch (e: IOException) {
-//            e.printStackTrace()
-//        }
-//    }
-
 
     private fun getLocationPermission() {
         if (ContextCompat.checkSelfPermission(
@@ -207,14 +201,25 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
 
         googleMap.setOnMapLoadedCallback {
-            val vectorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.marker_scooter)
+            val vectorDrawable =
+                ContextCompat.getDrawable(requireContext(), R.drawable.marker_scooter)
             for (ride in RidesDB.getRidesList()) {
-                if (ride.user != ""){
+                if (ride.user != "") {
                     vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.red))
-                }else if(ride.reserved != ""){
-                    vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.yellow))
-                }else{
-                    vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.main_blue))
+                } else if (ride.reserved != "") {
+                    vectorDrawable?.setTint(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.yellow
+                        )
+                    )
+                } else {
+                    vectorDrawable?.setTint(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.main_blue
+                        )
+                    )
                 }
                 val bitmap = Bitmap.createBitmap(
                     vectorDrawable?.intrinsicWidth ?: 0,
@@ -331,8 +336,8 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     // move camera to marker
 
 
-    fun moveCameraToMarker(lat : Double, long : Double) {
-        if(::googleMap.isInitialized) {
+    private fun moveCameraToMarker(lat: Double, long: Double) {
+        if (::googleMap.isInitialized) {
             googleMap.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
                     LatLng(
@@ -348,10 +353,9 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
 
-
     override fun onMarkerClick(marker: Marker): Boolean {
         val scooter = RidesDB.getScooter(marker.title.toString())
-       moveCameraToMarker(marker.position.latitude, marker.position.longitude)
+        moveCameraToMarker(marker.position.latitude, marker.position.longitude)
 
         // Create a BottomSheetDialogFragment
         val bottomSheetDialogFragment = BottomModalFragment(marker)

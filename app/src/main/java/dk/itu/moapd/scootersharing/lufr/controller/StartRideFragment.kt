@@ -45,6 +45,7 @@ import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentStartRideBinding
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
+import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 /**
  * Class StartRideFragment, holds the logic and functionality of the StartRideFragment.
@@ -122,28 +123,18 @@ class StartRideFragment : Fragment() {
             startRideButton.setOnClickListener {
                 getLocation { lat, long ->
 
-                    loadFragment(StartRideFragment())
+                    (activity as MainActivity).setCurrentFragment(MapsFragment())
                 }
             }
             logoutButton.setOnClickListener {
                 auth.signOut()
-                Toast.makeText(
-                    context, "Successfully logged out",
-                    Toast.LENGTH_LONG
-                ).show()
-                loadFragment(WelcomeFragment())
+                (activity as MainActivity).showToast("Successfully logged out")
+                (activity as MainActivity).setCurrentFragment(WelcomeFragment())
             }
             settingsButton.setOnClickListener {
-                loadFragment(SettingsFragment())
+                (activity as MainActivity).setCurrentFragment(SettingsFragment())
             }
         }
-    }
-
-    private fun loadFragment(fragment: Fragment) {
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     private fun getLocation(callback: (Double, Double) -> Unit) {

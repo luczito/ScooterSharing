@@ -47,6 +47,7 @@ import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentUpdateRideBinding
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
+import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 import java.sql.Date
 import java.text.SimpleDateFormat
 
@@ -143,26 +144,18 @@ class UpdateRideFragment : Fragment() {
                         Snackbar.LENGTH_LONG
                     ).show()
                     showMessage()
-                    loadFragment(UpdateRideFragment())
+                    (activity as MainActivity).setCurrentFragment(UpdateRideFragment())
                 }
             }
             logoutButton.setOnClickListener {
                 auth.signOut()
-                Toast.makeText(context, "Successfully logged out",
-                    Toast.LENGTH_LONG).show()
-                loadFragment(WelcomeFragment())
+                (activity as MainActivity).showToast("Successfully logged out")
+                (activity as MainActivity).setCurrentFragment(WelcomeFragment())
             }
             settingsButton.setOnClickListener{
-                loadFragment(SettingsFragment())
+                (activity as MainActivity).setCurrentFragment(SettingsFragment())
             }
         }
-    }
-
-    private fun loadFragment(fragment: Fragment){
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 
     /**

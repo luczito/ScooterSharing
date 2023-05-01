@@ -15,6 +15,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentSignupBinding
+import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 class SignupFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
@@ -71,16 +72,13 @@ class SignupFragment : Fragment() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
-                    val user = auth.currentUser
-                    Toast.makeText(context, "Succesfully signed up",
-                        Toast.LENGTH_SHORT).show()
+                    (activity as MainActivity).showToast("Successfully signed up")
                     sendEmailVerification()
-                    updateUI(user!!)
+                    (activity as MainActivity).setCurrentFragment(MapsFragment())
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(TAG, "createUserWithEmail:failure", task.exception)
-                    Toast.makeText(context, "Unable to sign up",
-                        Toast.LENGTH_SHORT).show()
+                    (activity as MainActivity).showToast("ERROR: Unable to sign up")
                 }
             }
         // [END create_user_with_email]
@@ -96,20 +94,8 @@ class SignupFragment : Fragment() {
         // [END send_email_verification]
     }
 
-    private fun updateUI(user: FirebaseUser) {
-        val fragment = WelcomeFragment()
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
-    private fun reload() {
-
-    }
-
-    fun checkCredentials(email: String, password: String, confPassword: String) : String {
-        var check: String
+    private fun checkCredentials(email: String, password: String, confPassword: String) : String {
+        val check: String
         if (!email.contains('@') || !email.contains('.')) {
             check = "Email address not valid"
         }

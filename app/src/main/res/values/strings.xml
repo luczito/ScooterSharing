@@ -41,4 +41,5 @@
 
     <string name="my_rides_button">My rides</string>
     <string name="all_rides_button">All rides</string>
+    <string name="qr_scan_prompt">Scan the chosen scooter</string>
 </resources>

@@ -43,8 +43,7 @@ import dk.itu.moapd.scootersharing.lufr.databinding.FragmentMyRidesBinding
 
 /**
  * Class MainFragment, holds the logic and functionality of the main fragment.
- * @property binding fragment binding for the view fragment.
- * @property listView the listview for the list of scooters
+ * @property binding fragment binding for the view fragment
  */
 class MyRidesFragment : Fragment() {
 
@@ -103,32 +102,6 @@ class MyRidesFragment : Fragment() {
             bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
             bottomNavBar.visibility = View.VISIBLE
 
-//            binding.apply {
-//                logoutButton.setOnClickListener {
-//                    auth.signOut()
-//                    Toast.makeText(
-//                        context, "Successfully logged out",
-//                        Toast.LENGTH_LONG
-//                    ).show()
-//                    loadFragment(WelcomeFragment())
-//                }
-//                settingsButton.setOnClickListener {
-//                    loadFragment(SettingsFragment())
-//                }
-//                allRidesButton.setOnClickListener{
-//                    loadFragment(AllRidesFragment())
-//                }
-//                myRidesButton.setOnClickListener{
-//                    loadFragment(MyRidesFragment())
-//                }
-//            }
-        }
-
-        private fun loadFragment(fragment: Fragment){
-            requireActivity().supportFragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit()
         }
 }
 
