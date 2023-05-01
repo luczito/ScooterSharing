@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentWelcomeBinding
+import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 
 class WelcomeFragment : Fragment() {
@@ -43,18 +44,10 @@ class WelcomeFragment : Fragment() {
 
         binding.apply {
             loginButton.setOnClickListener {
-                val fragment = LoginFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                (activity as MainActivity).setCurrentFragment(LoginFragment())
             }
             signupButton.setOnClickListener {
-                val fragment = SignupFragment()
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragment_container, fragment)
-                    .addToBackStack(null)
-                    .commit()
+                (activity as MainActivity).setCurrentFragment(SignupFragment())
             }
         }
     }

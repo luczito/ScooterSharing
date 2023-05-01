@@ -16,6 +16,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentPaymentBinding
+import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 class PaymentFragment : Fragment() {
     companion object {
@@ -62,41 +63,27 @@ class PaymentFragment : Fragment() {
                         if (task.isSuccessful) {
                             //authentication successful, update password
                             Log.d(SignupFragment.TAG, "updateInformation:success")
-                            Toast.makeText(
-                                context, "Successfully updated information",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            (activity as MainActivity).showToast("Successfully updated information")
 
                             //TODO ADD CARD INFO TO DB HERE
 
-                            loadFragment(StartRideFragment())
+                            (activity as MainActivity).setCurrentFragment(MapsFragment())
 
                         } else {
                             // if authentication fails, notify the user
                             Log.w(SignupFragment.TAG, "updateInformation:failure", task.exception)
-                            Toast.makeText(
-                                context, "Wrong password.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            (activity as MainActivity).showToast("ERROR: Wrong password")
                         }
                     }
             }
             logoutButton.setOnClickListener {
                 auth.signOut()
-                Toast.makeText(context, "Successfully logged out",
-                    Toast.LENGTH_LONG).show()
-                loadFragment(WelcomeFragment())
+                (activity as MainActivity).showToast("Successfully logged out")
+                (activity as MainActivity).setCurrentFragment(WelcomeFragment())
             }
             settingsButton.setOnClickListener{
-                loadFragment(SettingsFragment())
+                (activity as MainActivity).setCurrentFragment(SettingsFragment())
             }
         }
-    }
-
-    private fun loadFragment(fragment: Fragment){
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
     }
 }

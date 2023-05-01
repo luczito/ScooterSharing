@@ -18,6 +18,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentSettingsBinding
+import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 class SettingsFragment : Fragment() {
     companion object {
@@ -58,7 +59,7 @@ class SettingsFragment : Fragment() {
                 if (!editTextConfirmPassword.text.isNullOrBlank()) {
                     pass = editTextConfirmPassword.text.toString()
                 }
-                var creds = EmailAuthProvider.getCredential(
+                val creds = EmailAuthProvider.getCredential(
                     user.email!!,
                     pass
                 )
@@ -67,46 +68,31 @@ class SettingsFragment : Fragment() {
                         if (task.isSuccessful) {
                             //authentication successful, update password
                             Log.d(SignupFragment.TAG, "updateInformation:success")
-                            Toast.makeText(
-                                context, "Sucessfully updated information",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            (activity as MainActivity).showToast("Successfully updated user information")
+
                             if (!editTextChangePassword.text.isNullOrBlank()){
                                 user.updatePassword(editTextChangePassword.text.toString())
                             }
                             if (!editTextChangeEmail.text.isNullOrBlank()) {
                                 user.updateEmail(editTextChangeEmail.text.toString())
                             }
-
-                            loadFragment(MyRidesFragment())
+                            (activity as MainActivity).setCurrentFragment(MyRidesFragment())
 
                         } else {
                             // if authentication fails, notify the user
                             Log.w(SignupFragment.TAG, "updateInformation:failure", task.exception)
-                            Toast.makeText(
-                                context, "Wrong password.",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                            (activity as MainActivity).showToast("ERROR: Wrong password")
                         }
                     }
                 paymentSettingsButton.setOnClickListener {
-                    loadFragment(PaymentFragment())
+                    (activity as MainActivity).setCurrentFragment(PaymentFragment())
                 }
                 logoutButton.setOnClickListener {
                     auth.signOut()
-                    Toast.makeText(context, "Successfully logged out",
-                        Toast.LENGTH_LONG).show()
-                    loadFragment(WelcomeFragment())
+                    (activity as MainActivity).showToast("Successfully logged out")
+                    (activity as MainActivity).setCurrentFragment(WelcomeFragment())
                 }
             }
         }
     }
-
-    private fun loadFragment(fragment: Fragment){
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
 }

@@ -1,24 +1,19 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.gms.maps.MapFragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.storage.ktx.storage
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentAllRidesBinding
@@ -54,7 +49,7 @@ class AllRidesFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) : View? {
+    ) : View {
         binding = FragmentAllRidesBinding.inflate(layoutInflater, container, false)
 
         recyclerView = binding.recyclerView
@@ -66,39 +61,10 @@ class AllRidesFragment : Fragment() {
     /**
      * onCreateView function which inflates the binding, and holds the functionality for the 3 buttons.
      */
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?){
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavBar.visibility = View.VISIBLE
-
-
-
-//        binding.apply {
-//
-//            logoutButton.setOnClickListener {
-//                auth.signOut()
-//                Toast.makeText(context, "Successfully logged out",
-//                    Toast.LENGTH_LONG).show()
-//                loadFragment(WelcomeFragment())
-//            }
-//            settingsButton.setOnClickListener{
-//                loadFragment(SettingsFragment())
-//            }
-//            allRidesButton.setOnClickListener{
-//                loadFragment(AllRidesFragment())
-//            }
-//            myRidesButton.setOnClickListener{
-//                loadFragment(MyRidesFragment())
-//            }
-//        }
     }
-
-    private fun loadFragment(fragment: Fragment){
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, fragment)
-            .addToBackStack(null)
-            .commit()
-    }
-
 }

@@ -336,7 +336,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     // move camera to marker
 
 
-    fun moveCameraToMarker(lat: Double, long: Double) {
+    private fun moveCameraToMarker(lat: Double, long: Double) {
         if (::googleMap.isInitialized) {
             googleMap.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(

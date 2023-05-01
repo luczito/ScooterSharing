@@ -9,12 +9,9 @@ import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
-import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.maps.model.Marker
@@ -26,15 +23,14 @@ import com.google.firebase.ktx.Firebase
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
-import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentQrCodeBinding
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
+import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class QrCodeFragment(private val marker: Marker) : Fragment() {
-
     private inner class ImageAnalyzer() : ImageAnalysis.Analyzer {
         @SuppressLint("UnsafeOptInUsageError")
         override fun analyze(imageProxy: ImageProxy) {
@@ -163,12 +159,7 @@ class QrCodeFragment(private val marker: Marker) : Fragment() {
                 }
                 .show()
             }
-
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.fragment_container, MapsFragment())
-            .addToBackStack(null)
-            .commit()
-
+        (activity as MainActivity).setCurrentFragment(MapsFragment())
     }
 
     interface QrCodeListener {
