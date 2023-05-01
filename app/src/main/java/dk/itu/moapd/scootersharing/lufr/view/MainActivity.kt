@@ -28,12 +28,10 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.FirebaseApp
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.*
 
-/**
- * Class MainAcitivity, refers to the main fragment.
- */
 class MainActivity : AppCompatActivity() {
 
     companion object {
@@ -42,6 +40,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        FirebaseApp.initializeApp(this)
+
         setContentView(R.layout.activity_main)
 
         val startRideFragment=StartRideFragment()
