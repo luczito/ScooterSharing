@@ -191,6 +191,8 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                 binding.scooterReserved.text = "$name is currently in use"
             } else {
                 binding.rideClock.visibility = View.VISIBLE
+                binding.startRideButton.visibility = View.VISIBLE
+                binding.startRideButton.isClickable = true
                 binding.startRideButton.text = "End ride"
                 binding.scooterReserved.visibility = View.GONE
                 binding.reserveButton.visibility = View.GONE
@@ -240,7 +242,8 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
             }
             startRideButton.setOnClickListener {
                 if (startRideButton.text == "Start ride") {
-                    //double checks
+                    binding.startRideButton.text = "End ride"
+                    startUpdatingCounter()
                     val qrcodeFragment = QrCodeFragment(marker)
                     qrcodeFragment.qrCodeListener = this@BottomModalFragment
                     (activity as MainActivity).setCurrentFragment(qrcodeFragment)
@@ -255,8 +258,6 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
 
                         }
                         .setPositiveButton("End") { _, _ ->
-
-
                             getLocation { lat, long ->
                                 if (isAdded) {
                                     try {

@@ -23,6 +23,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentQrCodeBinding
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.view.MainActivity
@@ -159,7 +160,11 @@ class QrCodeFragment(private val marker: Marker) : Fragment() {
                 }
                 .show()
             }
-        (activity as MainActivity).setCurrentFragment(MapsFragment())
+        //(activity as MainActivity).setCurrentFragment(MapsFragment())
+        fragmentManager?.beginTransaction()?.apply {
+            replace(R.id.fragment_container, MapsFragment())
+            commit()
+        }
     }
 
     interface QrCodeListener {

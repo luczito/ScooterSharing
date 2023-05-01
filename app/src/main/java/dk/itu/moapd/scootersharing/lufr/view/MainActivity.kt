@@ -64,11 +64,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun setCurrentFragment(fragment: Fragment)=
+    fun setCurrentFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fragment_container,fragment)
+            replace(R.id.fragment_container, fragment)
             commit()
         }
+    }
 
     fun showToast(message: String){
         Toast.makeText(
