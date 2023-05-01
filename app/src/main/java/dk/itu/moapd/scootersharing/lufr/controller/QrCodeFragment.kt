@@ -72,6 +72,7 @@ class QrCodeFragment(private val marker: Marker) : Fragment() {
     var qrCodeListener: QrCodeListener? = null
 
     private lateinit var auth: FirebaseAuth
+    private var dialogOpened = false
 
     companion object {
         private const val REQUEST_CODE_PERMISSIONS = 10
@@ -148,7 +149,6 @@ class QrCodeFragment(private val marker: Marker) : Fragment() {
     }
 
     fun onQrCodeScanned(qrCodeText: String) {
-        var dialogOpened = false
         if (!dialogOpened && marker.title == qrCodeText) {
             dialogOpened = true
             MaterialAlertDialogBuilder(requireContext())
