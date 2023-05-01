@@ -133,6 +133,12 @@ object RidesDB {
         return rides.last {it.name == name}
     }
 
+    fun updateScooterImage(name: String, imageName: String) {
+        ridesRef.child(name).child("image").setValue(imageName)
+        rides.last {it.name == name}.image = imageName
+    }
+
+
     fun reserveScooter(name: String, user: String): String{
         ridesRef.child(name).child("reserved").setValue(user)
         rides.last {it.name == name}.reserved = user

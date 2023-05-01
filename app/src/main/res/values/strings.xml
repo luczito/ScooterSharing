@@ -32,6 +32,7 @@
     <string name="exp_date">Expiration date</string>
 
     <string name="reserve_button">Reserve scooter</string>
+    <string name="update_image">Update Scooter Image</string>
     <string name="go_to_map">Show on map</string>
     <string name="choose_scooter">Select or input the chosen scooter</string>
 
