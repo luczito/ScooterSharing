@@ -89,7 +89,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
 
         val autoCompleteTextView =
@@ -110,14 +109,15 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             .findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
+        bottomNavBar.selectedItemId = R.id.map_nav_button
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
-        bottomNavBar.visibility = View.VISIBLE
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
 

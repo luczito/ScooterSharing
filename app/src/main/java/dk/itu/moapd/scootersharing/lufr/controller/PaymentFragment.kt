@@ -52,6 +52,8 @@ class PaymentFragment : Fragment() {
         bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavBar.visibility = View.VISIBLE
 
+        binding.editTextUser.text = user.email
+
         binding.apply {
             applyButton.setOnClickListener {
                 val credentials = EmailAuthProvider.getCredential(
@@ -64,17 +66,18 @@ class PaymentFragment : Fragment() {
                             //authentication successful, update password
                             Log.d(SignupFragment.TAG, "updateInformation:success")
                             if (
-                                binding.editTextCardNumber.length() != 16
-                                || binding.editTextCvc.length() != 3
-                                || binding.editTextExpDate.length() != 5
+                                editTextCardNumber.length() != 16
+                                || editTextCvc.length() != 3
+                                || editTextExpDate.length() != 5
                             ) {
                                 (activity as MainActivity).showToast("ERROR: Invalid card information")
-                            }else{
+                            } else {
                                 UsersDB.updatePaymentInfo(
                                     email = user.email!!,
-                                    cardNumber = binding.editTextCardNumber.text.toString().toLong(),
-                                    cvc = binding.editTextCvc.text.toString().toInt(),
-                                    exp = binding.editTextExpDate.text.toString()
+                                    cardNumber = editTextCardNumber.text.toString()
+                                        .toLong(),
+                                    cvc = editTextCvc.text.toString().toInt(),
+                                    exp = editTextExpDate.text.toString()
                                 )
 
                                 (activity as MainActivity).showToast("Successfully updated card information")
@@ -87,13 +90,30 @@ class PaymentFragment : Fragment() {
                         }
                     }
             }
+            deleteInfoButton.setOnClickListener {
+                if(editTextPassword.text.toString() != ""){
+                    val credentials = EmailAuthProvider.getCredential(
+                        user.email!!,
+                        editTextPassword.text.toString()
+                    )
+                    user.reauthenticate(credentials)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                UsersDB.deletePaymentInfo(user.email!!)
+                                (activity as MainActivity).showToast("Successfully deleted card information")
+                                (activity as MainActivity).setCurrentFragment(MapsFragment())
+                            } else {
+                                (activity as MainActivity).showToast("ERROR: Wrong password")
+                            }
+                        }
+                }else{
+                    (activity as MainActivity).showToast("ERROR: Enter your password to make changes!")
+                }
+            }
             logoutButton.setOnClickListener {
                 auth.signOut()
                 (activity as MainActivity).showToast("Successfully logged out")
                 (activity as MainActivity).setCurrentFragment(WelcomeFragment())
-            }
-            settingsButton.setOnClickListener {
-                (activity as MainActivity).setCurrentFragment(MyProfileFragment())
             }
         }
     }

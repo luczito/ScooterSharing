@@ -43,6 +43,10 @@ class MyProfileFragment : Fragment() {
     ): View {
         binding = FragmentMyProfileBinding.inflate(layoutInflater, container, false)
 
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
+        bottomNavBar.selectedItemId = R.id.profile_nav_button
+
         return binding.root
     }
 
@@ -50,10 +54,15 @@ class MyProfileFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.editTextUser.text = user.email
 
-        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
-        bottomNavBar.visibility = View.VISIBLE
-
         binding.apply {
+            paymentSettingsButton.setOnClickListener {
+                (activity as MainActivity).setCurrentFragment(PaymentFragment())
+            }
+            logoutButton.setOnClickListener {
+                auth.signOut()
+                (activity as MainActivity).showToast("Successfully logged out")
+                (activity as MainActivity).setCurrentFragment(WelcomeFragment())
+            }
             applyButton.setOnClickListener {
                 var creds: AuthCredential? = null
                 if (!editTextConfirmPassword.text.isNullOrBlank()) {
@@ -69,29 +78,23 @@ class MyProfileFragment : Fragment() {
                                 }
                                 if (!editTextChangeEmail.text.isNullOrBlank()) {
                                     user.updateEmail(editTextChangeEmail.text.toString())
-                                    UsersDB.updateUserInfo(user.email!!, editTextChangeEmail.text.toString())
+                                    if(UsersDB.updateUserInfo(user.email!!, editTextChangeEmail.text.toString())){
+                                        Log.d(SignupFragment.TAG, "updateInformation:success")
+                                        (activity as MainActivity).showToast("Successfully updated user information")
+                                        (activity as MainActivity).setCurrentFragment(MyRidesFragment())
+                                    }else{
+                                        Log.e(SignupFragment.TAG, "ERROR: new email is in use or invalid")
+                                        (activity as MainActivity).showToast("ERROR: new email is in use or invalid")
+                                    }
                                 }
-
-                                Log.d(SignupFragment.TAG, "updateInformation:success")
-                                (activity as MainActivity).showToast("Successfully updated user information")
-                                (activity as MainActivity).setCurrentFragment(MyRidesFragment())
-
                             } else {
                                 // if authentication fails, notify the user
                                 Log.w(SignupFragment.TAG, "updateInformation:failure", task.exception)
                                 (activity as MainActivity).showToast("ERROR: Wrong password")
                             }
                         }
-                }
-
-                paymentSettingsButton.setOnClickListener {
-                    (activity as MainActivity).setCurrentFragment(PaymentFragment())
-                }
-
-                logoutButton.setOnClickListener {
-                    auth.signOut()
-                    (activity as MainActivity).showToast("Successfully logged out")
-                    (activity as MainActivity).setCurrentFragment(WelcomeFragment())
+                }else if(editTextChangeEmail.text.isNullOrBlank() && editTextChangePassword.text.isNullOrBlank()){
+                    (activity as MainActivity).showToast("ERROR: No valid information given")
                 }
             }
         }

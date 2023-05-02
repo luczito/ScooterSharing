@@ -46,14 +46,15 @@ class RidesFragment : Fragment() {
 
     private lateinit var binding: FragmentRidesBinding
     private lateinit var bottomNavBar: BottomNavigationView
-    private lateinit var auth: FirebaseAuth
-    private lateinit var user: FirebaseUser
-    private lateinit var recyclerView: RecyclerView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
         super.onCreate(savedInstanceState)
+
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
+        bottomNavBar.selectedItemId = R.id.rides_nav_button
     }
 
 

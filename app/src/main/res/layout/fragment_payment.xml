@@ -10,57 +10,27 @@
     android:orientation="vertical"
     tools:context=".controller.PaymentFragment">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="50dp"
-        android:orientation="horizontal">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/logout_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="start"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:drawableEnd="@drawable/baseline_logout_24" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/settings_button"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_gravity="end"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
-            android:background="?android:attr/selectableItemBackground"
-            android:drawableEnd="@drawable/baseline_settings_24" />
-
-    </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="30dp" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/logout_button"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:scaleX="1.3"
+        android:scaleY="1.3"
+        android:layout_gravity="start"
+        android:layout_margin="50dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:drawableEnd="@drawable/baseline_logout_24" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="40dp"
         android:gravity="center"
         android:scaleX="2"
         android:scaleY="2"
-        android:text="@string/payment_settings"
+        android:text="@string/settings"
         android:textColor="@color/mid_grey"
         android:textStyle="bold" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="50dp" />
 
     <TextView
         android:layout_width="match_parent"
@@ -71,11 +41,17 @@
         android:text="@string/app_name"
         android:textColor="@color/mid_grey"
         android:textStyle="bold"
+        android:layout_marginBottom="25dp"
         app:drawableTopCompat="@drawable/baseline_electric_scooter_24" />
 
-    <View
+    <TextView
+        android:id="@+id/edit_text_user"
         android:layout_width="match_parent"
-        android:layout_height="25dp" />
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/mid_grey"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -188,6 +164,19 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="15dp" />
+'
+    <Button
+        android:id="@+id/delete_info_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/button"
+        android:drawableLeft="@drawable/baseline_clear_24"
+        android:scaleX="1"
+        android:text="@string/delete_card_information"
+        android:textColor="@color/dark_grey"
+        android:visibility="visible"
+        android:layout_margin="10dp"/>
 
     <Button
         android:id="@+id/apply_button"

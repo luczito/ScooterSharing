@@ -58,13 +58,7 @@ class AllRidesFragment : Fragment() {
 
         return binding.root
     }
-    /**
-     * onCreateView function which inflates the binding, and holds the functionality for the 3 buttons.
-     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
-        bottomNavBar.visibility = View.VISIBLE
     }
 }

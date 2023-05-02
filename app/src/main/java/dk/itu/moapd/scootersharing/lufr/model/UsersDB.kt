@@ -14,58 +14,58 @@ object UsersDB {
     private val database = MainActivity.getDatabaseReference()
     private val usersRef: DatabaseReference = database.child("users")
 
-    fun addUser(email: String){
+    fun addUser(email: String) {
         val userKey = usersRef.push().key
-        getUserKey(email) {
-            foundKey ->
-            if(foundKey == null){
-                if(userKey != null){
+        getUserKey(email) { foundKey ->
+            if (foundKey == null) {
+                if (userKey != null) {
                     usersRef.child(userKey).child("email").setValue(email)
                     Log.d("UsersDB", "Successfully added user $userKey to the UsersDB")
-                }else{
+                } else {
                     Log.e("UsersDB", "User key not generated and therefore null")
                 }
-            }else{
+            } else {
                 Log.e("UsersDB", "ERROR: email already exists")
             }
         }
     }
 
-    fun updatePaymentInfo(email: String, cardNumber: Long, cvc: Int, exp: String){
-        getUserKey(email) {
-            userKey ->
-            if(userKey != null){
+    fun updatePaymentInfo(email: String, cardNumber: Long, cvc: Int, exp: String) {
+        getUserKey(email) { userKey ->
+            if (userKey != null) {
                 usersRef.child(userKey).child("card").setValue(cardNumber)
                 usersRef.child(userKey).child("cvc").setValue(cvc)
                 usersRef.child(userKey).child("exp").setValue(exp)
                 Log.d("UsersDB", "Successfully updated card info for $email")
-            }else{
+            } else {
                 Log.e("UsersDB", "User with email $email not found")
             }
         }
     }
 
-    fun updateUserInfo(email: String, newEmail: String){
-        getUserKey(email){
-            userKey ->
-            if(userKey != null){
+    fun updateUserInfo(email: String, newEmail: String): Boolean {
+        var success = false
+        getUserKey(email) { userKey ->
+            if (userKey != null) {
                 usersRef.child(userKey).child("email").setValue(newEmail)
                 Log.d("UsersDB", "Successfully updated email to $newEmail")
-            }else{
+                success = true
+            } else {
                 Log.e("UsersDB", "User with email $email not found!")
+                success = false
             }
         }
-        }
+        return success
+    }
 
-    fun deletePaymentInfo(email: String){
-        getUserKey(email){
-                userKey ->
-            if(userKey != null) {
+    fun deletePaymentInfo(email: String) {
+        getUserKey(email) { userKey ->
+            if (userKey != null) {
                 usersRef.child(userKey).child("card").removeValue()
                 usersRef.child(userKey).child("cvc").removeValue()
                 usersRef.child(userKey).child("exp").removeValue()
                 Log.d("UserDB", "Successfully removed card info for user $email")
-            }else{
+            } else {
                 Log.e("UsersDB", "User with email $email not found!")
             }
         }
