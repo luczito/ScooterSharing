@@ -40,6 +40,8 @@ import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentMyRidesBinding
+import dk.itu.moapd.scootersharing.lufr.model.PreviousRide
+import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 
 /**
  * Class MainFragment, holds the logic and functionality of the main fragment.
@@ -85,9 +87,13 @@ class MyRidesFragment : Fragment() {
             savedInstanceState: Bundle?
         ): View {
             binding = FragmentMyRidesBinding.inflate(layoutInflater, container, false)
-
+            var rides = ArrayList<PreviousRide>()
             recyclerView = binding.recyclerView
-            adapter = CustomArrayAdapter(RidesDB.getPreviousRidesList())
+            UsersDB.getMyRides(auth.currentUser?.email!!){
+                previousRides -> rides = previousRides as ArrayList<PreviousRide>
+            }
+
+            adapter = CustomArrayAdapter(rides)
             recyclerView.adapter = adapter
 
             return binding.root

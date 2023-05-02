@@ -94,4 +94,50 @@ object UsersDB {
             }
         })
     }
+
+    fun checkCardIsAdded(email: String, completionHandler: (Boolean) -> Unit) {
+        getUserKey(email) { userKey ->
+            if (userKey != null) {
+                usersRef.child(userKey).child("card").addListenerForSingleValueEvent(object: ValueEventListener{
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        completionHandler(dataSnapshot.exists())
+                    }
+
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Handle error
+                    }
+                })
+            }
+        }
+    }
+
+    fun addRide(email: String, ride: PreviousRide) {
+        getUserKey(email) { userKey ->
+            if (userKey != null) {
+                val key = usersRef.child(userKey).child("rides").push().key
+                usersRef.child(userKey).child("rides").child(key!!).setValue(ride)
+            }
+        }
+    }
+
+    fun getMyRides(email: String, completionHandler: (List<PreviousRide>) -> Unit) {
+        getUserKey(email) { userKey ->
+            if (userKey != null) {
+                val ridesRef = usersRef.child(userKey).child("rides")
+                ridesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(dataSnapshot: DataSnapshot) {
+                        val rides = mutableListOf<PreviousRide>()
+                        for (rideSnapshot in dataSnapshot.children) {
+                            val ride = rideSnapshot.getValue(PreviousRide::class.java)
+                            ride?.let { rides.add(it) }
+                        }
+                        completionHandler(rides)
+                    }
+                    override fun onCancelled(databaseError: DatabaseError) {
+                        // Handle error
+                    }
+                })
+            }
+        }
+    }
 }

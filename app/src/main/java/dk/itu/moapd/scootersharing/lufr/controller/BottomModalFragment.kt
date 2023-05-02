@@ -42,7 +42,9 @@ import com.google.firebase.storage.ktx.storage
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentBottomModalBinding
+import dk.itu.moapd.scootersharing.lufr.model.PreviousRide
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
+import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -241,10 +243,17 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
             }
             startRideButton.setOnClickListener {
                 if (startRideButton.text == "Start ride") {
-                    val qrcodeFragment = QrCodeFragment(marker)
-                    qrcodeFragment.qrCodeListener = this@BottomModalFragment
-                    (activity as MainActivity).setCurrentFragment(qrcodeFragment)
-                    dismiss()
+                    UsersDB.checkCardIsAdded(auth.currentUser?.email!!){
+                        found ->
+                        if(found){
+                            val qrcodeFragment = QrCodeFragment(marker)
+                            qrcodeFragment.qrCodeListener = this@BottomModalFragment
+                            (activity as MainActivity).setCurrentFragment(qrcodeFragment)
+                            dismiss()
+                        }else{
+                            (activity as MainActivity).showToast("ERROR: No payment method added")
+                        }
+                    }
 
                 } else if (startRideButton.text == "End ride") {
                     //double checks
@@ -283,6 +292,19 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                                 }
                             }
 
+                            UsersDB.addRide(
+                                email = auth.currentUser?.email!!,
+                                PreviousRide(
+                                    name!!,
+                                    location!!,
+                                    timestamp!!,
+                                    RidesDB.getScooter(name!!).timer * 2.5 + 10,
+                                    SimpleDateFormat("HH:mm:ss").format(
+                                        Date(((RidesDB.getScooter(name!!).timer - 3600) * 1000).toLong())
+                                    )
+                                    )
+                                )
+
                             stopUpdatingCounter() //stop the count
 
                             changeColor("blue")
@@ -309,6 +331,7 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                                     Date((RidesDB.endRide(name!!) * 1000).toLong())
                                 )
                             }")
+                            (activity as MainActivity).setCurrentFragment(MapsFragment())
                         }.show()
                 }
             }
