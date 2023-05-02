@@ -21,6 +21,7 @@ import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
 import dk.itu.moapd.scootersharing.lufr.model.Card
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
+import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 class CardAdapter(private val cards: List<Card>) : RecyclerView.Adapter<CardAdapter.CardViewHolder>() {
     private var fragment: AllRidesFragment? = null
@@ -44,7 +45,7 @@ class CardAdapter(private val cards: List<Card>) : RecyclerView.Adapter<CardAdap
         private val secondaryTextView = itemView.findViewById<TextView>(R.id.card_primary_text)
         private val supportingTextView = itemView.findViewById<TextView>(R.id.card_secondary_text)
         private val mediaImageView = itemView.findViewById<ImageView>(R.id.imageView)
-        private val actionButton = itemView.findViewById<MaterialButton>(R.id.go_to_map)
+        private val actionButton = itemView.findViewById<MaterialButton>(R.id.show_on_map_button)
 
         fun bind(card: Card) {
             titleTextView.text = card.name
@@ -77,11 +78,12 @@ class CardAdapter(private val cards: List<Card>) : RecyclerView.Adapter<CardAdap
                     // Handle any errors
                 }
             }
-
+        actionButton.setOnClickListener{
+            val activity = itemView.context
+            val mapsFragment = MapsFragment()
+            (activity as MainActivity).setCurrentFragment(MapsFragment())
+            mapsFragment.moveCameraToMarker(scooter.lat, scooter.long)
+        }
         }
     }
-    fun setFragment(fragment: AllRidesFragment) {
-        this.fragment = fragment
-    }
-
 }

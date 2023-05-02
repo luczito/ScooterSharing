@@ -41,7 +41,6 @@ import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 
-
 class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private lateinit var bottomNavBar: BottomNavigationView
@@ -334,9 +333,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     // move camera to marker
-
-
-    private fun moveCameraToMarker(lat: Double, long: Double) {
+    fun moveCameraToMarker(lat: Double, long: Double) {
         if (::googleMap.isInitialized) {
             googleMap.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
@@ -351,7 +348,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             Log.d(TAG, "GoogleMap not initialized")
         }
     }
-
 
     override fun onMarkerClick(marker: Marker): Boolean {
         val scooter = RidesDB.getScooter(marker.title.toString())
@@ -372,5 +368,4 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         return true
     }
-
 }
