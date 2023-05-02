@@ -29,6 +29,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.FirebaseApp
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.*
 
@@ -36,6 +38,9 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = MainActivity::class.qualifiedName
+        fun getDatabaseReference(): DatabaseReference {
+            return FirebaseDatabase.getInstance().reference
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -14,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentLoginBinding
 import com.google.firebase.auth.ktx.auth
+import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 
@@ -52,6 +53,7 @@ class LoginFragment : Fragment() {
                     Log.d(TAG, "signInWithEmail:success")
                     (activity as MainActivity).showToast("Successfully logged in")
                     val user = auth.currentUser
+                    UsersDB.updatePaymentInfo(email, 123, 123, "123")
                     sendEmailVerification()
                     (activity as MainActivity).setCurrentFragment(MapsFragment())
                 } else {

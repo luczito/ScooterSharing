@@ -3,6 +3,7 @@ package dk.itu.moapd.scootersharing.lufr.model
 import android.util.Log
 import com.google.firebase.database.*
 import com.google.firebase.database.DatabaseReference
+import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 import java.util.*
 
@@ -11,14 +12,20 @@ import java.util.*
  * Also holds all methods for scooters.
  */
 object RidesDB {
-    private val database: DatabaseReference = FirebaseDatabase.getInstance().reference
+    private val database = MainActivity.getDatabaseReference()
     private val ridesRef: DatabaseReference = database.child("rides")
     private val rides = ArrayList<Scooter>()
     private val previousRides = ArrayList<Scooter>()
     private var timer: Timer? = null
     private var timerValue = 0
 
+    init{
+        Log.d("RidesDB", "Database ref: ${RidesDB.database.key}")
+        Log.d("RidesDB", "Rides reference: ${RidesDB.ridesRef.key}")
+    }
+
     fun initialize(completion: () -> Unit) {
+
         // add a listener to the "rides" node to keep the local list up-to-date
         ridesRef.addValueEventListener(object: ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
@@ -58,7 +65,6 @@ object RidesDB {
         return cardList
     }
     fun startRide(name: String, user: String){
-
         ridesRef.child(name).child("user").setValue(user)
         rides.last {it.name == name}.user = user
         timer = Timer()
