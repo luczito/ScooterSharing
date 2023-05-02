@@ -31,7 +31,7 @@ object UsersDB {
         }
     }
 
-    fun updatePaymentInfo(email: String, cardNumber: Int, cvc: Int, exp: String){
+    fun updatePaymentInfo(email: String, cardNumber: Long, cvc: Int, exp: String){
         getUserKey(email) {
             userKey ->
             if(userKey != null){
@@ -75,17 +75,17 @@ object UsersDB {
         val query = database.child("users").orderByChild("email").equalTo(email)
         query.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onDataChange(dataSnapshot: DataSnapshot) {
-                var userkey: String? = null
+                var foundKey: String? = null
                 if (dataSnapshot.exists()) {
                     for (userSnapshot in dataSnapshot.children) {
                         val userKey = userSnapshot.key
                         if (userKey != null) {
-                            userkey = userKey
+                            foundKey = userKey
                             break
                         }
                     }
                 }
-                callback(userkey)
+                callback(foundKey)
             }
 
             override fun onCancelled(databaseError: DatabaseError) {

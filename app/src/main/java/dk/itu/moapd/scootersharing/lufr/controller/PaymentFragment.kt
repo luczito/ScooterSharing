@@ -5,7 +5,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -16,6 +15,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentPaymentBinding
+import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 class PaymentFragment : Fragment() {
@@ -63,12 +63,23 @@ class PaymentFragment : Fragment() {
                         if (task.isSuccessful) {
                             //authentication successful, update password
                             Log.d(SignupFragment.TAG, "updateInformation:success")
-                            (activity as MainActivity).showToast("Successfully updated information")
+                            if (
+                                binding.editTextCardNumber.length() != 16
+                                || binding.editTextCvc.length() != 3
+                                || binding.editTextExpDate.length() != 5
+                            ) {
+                                (activity as MainActivity).showToast("ERROR: Invalid card information")
+                            }else{
+                                UsersDB.updatePaymentInfo(
+                                    email = user.email!!,
+                                    cardNumber = binding.editTextCardNumber.text.toString().toLong(),
+                                    cvc = binding.editTextCvc.text.toString().toInt(),
+                                    exp = binding.editTextExpDate.text.toString()
+                                )
 
-                            //TODO ADD CARD INFO TO DB HERE
-
-                            (activity as MainActivity).setCurrentFragment(MapsFragment())
-
+                                (activity as MainActivity).showToast("Successfully updated card information")
+                                (activity as MainActivity).setCurrentFragment(MapsFragment())
+                            }
                         } else {
                             // if authentication fails, notify the user
                             Log.w(SignupFragment.TAG, "updateInformation:failure", task.exception)
@@ -81,8 +92,8 @@ class PaymentFragment : Fragment() {
                 (activity as MainActivity).showToast("Successfully logged out")
                 (activity as MainActivity).setCurrentFragment(WelcomeFragment())
             }
-            settingsButton.setOnClickListener{
-                (activity as MainActivity).setCurrentFragment(SettingsFragment())
+            settingsButton.setOnClickListener {
+                (activity as MainActivity).setCurrentFragment(MyProfileFragment())
             }
         }
     }
