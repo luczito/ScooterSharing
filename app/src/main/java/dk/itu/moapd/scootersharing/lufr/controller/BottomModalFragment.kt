@@ -60,7 +60,6 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
         private const val REQUEST_CAMERA_PERMISSION = 2
     }
 
-
     private lateinit var binding: FragmentBottomModalBinding
 
     private var takePhoto: ActivityResultLauncher<Uri>? = null
@@ -242,8 +241,6 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
             }
             startRideButton.setOnClickListener {
                 if (startRideButton.text == "Start ride") {
-                    binding.startRideButton.text = "End ride"
-                    startUpdatingCounter()
                     val qrcodeFragment = QrCodeFragment(marker)
                     qrcodeFragment.qrCodeListener = this@BottomModalFragment
                     (activity as MainActivity).setCurrentFragment(qrcodeFragment)
@@ -312,7 +309,7 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                                     Date((RidesDB.endRide(name!!) * 1000).toLong())
                                 )
                             }")
-                        }
+                        }.show()
                 }
             }
         }

@@ -9,12 +9,14 @@ import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.gms.maps.model.Marker
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.common.util.concurrent.ListenableFuture
 import com.google.firebase.auth.FirebaseAuth
@@ -61,15 +63,13 @@ class QrCodeFragment(private val marker: Marker) : Fragment() {
     }
 
     private lateinit var viewBinding: FragmentQrCodeBinding
-
     private lateinit var cameraProviderFuture: ListenableFuture<ProcessCameraProvider>
     private lateinit var cameraExecutor: ExecutorService
     private lateinit var analyzer: ImageAnalyzer
-
     var qrCodeListener: QrCodeListener? = null
-
     private lateinit var auth: FirebaseAuth
     private var dialogOpened = false
+    private lateinit var bottomNavBar: BottomNavigationView
 
     companion object {
         private const val REQUEST_CODE_PERMISSIONS = 10
@@ -90,6 +90,8 @@ class QrCodeFragment(private val marker: Marker) : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.GONE
 
         if (!allPermissionsGranted()) {
             requestPermissions(
@@ -109,6 +111,12 @@ class QrCodeFragment(private val marker: Marker) : Fragment() {
         }, ContextCompat.getMainExecutor(requireContext()))
 
         auth = Firebase.auth
+
+        viewBinding.apply {
+            backButton.setOnClickListener {
+                (activity as MainActivity).setCurrentFragment(MapsFragment())
+            }
+        }
     }
 
     @SuppressLint("UnsafeExperimentalUsageError")
@@ -151,19 +159,14 @@ class QrCodeFragment(private val marker: Marker) : Fragment() {
             MaterialAlertDialogBuilder(requireContext())
                 .setTitle("Start ride")
                 .setMessage("Start ride on scooter $qrCodeText?")
-                .setNeutralButton("Cancel") { _, _ ->
-                    //dismiss()
-                }
+                .setNeutralButton("Cancel") { _, _ -> }
                 .setPositiveButton("Start") { _, _ ->
-                    //remove reserve button, start counter, change button title
                     RidesDB.startRide(qrCodeText, auth.currentUser?.email.toString())
+                    (activity as MainActivity).showToast("Successfully started a ride on $qrCodeText")
+                    (activity as MainActivity).setCurrentFragment(MapsFragment())
                 }
                 .show()
-            }
-        //(activity as MainActivity).setCurrentFragment(MapsFragment())
-        fragmentManager?.beginTransaction()?.apply {
-            replace(R.id.fragment_container, MapsFragment())
-            commit()
+            (activity as MainActivity).setCurrentFragment(MapsFragment())
         }
     }
 
@@ -171,4 +174,3 @@ class QrCodeFragment(private val marker: Marker) : Fragment() {
         fun onQRCodeScanned(scannedText: String)
     }
 }
-
