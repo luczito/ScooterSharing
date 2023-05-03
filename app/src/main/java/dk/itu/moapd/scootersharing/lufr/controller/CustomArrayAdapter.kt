@@ -1,17 +1,19 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import dk.itu.moapd.scootersharing.lufr.R
+import dk.itu.moapd.scootersharing.lufr.model.PreviousRide
 import dk.itu.moapd.scootersharing.lufr.model.Scooter
 
 /**
  * custom array adapter class. Used to create the list of scooters for the frontpage.
  */
-class CustomArrayAdapter(private val dataSet: List<Scooter>) :
+class CustomArrayAdapter(private val dataSet: List<PreviousRide>,) :
     RecyclerView.Adapter<CustomArrayAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -19,13 +21,13 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
             val location: TextView
             val timestamp: TextView
             val price: TextView
-            val distance: TextView
+            val time: TextView
             init {
                 name = view.findViewById(R.id.name)
                 location = view.findViewById(R.id.location)
                 timestamp = view.findViewById(R.id.timestamp)
                 price = view.findViewById(R.id.price)
-                distance = view.findViewById(R.id.distance)
+                time = view.findViewById(R.id.time)
             }
         }
 
@@ -35,12 +37,18 @@ class CustomArrayAdapter(private val dataSet: List<Scooter>) :
         return ViewHolder(view)
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         viewHolder.name.text = dataSet[position].name
         viewHolder.location.text = dataSet[position].location
-        viewHolder.timestamp.text = dataSet[position].getFormatTimestamp()
-        viewHolder.price.text = "100dkk"
-        viewHolder.distance.text = "10km"
+        viewHolder.timestamp.text = dataSet[position].timestamp
+        viewHolder.price.text = "${dataSet[position].price}dkk"
+        if(dataSet[position].timer.take(2).toString().toInt() > 0){
+            viewHolder.time.text = dataSet[position].timer
+        }else{
+            viewHolder.time.text = dataSet[position].timer.takeLast(5)
+        }
+
     }
     override fun getItemCount(): Int = dataSet.size
 }

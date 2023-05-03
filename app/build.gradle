@@ -86,6 +86,4 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation 'com.google.mlkit:barcode-scanning:17.1.0'
-
-
 }

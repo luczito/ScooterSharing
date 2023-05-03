@@ -15,11 +15,11 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentSignupBinding
+import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 class SignupFragment : Fragment() {
     private lateinit var auth: FirebaseAuth
-
     companion object {
         val TAG = SignupFragment::class.qualifiedName
     }
@@ -37,7 +37,7 @@ class SignupFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) : View? {
+    ) : View {
         binding = FragmentSignupBinding.inflate(layoutInflater, container, false)
 
         return binding.root
@@ -73,6 +73,7 @@ class SignupFragment : Fragment() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "createUserWithEmail:success")
                     (activity as MainActivity).showToast("Successfully signed up")
+                    UsersDB.addUser(email)
                     sendEmailVerification()
                     (activity as MainActivity).setCurrentFragment(MapsFragment())
                 } else {

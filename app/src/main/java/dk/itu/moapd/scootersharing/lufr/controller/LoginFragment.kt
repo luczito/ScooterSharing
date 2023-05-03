@@ -14,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentLoginBinding
 import com.google.firebase.auth.ktx.auth
+import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 

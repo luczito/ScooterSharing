@@ -28,24 +28,29 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.FirebaseApp
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.*
 
-/**
- * Class MainAcitivity, refers to the main fragment.
- */
 class MainActivity : AppCompatActivity() {
 
     companion object {
         private val TAG = MainActivity::class.qualifiedName
+        fun getDatabaseReference(): DatabaseReference {
+            return FirebaseDatabase.getInstance().reference
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        FirebaseApp.initializeApp(this)
+
         setContentView(R.layout.activity_main)
 
-        val startRideFragment=StartRideFragment()
-        val updateRideFragment=UpdateRideFragment()
+        val myProfileFragment=MyProfileFragment()
         val mapsFragment=MapsFragment()
         val allRidesFragment=RidesFragment()
 
@@ -54,16 +59,13 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setOnNavigationItemSelectedListener {
             when(it.itemId){
-                R.id.map_nav_button->setCurrentFragment(mapsFragment)
-                R.id.start_nav_button->setCurrentFragment(startRideFragment)
-                R.id.update_nav_button->setCurrentFragment(updateRideFragment)
                 R.id.rides_nav_button->setCurrentFragment(allRidesFragment)
+                R.id.map_nav_button->setCurrentFragment(mapsFragment)
+                R.id.profile_nav_button->setCurrentFragment(myProfileFragment)
             }
             true
         }
-
     }
-
     fun setCurrentFragment(fragment: Fragment) {
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.fragment_container, fragment)

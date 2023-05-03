@@ -5,9 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import com.firebase.ui.auth.data.model.User
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -16,6 +16,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentPaymentBinding
+import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 class PaymentFragment : Fragment() {
@@ -52,7 +53,21 @@ class PaymentFragment : Fragment() {
         bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavBar.visibility = View.VISIBLE
 
+
         binding.apply {
+            editTextUser.text = user.email
+            UsersDB.checkCardIsAdded(user.email!!){
+                    found ->
+                if (found){
+                    UsersDB.getCardInfo(user.email!!){
+                            card, cvc, exp ->
+                        val filterCard = card!!.toString().take(8) + "********"
+                        binding.editTextCardNumber.setHint(filterCard)
+                        binding.editTextCvc.setHint(cvc.toString())
+                        binding.editTextExpDate.setHint("***")
+                    }
+                }
+            }
             applyButton.setOnClickListener {
                 val credentials = EmailAuthProvider.getCredential(
                     user.email!!,
@@ -63,12 +78,24 @@ class PaymentFragment : Fragment() {
                         if (task.isSuccessful) {
                             //authentication successful, update password
                             Log.d(SignupFragment.TAG, "updateInformation:success")
-                            (activity as MainActivity).showToast("Successfully updated information")
+                            if (
+                                editTextCardNumber.length() != 16
+                                || editTextCvc.length() != 3
+                                || editTextExpDate.length() != 5
+                            ) {
+                                (activity as MainActivity).showToast("ERROR: Invalid card information")
+                            } else {
+                                UsersDB.updatePaymentInfo(
+                                    email = user.email!!,
+                                    cardNumber = editTextCardNumber.text.toString()
+                                        .toLong(),
+                                    cvc = editTextCvc.text.toString().toInt(),
+                                    exp = editTextExpDate.text.toString()
+                                )
 
-                            //TODO ADD CARD INFO TO DB HERE
-
-                            (activity as MainActivity).setCurrentFragment(MapsFragment())
-
+                                (activity as MainActivity).showToast("Successfully updated card information")
+                                (activity as MainActivity).setCurrentFragment(MapsFragment())
+                            }
                         } else {
                             // if authentication fails, notify the user
                             Log.w(SignupFragment.TAG, "updateInformation:failure", task.exception)
@@ -76,13 +103,30 @@ class PaymentFragment : Fragment() {
                         }
                     }
             }
+            deleteInfoButton.setOnClickListener {
+                if(editTextPassword.text.toString() != ""){
+                    val credentials = EmailAuthProvider.getCredential(
+                        user.email!!,
+                        editTextPassword.text.toString()
+                    )
+                    user.reauthenticate(credentials)
+                        .addOnCompleteListener { task ->
+                            if (task.isSuccessful) {
+                                UsersDB.deletePaymentInfo(user.email!!)
+                                (activity as MainActivity).showToast("Successfully deleted card information")
+                                (activity as MainActivity).setCurrentFragment(MapsFragment())
+                            } else {
+                                (activity as MainActivity).showToast("ERROR: Wrong password")
+                            }
+                        }
+                }else{
+                    (activity as MainActivity).showToast("ERROR: Enter your password to make changes!")
+                }
+            }
             logoutButton.setOnClickListener {
                 auth.signOut()
                 (activity as MainActivity).showToast("Successfully logged out")
                 (activity as MainActivity).setCurrentFragment(WelcomeFragment())
-            }
-            settingsButton.setOnClickListener{
-                (activity as MainActivity).setCurrentFragment(SettingsFragment())
             }
         }
     }

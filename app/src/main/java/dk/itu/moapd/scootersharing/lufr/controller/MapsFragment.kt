@@ -32,7 +32,6 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -40,7 +39,6 @@ import dk.itu.moapd.scootersharing.lufr.BuildConfig
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
-
 
 class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
@@ -89,7 +87,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_maps, container, false)
 
         val autoCompleteTextView =
@@ -110,14 +107,15 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             .findFragmentById(R.id.map) as SupportMapFragment?
         mapFragment?.getMapAsync(this)
 
+        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
+        bottomNavBar.visibility = View.VISIBLE
+        bottomNavBar.selectedItemId = R.id.map_nav_button
+
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
-        bottomNavBar.visibility = View.VISIBLE
 
         val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
 
@@ -201,6 +199,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
 
         googleMap.setOnMapLoadedCallback {
+            googleMap.clear()
             val vectorDrawable =
                 ContextCompat.getDrawable(requireContext(), R.drawable.marker_scooter)
             for (ride in RidesDB.getRidesList()) {
@@ -244,7 +243,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         updateLocationUI()
         getDeviceLocation()
         googleMap.setOnMarkerClickListener(this)
-
     }
 
     @Deprecated("Deprecated in Java")
@@ -334,9 +332,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
     }
 
     // move camera to marker
-
-
-    private fun moveCameraToMarker(lat: Double, long: Double) {
+    fun moveCameraToMarker(lat: Double, long: Double) {
         if (::googleMap.isInitialized) {
             googleMap.moveCamera(
                 CameraUpdateFactory.newLatLngZoom(
@@ -351,7 +347,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
             Log.d(TAG, "GoogleMap not initialized")
         }
     }
-
 
     override fun onMarkerClick(marker: Marker): Boolean {
         val scooter = RidesDB.getScooter(marker.title.toString())
@@ -372,5 +367,4 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         return true
     }
-
 }
