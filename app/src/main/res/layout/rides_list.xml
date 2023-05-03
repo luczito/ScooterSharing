@@ -55,34 +55,35 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:gravity="end|center"
+            android:gravity="center"
             android:layout_gravity="center">
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/light_grey"
+                android:paddingHorizontal="10dp"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scaleType="centerInside"
+                android:src="@drawable/baseline_arrow_right_alt_24"
+                android:tint="@color/light_grey" />
 
             <TextView
                 android:id="@+id/price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="100dkk"
-                android:textSize="20sp"
+                android:textSize="18sp"
                 android:textColor="@color/light_grey"
-                android:paddingHorizontal="20dp" />
+                android:paddingHorizontal="10dp" />
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:src="@drawable/baseline_arrow_right_alt_24"
-                android:tint="@color/light_grey"
-                android:scaleType="centerInside" />
 
-            <TextView
-                android:id="@+id/time"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:textColor="@color/light_grey"
-                android:text="8.1km"
-                android:paddingHorizontal="20dp"
-                android:textSize="16sp" />
+
+
 
         </LinearLayout>
 

@@ -43,7 +43,12 @@ class CustomArrayAdapter(private val dataSet: List<PreviousRide>,) :
         viewHolder.location.text = dataSet[position].location
         viewHolder.timestamp.text = dataSet[position].timestamp
         viewHolder.price.text = "${dataSet[position].price}dkk"
-        viewHolder.time.text = dataSet[position].timer
+        if(dataSet[position].timer.take(2).toString().toInt() > 0){
+            viewHolder.time.text = dataSet[position].timer
+        }else{
+            viewHolder.time.text = dataSet[position].timer.takeLast(5)
+        }
+
     }
     override fun getItemCount(): Int = dataSet.size
 }

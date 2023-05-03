@@ -66,7 +66,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:color="@color/mid_grey"
-            android:hint="@string/card_number"
             android:textColorHint="@color/mid_grey">
 
             <com.google.android.material.textfield.TextInputEditText
@@ -96,7 +95,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:color="@color/mid_grey"
-            android:hint="@string/exp_date"
             android:textColorHint="@color/mid_grey">
             >
 
@@ -117,7 +115,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:color="@color/mid_grey"
-            android:hint="@string/cvc"
             android:textColorHint="@color/mid_grey">
 
 

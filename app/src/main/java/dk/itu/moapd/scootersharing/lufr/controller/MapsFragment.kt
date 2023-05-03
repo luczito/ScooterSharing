@@ -32,7 +32,6 @@ import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.api.net.FetchPlaceRequest
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -200,6 +199,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
 
         googleMap.setOnMapLoadedCallback {
+            googleMap.clear()
             val vectorDrawable =
                 ContextCompat.getDrawable(requireContext(), R.drawable.marker_scooter)
             for (ride in RidesDB.getRidesList()) {
@@ -243,7 +243,6 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         updateLocationUI()
         getDeviceLocation()
         googleMap.setOnMarkerClickListener(this)
-
     }
 
     @Deprecated("Deprecated in Java")

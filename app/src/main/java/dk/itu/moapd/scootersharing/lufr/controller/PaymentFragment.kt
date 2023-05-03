@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
+import com.firebase.ui.auth.data.model.User
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -52,9 +53,21 @@ class PaymentFragment : Fragment() {
         bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavBar.visibility = View.VISIBLE
 
-        binding.editTextUser.text = user.email
 
         binding.apply {
+            editTextUser.text = user.email
+            UsersDB.checkCardIsAdded(user.email!!){
+                    found ->
+                if (found){
+                    UsersDB.getCardInfo(user.email!!){
+                            card, cvc, exp ->
+                        val filterCard = card!!.toString().take(8) + "********"
+                        binding.editTextCardNumber.setHint(filterCard)
+                        binding.editTextCvc.setHint(cvc.toString())
+                        binding.editTextExpDate.setHint("***")
+                    }
+                }
+            }
             applyButton.setOnClickListener {
                 val credentials = EmailAuthProvider.getCredential(
                     user.email!!,

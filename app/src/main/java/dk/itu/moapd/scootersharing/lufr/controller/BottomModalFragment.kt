@@ -7,7 +7,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Canvas
 import android.location.Geocoder
 import android.location.Location
 import android.net.Uri
@@ -18,16 +17,13 @@ import android.util.LruCache
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
-import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -39,7 +35,6 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.ktx.storage
-import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.controller.SignupFragment.Companion.TAG
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentBottomModalBinding
 import dk.itu.moapd.scootersharing.lufr.model.PreviousRide
@@ -162,7 +157,6 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
             }
         }
 
-
         //check is the ride is currently reserved
         if (reserved != "") {
             binding.scooterReserved.text = "$name is reserved"
@@ -223,22 +217,19 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                 }
             }
 
-
             reserveButton.setOnClickListener {
                 if (reserved == auth.currentUser?.email.toString()) {
-                    changeColor("blue")
-
                     //toast it up - cancel toaster
                     (activity as MainActivity).showToast("Successfully cancelled reservation of $name")
                     dismiss()
                     RidesDB.cancelReservation(name!!, auth.currentUser?.email.toString())
+                    (activity as MainActivity).setCurrentFragment(MapsFragment())
                 } else {
-                    changeColor("yellow")
-
                     //toast it up - reserve toaster
                     (activity as MainActivity).showToast("Successfully reserved $name")
                     dismiss()
                     RidesDB.reserveScooter(name!!, auth.currentUser?.email.toString())
+                    (activity as MainActivity).setCurrentFragment(MapsFragment())
                 }
             }
             startRideButton.setOnClickListener {
@@ -280,8 +271,6 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                                                 long
                                             )
                                             marker.position = LatLng(lat, long)
-                                            marker.isVisible = false
-                                            marker.isVisible = true
                                         } else {
                                             // Handle the case when bestMatch is null
                                         }
@@ -291,14 +280,13 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                                     }
                                 }
                             }
-
                             UsersDB.addRide(
                                 email = auth.currentUser?.email!!,
                                 PreviousRide(
                                     name!!,
-                                    location!!,
-                                    timestamp!!,
-                                    RidesDB.getScooter(name!!).timer * 2.5 + 10,
+                                    RidesDB.getScooter(name!!).location,
+                                    RidesDB.getScooter(name!!).getFormatTimestamp(),
+                                    RidesDB.getScooter(name!!).timer * 2.5 / 60 + 10,
                                     SimpleDateFormat("HH:mm:ss").format(
                                         Date(((RidesDB.getScooter(name!!).timer - 3600) * 1000).toLong())
                                     )
@@ -306,32 +294,27 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                                 )
 
                             stopUpdatingCounter() //stop the count
-
-                            changeColor("blue")
+                            binding.rideClock.visibility = View.GONE
 
                             binding.scooterReserved.visibility = View.VISIBLE
                             binding.scooterReserved.text = "$name is available"
 
-                            reserveButton.visibility =
-                                View.VISIBLE     //show the reserve button again
+                            reserveButton.visibility = View.VISIBLE     //show the reserve button again
                             reserveButton.isClickable = true
 
-                            binding.scooterTimestamp.text =
-                                RidesDB.getScooter(name!!).getFormatTimestamp()
+                            binding.scooterTimestamp.text = RidesDB.getScooter(name!!).getFormatTimestamp()
                             binding.scooterLocation.text = RidesDB.getScooter(name!!).location
-
-                            binding.rideClock.visibility = View.GONE
 
                             startRideButton.text = "Start ride" //change button title again
 
-                            dismiss()
                             //toast it up - display ride time to user
                             (activity as MainActivity).showToast("Ride on scooter: $name ended. Ride length: ${
                                 SimpleDateFormat("HH:mm:ss").format(
                                     Date((RidesDB.endRide(name!!) * 1000).toLong())
                                 )
-                            }")
+                            }, Price: ${RidesDB.getScooter(name!!).timer * 2.5 + 10}dkk")
                             (activity as MainActivity).setCurrentFragment(MapsFragment())
+                            dismiss()
                         }.show()
                 }
             }
@@ -349,6 +332,58 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
         }"
 
         handler.postDelayed(updateTextViewRunnable, 1000)
+    }
+
+    private fun stopUpdatingCounter() {
+        isTextViewUpdating = false
+
+        handler.removeCallbacks(updateTextViewRunnable)
+    }
+
+    private val updateTextViewRunnable = object : Runnable {
+        @SuppressLint("SetTextI18n", "SimpleDateFormat")
+        override fun run() {
+            binding.rideClock.text = "Ongoing ride: ${
+                SimpleDateFormat("HH:mm:ss").format(
+                    Date(((RidesDB.getScooter(name!!).timer - 3600) * 1000).toLong())
+                )
+            }"
+
+            if (isTextViewUpdating) {
+                handler.postDelayed(this, 1000)
+            }
+        }
+    }
+
+    private fun getLocation(callback: (Double, Double) -> Unit) {
+        if (checkPermission()) {
+            throw Exception("No location permissions!")
+        }
+        fusedLocationProviderClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location != null) {
+                    val lat = location.latitude
+                    val long = location.longitude
+                    callback(lat, long)
+                } else {
+                    throw Exception("Location is null")
+                }
+            }
+            .addOnFailureListener { exception: Exception ->
+                throw exception
+            }
+    }
+
+    private fun checkPermission() =
+        ActivityCompat.checkSelfPermission(
+            this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            this.requireContext(),
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+
+    override fun onQRCodeScanned(scannedText: String) {
+        RidesDB.startRide(scannedText, auth.currentUser?.email.toString())
     }
 
     // <---------------------------------- IMAGE UPLOAD BLOCK START ----------------------------------------->
@@ -384,7 +419,7 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                 Log.d("Image", "Image uploaded to Firebase Storage and database updated")
                 (activity as MainActivity).showToast("Image uploaded successfully")
 
-                }.addOnFailureListener { exception ->
+            }.addOnFailureListener { exception ->
                 Log.e("Image", "Failed to get download URL for image", exception)
                 (activity as MainActivity).showToast("Failed to upload image")
 
@@ -469,84 +504,4 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
     }
 
     // <---------------------------------- IMAGE UPLOAD BLOCK END ----------------------------------------->
-
-
-    private fun stopUpdatingCounter() {
-        isTextViewUpdating = false
-
-        handler.removeCallbacks(updateTextViewRunnable)
-    }
-
-    private val updateTextViewRunnable = object : Runnable {
-        @SuppressLint("SetTextI18n", "SimpleDateFormat")
-        override fun run() {
-            binding.rideClock.text = "Ongoing ride: ${
-                SimpleDateFormat("HH:mm:ss").format(
-                    Date(((RidesDB.getScooter(name!!).timer - 3600) * 1000).toLong())
-                )
-            }"
-
-            if (isTextViewUpdating) {
-                handler.postDelayed(this, 1000)
-            }
-        }
-    }
-
-    private fun getLocation(callback: (Double, Double) -> Unit) {
-        if (checkPermission()) {
-            throw Exception("No location permissions!")
-        }
-        fusedLocationProviderClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                if (location != null) {
-                    val lat = location.latitude
-                    val long = location.longitude
-                    callback(lat, long)
-                } else {
-                    throw Exception("Location is null")
-                }
-            }
-            .addOnFailureListener { exception: Exception ->
-                throw exception
-            }
-    }
-
-    private fun checkPermission() =
-        ActivityCompat.checkSelfPermission(
-            this.requireContext(), Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-            this.requireContext(),
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
-
-    private fun changeColor(color: String) {
-        val vectorDrawable = ContextCompat.getDrawable(requireContext(), R.drawable.marker_scooter)
-        when (color) {
-            "red" -> {
-                vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.red))
-            }
-            "yellow" -> {
-                vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.yellow))
-            }
-            "blue" -> {
-                vectorDrawable?.setTint(ContextCompat.getColor(requireContext(), R.color.main_blue))
-            }
-        }
-
-        val bitmap = Bitmap.createBitmap(
-            vectorDrawable?.intrinsicWidth ?: 0,
-            vectorDrawable?.intrinsicHeight ?: 0,
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(bitmap)
-        vectorDrawable?.setBounds(0, 0, canvas.width, canvas.height)
-        vectorDrawable?.draw(canvas)
-
-        val icon = BitmapDescriptorFactory.fromBitmap(bitmap)
-        marker.setIcon(icon)
-    }
-
-    override fun onQRCodeScanned(scannedText: String) {
-        RidesDB.startRide(scannedText, auth.currentUser?.email.toString())
-    }
 }

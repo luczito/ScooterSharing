@@ -15,7 +15,6 @@ object RidesDB {
     private val database = MainActivity.getDatabaseReference()
     private val ridesRef: DatabaseReference = database.child("rides")
     private val rides = ArrayList<Scooter>()
-    private val previousRides = ArrayList<Scooter>()
     private var timer: Timer? = null
     private var timerValue = 0
 
@@ -51,10 +50,6 @@ object RidesDB {
         return rides
     }
 
-    fun getPreviousRidesList(): List<Scooter> {
-        return previousRides
-    }
-
     fun getRidesAsCards() : List<Card>{
         var card: Card
         val cardList = ArrayList<Card>()
@@ -67,6 +62,7 @@ object RidesDB {
     fun startRide(name: String, user: String){
         ridesRef.child(name).child("user").setValue(user)
         rides.last {it.name == name}.user = user
+        timerValue = 0
         timer = Timer()
         timer!!.scheduleAtFixedRate(object : TimerTask() {
             override fun run() {
@@ -88,10 +84,6 @@ object RidesDB {
         ridesRef.child(name).child("user").setValue("")
         rides.last {it.name == name}.user = ""
 
-        //add to previous rides
-        val scooter = rides.last{it.name == name}
-        previousRides.add(scooter)
-
         return timeSpent - 3600
     }
 
@@ -108,16 +100,6 @@ object RidesDB {
         return "Successfully added scooter: ${scooter.name} at ${scooter.location}, at ${scooter.getFormatTimestamp()}"
     }
 
-    // updates current scooter with a new location and timestamp
-    fun updateCurrentScooter(location: String, timestamp: Long, lat: Double, long: Double): String {
-        val currentScooter = getCurrentScooter()
-        ridesRef.child(currentScooter!!.name).child("location").setValue(location)
-        ridesRef.child(currentScooter.name).child("timestamp").setValue(timestamp)
-        ridesRef.child(currentScooter.name).child("lat").setValue(lat)
-        ridesRef.child(currentScooter.name).child("long").setValue(long)
-        return "${rides[rides.size-1].getFormatTimestamp()}: Updated scooter ${currentScooter.name} with location: $location"
-    }
-
     fun updateScooter(name: String, location: String, timestamp: Long, lat: Double, long: Double, image: String = ""){
         val currentScooter = getScooter(name)
         ridesRef.child(currentScooter.name).child("location").setValue(location)
@@ -129,12 +111,6 @@ object RidesDB {
         }
     }
 
-
-    // retrieves the last scooter from the ridesRef database reference
-    fun getCurrentScooter(): Scooter? {
-       return rides.lastOrNull()
-    }
-
     fun getScooter(name: String): Scooter{
         return rides.last {it.name == name}
     }
@@ -143,7 +119,6 @@ object RidesDB {
         ridesRef.child(name).child("image").setValue(imageName)
         rides.last {it.name == name}.image = imageName
     }
-
 
     fun reserveScooter(name: String, user: String): String{
         ridesRef.child(name).child("reserved").setValue(user)

@@ -98,15 +98,16 @@ object UsersDB {
     fun checkCardIsAdded(email: String, completionHandler: (Boolean) -> Unit) {
         getUserKey(email) { userKey ->
             if (userKey != null) {
-                usersRef.child(userKey).child("card").addListenerForSingleValueEvent(object: ValueEventListener{
-                    override fun onDataChange(dataSnapshot: DataSnapshot) {
-                        completionHandler(dataSnapshot.exists())
-                    }
+                usersRef.child(userKey).child("card")
+                    .addListenerForSingleValueEvent(object : ValueEventListener {
+                        override fun onDataChange(dataSnapshot: DataSnapshot) {
+                            completionHandler(dataSnapshot.exists())
+                        }
 
-                    override fun onCancelled(databaseError: DatabaseError) {
-                        // Handle error
-                    }
-                })
+                        override fun onCancelled(databaseError: DatabaseError) {
+                            // Handle error
+                        }
+                    })
             }
         }
     }
@@ -123,20 +124,42 @@ object UsersDB {
     fun getMyRides(email: String, completionHandler: (List<PreviousRide>) -> Unit) {
         getUserKey(email) { userKey ->
             if (userKey != null) {
-                val ridesRef = usersRef.child(userKey).child("rides")
-                ridesRef.addListenerForSingleValueEvent(object : ValueEventListener {
+                val usersRef = usersRef.child(userKey).child("rides")
+                usersRef.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(dataSnapshot: DataSnapshot) {
                         val rides = mutableListOf<PreviousRide>()
                         for (rideSnapshot in dataSnapshot.children) {
                             val ride = rideSnapshot.getValue(PreviousRide::class.java)
                             ride?.let { rides.add(it) }
                         }
+                        Log.d("UsersDB", "Completed loading rides $rides")
                         completionHandler(rides)
                     }
+
                     override fun onCancelled(databaseError: DatabaseError) {
-                        // Handle error
+                        Log.e("UsersDB", "ERROR: Couldn't load rides from DB")
                     }
                 })
+            }
+        }
+    }
+
+    fun getCardInfo(email: String, callback: (Long?, Int?, String?) -> Unit) {
+        getUserKey(email) { userKey ->
+            if (userKey != null) {
+                usersRef.child(userKey).get().addOnSuccessListener { snapshot ->
+                    if (snapshot.exists()) {
+                        val card = snapshot.child("card").getValue(Long::class.java)
+                        val cvc = snapshot.child("cvc").getValue(Int::class.java)
+                        val exp = snapshot.child("exp").getValue(String::class.java)
+
+                        callback(card, cvc, exp)
+                    } else {
+                        callback(null, null, null)
+                    }
+                }.addOnFailureListener {
+                    callback(null, null, null)
+                }
             }
         }
     }

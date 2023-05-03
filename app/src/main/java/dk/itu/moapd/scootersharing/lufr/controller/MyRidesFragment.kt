@@ -28,16 +28,13 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
-import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.RidesDB
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentMyRidesBinding
 import dk.itu.moapd.scootersharing.lufr.model.PreviousRide
@@ -54,7 +51,6 @@ class MyRidesFragment : Fragment() {
     }
 
     private lateinit var binding: FragmentMyRidesBinding
-    private lateinit var bottomNavBar: BottomNavigationView
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: CustomArrayAdapter
@@ -69,8 +65,6 @@ class MyRidesFragment : Fragment() {
         WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
         super.onCreate(savedInstanceState)
 
-        // Singleton to share an object between the app activities .
-        // Singleton to share an object between the app activities .
         RidesDB.initialize {
             Log.d("RidesDB", "Data is fully loaded")
         }
@@ -87,15 +81,21 @@ class MyRidesFragment : Fragment() {
             savedInstanceState: Bundle?
         ): View {
             binding = FragmentMyRidesBinding.inflate(layoutInflater, container, false)
-            var rides = ArrayList<PreviousRide>()
             recyclerView = binding.recyclerView
+
+            //await this
+            var rides = ArrayList<PreviousRide>()
+            adapter = CustomArrayAdapter(rides)
             UsersDB.getMyRides(auth.currentUser?.email!!){
-                previousRides -> rides = previousRides as ArrayList<PreviousRide>
+                    previousRides ->
+                rides.clear()
+                rides = previousRides as ArrayList<PreviousRide>
+                rides.reverse()
+                adapter = CustomArrayAdapter(rides)
+                recyclerView.adapter = adapter
             }
 
-            adapter = CustomArrayAdapter(rides)
             recyclerView.adapter = adapter
-
             return binding.root
         }
         override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
