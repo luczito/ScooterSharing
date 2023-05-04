@@ -62,9 +62,9 @@ class PaymentFragment : Fragment() {
                     UsersDB.getCardInfo(user.email!!){
                             card, cvc, exp ->
                         val filterCard = card!!.toString().take(8) + "********"
-                        binding.editTextCardNumber.setHint(filterCard)
-                        binding.editTextCvc.setHint(cvc.toString())
-                        binding.editTextExpDate.setHint("***")
+                        binding.editTextCardNumber.hint = filterCard
+                        binding.editTextCvc.hint = cvc.toString()
+                        binding.editTextExpDate.hint = "***"
                     }
                 }
             }

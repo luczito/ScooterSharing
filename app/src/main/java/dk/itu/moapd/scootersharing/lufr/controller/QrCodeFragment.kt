@@ -34,7 +34,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class QrCodeFragment(private val marker: Marker) : Fragment() {
-    private inner class ImageAnalyzer() : ImageAnalysis.Analyzer {
+    private inner class ImageAnalyzer : ImageAnalysis.Analyzer {
         @SuppressLint("UnsafeOptInUsageError")
         override fun analyze(imageProxy: ImageProxy) {
             imageProxy.image?.let { image ->

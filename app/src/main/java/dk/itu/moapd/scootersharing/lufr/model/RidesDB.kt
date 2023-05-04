@@ -19,8 +19,8 @@ object RidesDB {
     private var timerValue = 0
 
     init{
-        Log.d("RidesDB", "Database ref: ${RidesDB.database.key}")
-        Log.d("RidesDB", "Rides reference: ${RidesDB.ridesRef.key}")
+        Log.d("RidesDB", "Database ref: ${database.key}")
+        Log.d("RidesDB", "Rides reference: ${ridesRef.key}")
     }
 
     fun initialize(completion: () -> Unit) {

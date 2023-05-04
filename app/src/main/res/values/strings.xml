@@ -43,4 +43,7 @@
     <string name="all_rides_button">All rides</string>
     <string name="qr_scan_prompt">Scan the chosen scooter</string>
     <string name="delete_card_information">Delete card information</string>
+
+    <string name="dont_have_a_user_sign_up">Don\'t have a user? <u>Sign up here</u></string>
+    <string name="already_have_user_login">Already have a user? <u>Login here</u></string>
 </resources>

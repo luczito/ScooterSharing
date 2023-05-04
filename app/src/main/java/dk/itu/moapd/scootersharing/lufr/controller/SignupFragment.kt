@@ -51,7 +51,7 @@ class SignupFragment : Fragment() {
 
         binding.apply {
             signupButton.setOnClickListener {
-                var check = checkCredentials(editTextEmail.text.toString().trim(),
+                val check = checkCredentials(editTextEmail.text.toString().trim(),
                     editTextPassword.text.toString().trim(),
                     editTextConfirmPassword.text.toString().trim()
                 )
@@ -61,6 +61,9 @@ class SignupFragment : Fragment() {
                     Toast.makeText(context, check,
                         Toast.LENGTH_SHORT).show()
                 }
+            }
+            loginButton.setOnClickListener{
+                (activity as MainActivity).setCurrentFragment(LoginFragment())
             }
         }
     }

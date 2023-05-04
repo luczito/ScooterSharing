@@ -131,7 +131,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             val selectedPlace = autoCompleteAdapter.getItem(position)
-            selectedPlace?.let { placeItem ->
+            selectedPlace.let { placeItem ->
                 autoCompleteTextView.setText(placeItem.primaryText)
 
                 val placeId = placeItem.placeId

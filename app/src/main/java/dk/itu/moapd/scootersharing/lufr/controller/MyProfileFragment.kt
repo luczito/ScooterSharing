@@ -71,7 +71,7 @@ class MyProfileFragment : Fragment() {
                         editTextConfirmPassword.text.toString()
                     )
                     user.reauthenticate(creds)
-                        .addOnCompleteListener() { task ->
+                        .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 if (!editTextChangePassword.text.isNullOrBlank()){
                                     user.updatePassword(editTextChangePassword.text.toString())
