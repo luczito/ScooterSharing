@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
@@ -10,10 +11,11 @@
         android:layout_height="match_parent"
         android:src="@drawable/baseline_electric_scooter_24"
         android:scaleType="centerInside"
-        android:tint="@color/light_grey"
         android:scaleX="2"
         android:scaleY="2"
-        android:paddingLeft="20dp"/>
+        android:paddingStart="20dp"
+        app:tint="@color/light_grey"
+        android:contentDescription="@string/image_for_the_scooter" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -26,7 +28,7 @@
             android:id="@+id/name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Cph001"
+            android:text="@string/cph001"
             android:textColor="@color/light_grey"
             android:textSize="22sp"
             android:gravity="center"
@@ -36,7 +38,7 @@
             android:id="@+id/timestamp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="01/01/2023 - 10:10"
+            android:text="@string/placeholder_date"
             android:textColor="@color/light_grey"
             android:textSize="15sp"
             android:gravity="center" />
@@ -45,11 +47,11 @@
             android:id="@+id/location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="ITU"
+            android:text="@string/placeholder_location"
             android:textSize="18sp"
             android:textStyle="bold"
             android:textColor="@color/light_grey"
-            android:paddingLeft="25dp"/>
+            android:paddingStart="25dp"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,7 +73,8 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerInside"
                 android:src="@drawable/baseline_arrow_right_alt_24"
-                android:tint="@color/light_grey" />
+                android:contentDescription="@string/arrow"
+                app:tint="@color/light_grey" />
 
             <TextView
                 android:id="@+id/price"
@@ -80,10 +83,6 @@
                 android:textSize="18sp"
                 android:textColor="@color/light_grey"
                 android:paddingHorizontal="10dp" />
-
-
-
-
 
         </LinearLayout>
 

@@ -359,7 +359,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         bundle.putString("name", marker.title)
         bundle.putString("location", scooter.location)
         bundle.putString("timestamp", scooter.getFormatTimestamp())
-        bundle.putString("reserved", scooter.reserved.toString())
+        bundle.putString("reserved", scooter.reserved)
         bottomSheetDialogFragment.arguments = bundle
 
         // Show the bottom sheet fragment

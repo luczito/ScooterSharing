@@ -13,10 +13,6 @@ import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 
 class WelcomeFragment : Fragment() {
-    companion object {
-        private val TAG = WelcomeFragment::class.qualifiedName
-    }
-
     private lateinit var binding: FragmentWelcomeBinding
     private lateinit var bottomNavBar: BottomNavigationView
 

@@ -51,7 +51,6 @@ class LoginFragment : Fragment() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     (activity as MainActivity).showToast("Successfully logged in")
-                    val user = auth.currentUser
                     sendEmailVerification()
                     (activity as MainActivity).setCurrentFragment(MapsFragment())
                 } else {
@@ -67,7 +66,7 @@ class LoginFragment : Fragment() {
         // [START send_email_verification]
         val user = auth.currentUser!!
         user.sendEmailVerification()
-            .addOnCompleteListener(this.requireActivity()) { task ->
+            .addOnCompleteListener(this.requireActivity()) { _ ->
             }
     }
 

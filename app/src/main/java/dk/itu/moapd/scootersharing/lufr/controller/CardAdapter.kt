@@ -61,8 +61,8 @@ class CardAdapter(private val cards: List<Card>) : RecyclerView.Adapter<CardAdap
                 mediaImageView.setImageBitmap(cachedBitmap)
             } else {
                 // Download image and save in cache
-                val ONE_MEGABYTE: Long = 1024 * 1024
-                imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+                val oneMegabyte: Long = 1024 * 1024
+                imageRef.getBytes(oneMegabyte).addOnSuccessListener {
                     val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
                     mediaImageView.setImageBitmap(bitmap)
                     cache.put(card.name, bitmap) // Save image in cache

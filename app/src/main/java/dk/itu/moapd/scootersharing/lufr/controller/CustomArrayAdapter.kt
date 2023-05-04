@@ -8,12 +8,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.model.PreviousRide
-import dk.itu.moapd.scootersharing.lufr.model.Scooter
 
-/**
- * custom array adapter class. Used to create the list of scooters for the frontpage.
- */
-class CustomArrayAdapter(private val dataSet: List<PreviousRide>,) :
+class CustomArrayAdapter(private val dataSet: List<PreviousRide>) :
     RecyclerView.Adapter<CustomArrayAdapter.ViewHolder>() {
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
@@ -43,7 +39,7 @@ class CustomArrayAdapter(private val dataSet: List<PreviousRide>,) :
         viewHolder.location.text = dataSet[position].location
         viewHolder.timestamp.text = dataSet[position].timestamp
         viewHolder.price.text = "${dataSet[position].price}dkk"
-        if(dataSet[position].timer.take(2).toString().toInt() > 0){
+        if(dataSet[position].timer.take(2).toInt() > 0){
             viewHolder.time.text = dataSet[position].timer
         }else{
             viewHolder.time.text = dataSet[position].timer.takeLast(5)

@@ -1,5 +1,6 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +12,6 @@ import android.widget.TextView
 import com.google.android.gms.tasks.Tasks
 import com.google.android.libraries.places.api.Places
 import com.google.android.libraries.places.api.model.AutocompleteSessionToken
-import com.google.android.libraries.places.api.model.TypeFilter
 import com.google.android.libraries.places.api.net.FindAutocompletePredictionsRequest
 
 data class PlaceItem(val primaryText: String, val secondaryText: String, val placeId: String)
@@ -29,6 +29,7 @@ class PlacesAutoCompleteAdapter(context: Context, resId: Int) :
         return resultList[position]
     }
 
+    @SuppressLint("SetTextI18n")
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val view = convertView ?: LayoutInflater.from(context).inflate(android.R.layout.simple_dropdown_item_1line, parent, false)
         val textView = view.findViewById<TextView>(android.R.id.text1)

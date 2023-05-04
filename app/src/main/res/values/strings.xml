@@ -46,4 +46,16 @@
 
     <string name="dont_have_a_user_sign_up">Don\'t have a user? <u>Sign up here</u></string>
     <string name="already_have_user_login">Already have a user? <u>Login here</u></string>
+    <string name="image_for_the_scooter">Image for the scooter</string>
+    <string name="search_here">Search Here</string>
+    <string name="available">Available</string>
+    <string name="reserved">Reserved</string>
+    <string name="unavailable">Unavailable</string>
+    <string name="cph001">Cph001</string>
+    <string name="placeholder_date">01/01/2023 – 10:10</string>
+    <string name="placeholder_location">ITU</string>
+    <string name="arrow">arrow</string>
+    <string name="rides">Rides</string>
+    <string name="map">Map</string>
+    <string name="my_profile">My Profile</string>
 </resources>

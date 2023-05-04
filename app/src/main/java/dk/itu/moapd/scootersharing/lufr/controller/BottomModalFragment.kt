@@ -53,7 +53,6 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
     QrCodeFragment.QrCodeListener {
 
     companion object {
-        private const val REQUEST_IMAGE_CAPTURE = 1
         private const val REQUEST_CAMERA_PERMISSION = 2
     }
 
@@ -147,8 +146,8 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
             binding.scooterImage.setImageBitmap(cachedBitmap)
         } else {
             // Download image and save in cache
-            val ONE_MEGABYTE: Long = 1024 * 1024
-            imageRef.getBytes(ONE_MEGABYTE).addOnSuccessListener {
+            val oneMegabyte: Long = 1024 * 1024
+            imageRef.getBytes(oneMegabyte).addOnSuccessListener {
                 val bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
                 binding.scooterImage.setImageBitmap(bitmap)
                 cache.put(name, bitmap) // Save image in cache
@@ -252,7 +251,6 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
                         .setTitle("End ride")
                         .setMessage("End ride on scooter $name?")
                         .setNeutralButton("Cancel") { _, _ ->
-
                         }
                         .setPositiveButton("End") { _, _ ->
                             getLocation { lat, long ->
@@ -409,7 +407,7 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
 
         // Upload the data to Firebase Storage
         val uploadTask = imagesRef.putBytes(data)
-        uploadTask.addOnSuccessListener { taskSnapshot ->
+        uploadTask.addOnSuccessListener { _ ->
             imagesRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                 // Update the scooter image URL in the Firebase Realtime Database
                 val scooterRef =
