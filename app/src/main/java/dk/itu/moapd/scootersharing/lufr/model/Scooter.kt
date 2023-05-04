@@ -39,6 +39,7 @@ data class Scooter(
     var user: String,
     var timer: Int)
     {
+        constructor() : this("", "", 0L, 0.0, 0.0,"", "", "",0)
         override fun toString(): String {
         return "[${getFormatTimestamp()}] - Scooter: $name is placed at $location"
     }

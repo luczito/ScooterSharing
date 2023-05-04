@@ -1,5 +1,7 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -54,11 +56,14 @@ class PaymentFragment : Fragment() {
                     found ->
                 if (found){
                     UsersDB.getCardInfo(user.email!!){
-                            card, cvc, _ ->
+                            card, _, exp ->
                         val filterCard = card!!.toString().take(8) + "********"
-                        binding.editTextCardNumber.hint = filterCard
-                        binding.editTextCvc.hint = cvc.toString()
-                        binding.editTextExpDate.hint = "***"
+                        editTextCardNumber.hint = filterCard
+                        editTextCardNumber.setHintTextColor(Color.GRAY)
+                        editTextCvc.hint = "***"
+                        editTextCvc.setHintTextColor(Color.GRAY)
+                        editTextExpDate.hint = exp
+                        editTextExpDate.setHintTextColor(Color.GRAY)
                     }
                 }
             }

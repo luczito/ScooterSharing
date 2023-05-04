@@ -7,3 +7,6 @@ data class PreviousRide (
     var price: Double,
     var timer: String
         )
+{
+    constructor(): this("","","",0.0,"")
+}
