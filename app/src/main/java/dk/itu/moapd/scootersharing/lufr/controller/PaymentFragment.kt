@@ -1,6 +1,5 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
-import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log

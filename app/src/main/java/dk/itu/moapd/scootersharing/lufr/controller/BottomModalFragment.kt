@@ -407,7 +407,7 @@ class BottomModalFragment(private val marker: Marker) : BottomSheetDialogFragmen
 
         // Upload the data to Firebase Storage
         val uploadTask = imagesRef.putBytes(data)
-        uploadTask.addOnSuccessListener { _ ->
+        uploadTask.addOnSuccessListener {
             imagesRef.downloadUrl.addOnSuccessListener { downloadUrl ->
                 // Update the scooter image URL in the Firebase Realtime Database
                 val scooterRef =

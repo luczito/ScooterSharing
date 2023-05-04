@@ -66,7 +66,7 @@ class LoginFragment : Fragment() {
         // [START send_email_verification]
         val user = auth.currentUser!!
         user.sendEmailVerification()
-            .addOnCompleteListener(this.requireActivity()) { _ ->
+            .addOnCompleteListener(this.requireActivity()) {
             }
     }
 

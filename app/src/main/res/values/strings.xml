@@ -58,4 +58,5 @@
     <string name="rides">Rides</string>
     <string name="map">Map</string>
     <string name="my_profile">My Profile</string>
+    <string name="qrcode_square">QRCode square</string>
 </resources>
