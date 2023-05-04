@@ -10,7 +10,6 @@ import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
@@ -51,7 +50,7 @@ class SignupFragment : Fragment() {
 
         binding.apply {
             signupButton.setOnClickListener {
-                var check = checkCredentials(editTextEmail.text.toString().trim(),
+                val check = checkCredentials(editTextEmail.text.toString().trim(),
                     editTextPassword.text.toString().trim(),
                     editTextConfirmPassword.text.toString().trim()
                 )
@@ -62,11 +61,13 @@ class SignupFragment : Fragment() {
                         Toast.LENGTH_SHORT).show()
                 }
             }
+            loginButton.setOnClickListener{
+                (activity as MainActivity).setCurrentFragment(LoginFragment())
+            }
         }
     }
 
     private fun createAccount(email: String, password: String) {
-        // [START create_user_with_email]
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this.requireActivity()) { task ->
                 if (task.isSuccessful) {
@@ -82,17 +83,13 @@ class SignupFragment : Fragment() {
                     (activity as MainActivity).showToast("ERROR: Unable to sign up")
                 }
             }
-        // [END create_user_with_email]
     }
 
     private fun sendEmailVerification() {
-        // [START send_email_verification]
         val user = auth.currentUser!!
         user.sendEmailVerification()
-            .addOnCompleteListener(this.requireActivity()) { task ->
-                // Email Verification sent
-            }
-        // [END send_email_verification]
+            .addOnCompleteListener(this.requireActivity()) {
+             }
     }
 
     private fun checkCredentials(email: String, password: String, confPassword: String) : String {

@@ -1,5 +1,6 @@
 package dk.itu.moapd.scootersharing.lufr.controller
 
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -7,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.Fragment
-import com.firebase.ui.auth.data.model.User
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.EmailAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -20,10 +20,6 @@ import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 class PaymentFragment : Fragment() {
-    companion object {
-        private val TAG = PaymentFragment::class.qualifiedName
-    }
-
     private lateinit var binding: FragmentPaymentBinding
     private lateinit var bottomNavBar: BottomNavigationView
 
@@ -53,18 +49,20 @@ class PaymentFragment : Fragment() {
         bottomNavBar = requireActivity().findViewById(R.id.bottomNavigationView)
         bottomNavBar.visibility = View.VISIBLE
 
-
         binding.apply {
             editTextUser.text = user.email
             UsersDB.checkCardIsAdded(user.email!!){
                     found ->
                 if (found){
                     UsersDB.getCardInfo(user.email!!){
-                            card, cvc, exp ->
+                            card, _, exp ->
                         val filterCard = card!!.toString().take(8) + "********"
-                        binding.editTextCardNumber.setHint(filterCard)
-                        binding.editTextCvc.setHint(cvc.toString())
-                        binding.editTextExpDate.setHint("***")
+                        editTextCardNumber.hint = filterCard
+                        editTextCardNumber.setHintTextColor(Color.GRAY)
+                        editTextCvc.hint = "***"
+                        editTextCvc.setHintTextColor(Color.GRAY)
+                        editTextExpDate.hint = exp
+                        editTextExpDate.setHintTextColor(Color.GRAY)
                     }
                 }
             }

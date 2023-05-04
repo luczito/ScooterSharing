@@ -14,7 +14,6 @@ import com.google.firebase.ktx.Firebase
 import dk.itu.moapd.scootersharing.lufr.R
 import dk.itu.moapd.scootersharing.lufr.databinding.FragmentLoginBinding
 import com.google.firebase.auth.ktx.auth
-import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 
@@ -52,7 +51,6 @@ class LoginFragment : Fragment() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(TAG, "signInWithEmail:success")
                     (activity as MainActivity).showToast("Successfully logged in")
-                    val user = auth.currentUser
                     sendEmailVerification()
                     (activity as MainActivity).setCurrentFragment(MapsFragment())
                 } else {
@@ -68,7 +66,7 @@ class LoginFragment : Fragment() {
         // [START send_email_verification]
         val user = auth.currentUser!!
         user.sendEmailVerification()
-            .addOnCompleteListener(this.requireActivity()) { task ->
+            .addOnCompleteListener(this.requireActivity()) {
             }
     }
 
@@ -80,7 +78,7 @@ class LoginFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentLoginBinding.inflate(layoutInflater, container, false)
 
         return binding.root
@@ -94,7 +92,7 @@ class LoginFragment : Fragment() {
 
         binding.apply {
             loginButton.setOnClickListener {
-                var check = checkCredentials(
+                val check = checkCredentials(
                     editTextEmail.text.toString().trim(),
                     editTextPassword.text.toString().trim()
                 )
@@ -110,14 +108,17 @@ class LoginFragment : Fragment() {
                     ).show()
                 }
             }
+            signUpButton.setOnClickListener{
+                (activity as MainActivity).setCurrentFragment(SignupFragment())
+            }
         }
     }
 
     private fun checkCredentials(email: String, password: String): String {
         val check: String
         if (!email.contains('@') || !email.contains('.') || email.length < 8) {
-            check = "Email address not valid"
-        } else if (password.length < 6) {
+                check = "Email address not valid"
+            } else if (password.length < 6) {
             check = "Incorrect password"
         } else {
             check = "true"

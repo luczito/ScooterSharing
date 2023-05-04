@@ -20,10 +20,6 @@ import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 class MyProfileFragment : Fragment() {
-    companion object {
-        private val TAG = MyProfileFragment::class.qualifiedName
-    }
-
     private lateinit var binding: FragmentMyProfileBinding
     private lateinit var bottomNavBar: BottomNavigationView
     private lateinit var auth: FirebaseAuth
@@ -64,14 +60,14 @@ class MyProfileFragment : Fragment() {
                 (activity as MainActivity).setCurrentFragment(WelcomeFragment())
             }
             applyButton.setOnClickListener {
-                var creds: AuthCredential? = null
+                var credentials: AuthCredential? = null
                 if (!editTextConfirmPassword.text.isNullOrBlank()) {
-                    creds = EmailAuthProvider.getCredential(
+                    credentials = EmailAuthProvider.getCredential(
                         user.email!!,
                         editTextConfirmPassword.text.toString()
                     )
-                    user.reauthenticate(creds)
-                        .addOnCompleteListener() { task ->
+                    user.reauthenticate(credentials)
+                        .addOnCompleteListener { task ->
                             if (task.isSuccessful) {
                                 if (!editTextChangePassword.text.isNullOrBlank()){
                                     user.updatePassword(editTextChangePassword.text.toString())

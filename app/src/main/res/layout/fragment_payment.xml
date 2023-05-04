@@ -65,8 +65,7 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:color="@color/mid_grey"
-            android:textColorHint="@color/mid_grey">
+            android:color="@color/mid_grey">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_card_number"
@@ -76,8 +75,7 @@
                 android:drawableLeft="@drawable/baseline_numbers_24"
                 android:drawableTint="@color/mid_grey"
                 android:inputType="number"
-                android:maxLength="16"
-                android:textColor="@color/light_grey" />
+                android:maxLength="16" />
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
@@ -94,9 +92,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:color="@color/mid_grey"
-            android:textColorHint="@color/mid_grey">
-            >
+            android:color="@color/mid_grey">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_exp_date"
@@ -104,8 +100,7 @@
                 android:layout_height="wrap_content"
                 android:color="@color/mid_grey"
                 android:drawableLeft="@drawable/baseline_calendar_month_24"
-                android:maxLength="5"
-                android:textColor="@color/light_grey" />
+                android:maxLength="5" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,9 +109,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:color="@color/mid_grey"
-            android:textColorHint="@color/mid_grey">
-
+            android:color="@color/mid_grey">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edit_text_cvc"
@@ -126,8 +119,7 @@
                 android:drawableLeft="@drawable/baseline_check_24"
                 android:drawableTint="@color/mid_grey"
                 android:inputType="number"
-                android:maxLength="3"
-                android:textColor="@color/light_grey" />
+                android:maxLength="3"/>
         </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
@@ -161,7 +153,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="15dp" />
-'
+
     <Button
         android:id="@+id/delete_info_button"
         android:layout_width="wrap_content"

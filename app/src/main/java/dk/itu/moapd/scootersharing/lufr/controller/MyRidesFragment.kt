@@ -40,16 +40,7 @@ import dk.itu.moapd.scootersharing.lufr.databinding.FragmentMyRidesBinding
 import dk.itu.moapd.scootersharing.lufr.model.PreviousRide
 import dk.itu.moapd.scootersharing.lufr.model.UsersDB
 
-/**
- * Class MainFragment, holds the logic and functionality of the main fragment.
- * @property binding fragment binding for the view fragment
- */
 class MyRidesFragment : Fragment() {
-
-    companion object {
-        private val TAG = MyRidesFragment::class.qualifiedName
-    }
-
     private lateinit var binding: FragmentMyRidesBinding
 
     private lateinit var recyclerView: RecyclerView
@@ -58,9 +49,6 @@ class MyRidesFragment : Fragment() {
     private lateinit var user: FirebaseUser
     private lateinit var auth: FirebaseAuth
 
-    /**
-     * Default onCreate function.
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         WindowCompat.setDecorFitsSystemWindows(requireActivity().window, false)
         super.onCreate(savedInstanceState)
@@ -97,9 +85,6 @@ class MyRidesFragment : Fragment() {
 
             recyclerView.adapter = adapter
             return binding.root
-        }
-        override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-            super.onViewCreated(view, savedInstanceState)
         }
 }
 

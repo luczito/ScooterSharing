@@ -13,10 +13,6 @@ import dk.itu.moapd.scootersharing.lufr.view.MainActivity
 
 
 class WelcomeFragment : Fragment() {
-    companion object {
-        private val TAG = WelcomeFragment::class.qualifiedName
-    }
-
     private lateinit var binding: FragmentWelcomeBinding
     private lateinit var bottomNavBar: BottomNavigationView
 
@@ -30,7 +26,7 @@ class WelcomeFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ) : View? {
+    ) : View {
         binding = FragmentWelcomeBinding.inflate(layoutInflater, container, false)
 
         return binding.root

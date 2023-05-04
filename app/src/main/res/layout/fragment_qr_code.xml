@@ -52,7 +52,8 @@
                 android:layout_below="@id/text_view"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="50dp"
-                android:background="@drawable/empty_outline" />
+                android:background="@drawable/empty_outline"
+                android:contentDescription="@string/qrcode_square" />
 
         </RelativeLayout>
     </FrameLayout>

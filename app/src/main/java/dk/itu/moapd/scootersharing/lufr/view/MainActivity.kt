@@ -37,7 +37,6 @@ import dk.itu.moapd.scootersharing.lufr.controller.*
 class MainActivity : AppCompatActivity() {
 
     companion object {
-        private val TAG = MainActivity::class.qualifiedName
         fun getDatabaseReference(): DatabaseReference {
             return FirebaseDatabase.getInstance().reference
         }

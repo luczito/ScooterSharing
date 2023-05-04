@@ -28,13 +28,6 @@ import android.annotation.SuppressLint
 import java.sql.Date
 import java.text.SimpleDateFormat
 
-/**
- * Scooter is a data class that holds the information for scooters in the system.
- * @property name the name of the scooter.
- * @property location the location of the scooter.
- * @property timestamp the time the scooter was placed at the location.
- * @function toString() returns name, location and timestamp as a collected string.
- */
 data class Scooter(
     val name: String,
     var location: String,

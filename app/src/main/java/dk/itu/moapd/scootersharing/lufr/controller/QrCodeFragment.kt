@@ -9,7 +9,6 @@ import android.util.Size
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.content.ContextCompat
@@ -34,7 +33,7 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
 class QrCodeFragment(private val marker: Marker) : Fragment() {
-    private inner class ImageAnalyzer() : ImageAnalysis.Analyzer {
+    private inner class ImageAnalyzer : ImageAnalysis.Analyzer {
         @SuppressLint("UnsafeOptInUsageError")
         override fun analyze(imageProxy: ImageProxy) {
             imageProxy.image?.let { image ->

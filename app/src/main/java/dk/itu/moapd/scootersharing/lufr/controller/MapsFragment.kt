@@ -131,7 +131,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
 
         autoCompleteTextView.setOnItemClickListener { _, _, position, _ ->
             val selectedPlace = autoCompleteAdapter.getItem(position)
-            selectedPlace?.let { placeItem ->
+            selectedPlace.let { placeItem ->
                 autoCompleteTextView.setText(placeItem.primaryText)
 
                 val placeId = placeItem.placeId
@@ -359,7 +359,7 @@ class MapsFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerClickList
         bundle.putString("name", marker.title)
         bundle.putString("location", scooter.location)
         bundle.putString("timestamp", scooter.getFormatTimestamp())
-        bundle.putString("reserved", scooter.reserved.toString())
+        bundle.putString("reserved", scooter.reserved)
         bottomSheetDialogFragment.arguments = bundle
 
         // Show the bottom sheet fragment

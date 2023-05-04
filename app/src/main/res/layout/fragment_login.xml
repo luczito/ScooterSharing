@@ -8,8 +8,8 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:background="@color/dark_grey"
-    tools:context=".controller.WelcomeFragment"
-    android:id="@+id/fragment_welcome">
+    tools:context=".controller.LoginFragment"
+    android:id="@+id/fragment_login">
 
     <TextView
         android:layout_width="match_parent"
@@ -95,5 +95,18 @@
         android:drawableLeft="@drawable/baseline_person_24"
         />
 
+    <com.google.android.material.button.MaterialButton
+        android:text="@string/dont_have_a_user_sign_up"
+        android:textStyle="italic"
+        android:textAllCaps="false"
+        android:textColor="@color/mid_grey"
+        android:scaleX="1"
+        android:id="@+id/sign_up_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="visible"
+        android:background="@android:color/transparent"
+        />
 
 </LinearLayout>

@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
 xmlns:android="http://schemas.android.com/apk/res/android"
-xmlns:app="http://schemas.android.com/apk/res-auto"
 android:layout_width="match_parent"
 android:layout_height="match_parent">
 
 <!--fragment to display our maps-->
-    <androidx.fragment.app.FragmentContainerView xmlns:android="http://schemas.android.com/apk/res/android"
+    <androidx.fragment.app.FragmentContainerView
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -31,7 +30,7 @@ android:layout_height="match_parent">
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="32dp"
             android:background="@drawable/search_view_design"
-            android:hint="Search Here"
+            android:hint="@string/search_here"
             android:inputType="text"
             android:padding="10dp"
             android:singleLine="true"
@@ -64,12 +63,13 @@ android:layout_height="match_parent">
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="4dp"
-                android:background="@drawable/scooter_available" />
+                android:background="@drawable/scooter_available"
+                android:contentDescription="@string/image_for_the_scooter" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Available"
+                android:text="@string/available"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
@@ -84,12 +84,13 @@ android:layout_height="match_parent">
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="4dp"
-                android:background="@drawable/scooter_reserved"/>
+                android:background="@drawable/scooter_reserved"
+                android:contentDescription="@string/image_for_the_scooter" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Reserved"
+                android:text="@string/reserved"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
@@ -104,12 +105,13 @@ android:layout_height="match_parent">
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:layout_marginTop="4dp"
-                android:background="@drawable/scooter_unavailable" />
+                android:background="@drawable/scooter_unavailable"
+                android:contentDescription="@string/image_for_the_scooter" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Unavailable"
+                android:text="@string/unavailable"
                 android:textColor="@color/black"
                 android:textSize="14sp" />
 
